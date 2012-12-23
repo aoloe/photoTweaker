@@ -27,8 +27,8 @@ public:
 
     void setFilePath(QString filePath) {this->filePath = filePath;}
     inline QString getFileName() { return filePath.split('/').last(); }
-    inline QImage* getImage() { return image; }
-    inline void setImage(const QImage &image) { *this->image = image; }
+    inline QImage getImage() { return image; }
+    inline void setImage(const QImage image) { this->image = image; }
 
     const uchar* getData();
 
@@ -65,10 +65,10 @@ public:
     void undo(UndoCommand *command);
 
 private:
-    QImage *image;
+    QImage image;
     QString filePath;
     bool isEdited;
-    QPixmap *pixmap;
+    QPixmap pixmap;
     QCursor *currentCursor;
     qreal zoomFactor;
     QUndoStack *undoStack;

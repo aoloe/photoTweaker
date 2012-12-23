@@ -34,7 +34,7 @@ UndoCommand::UndoCommand(const QImage *image, Photo &pPhoto, QUndoCommand *paren
 void UndoCommand::undo()
 {
     photo.clearSelection();
-    currImage = *(photo.getImage());
+    currImage = photo.getImage();
     photo.setImage(prevImage);
     photo.update();
     photo.saveImageChanges();

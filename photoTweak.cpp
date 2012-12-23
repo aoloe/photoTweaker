@@ -79,6 +79,7 @@ void PhotoTweak::show()
     pixmap->loadFromData(imageData);
     label->setPixmap(*pixmap);
     */
+    /*
     const QImage* image = photo->getImage();
     // TODO: only do it if the image exists! otherwise it will crash...
     if (image != NULL)
@@ -91,5 +92,23 @@ void PhotoTweak::show()
             qDebug() << "pixmap is null";
         // label->setPixmap(*pixmap);
     }
+    */
+    /*
+    QImage image;
+    qDebug() << "file path" << filePath;
+    qDebug() << "exists" << QFile::exists(filePath);
+    bool result = image.load(filePath);
+    qDebug() << "result" << result;
+    QPixmap pixmap;
+    // pixmap.fromImage(image);
+    pixmap = QPixmap::fromImage(image);
+    */
+    pixmap = QPixmap::fromImage(photo->getImage());
+    
+    if (!pixmap.isNull())
+        label->setPixmap(pixmap);
+    else
+        qDebug() << "pixmap is not valid";
+    label->show();
 
 }

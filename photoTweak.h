@@ -27,7 +27,7 @@ private:
 
 	// Magick++ Objects
 	QByteArray 	imgData;
-	QPixmap	*pixmap;
+	QPixmap	pixmap;
 	// Image 		magickImage;
 	// Blob 			blob;
 };

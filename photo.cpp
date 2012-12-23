@@ -15,7 +15,7 @@ Photo::Photo()
     // setMouseTracking(true);
 
     filePath.clear();
-    image = new QImage();
+    image = QImage();
 
 
     // mZoomFactor = 1;
@@ -75,9 +75,10 @@ void Photo::open()
 void Photo::open(const QString filePath)
 {
     this->filePath = filePath;
-    image->load(filePath);
+    bool result = image.load(filePath);
+    qDebug() << "result:" << result;
     qDebug() << "opened file" << filePath;
-    *image = image->convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 }
 
 void Photo::update()
@@ -94,7 +95,7 @@ void Photo::update()
 
 const uchar* Photo::getData()
 {
-    return image->constBits();
+    return image.constBits();
 }
 
 void Photo::saveImageChanges()
