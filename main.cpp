@@ -11,9 +11,9 @@ int main(int argc, char **argv)
 	PhotoTweak photoTweak;
     if (argc == 2)
     {
-        photoTweak.setFilename(argv[1]);   
+        photoTweak.setFilePath(argv[1]);   
     }
-	photoTweak.show();
+	photoTweak.run();
 
 	return app.exec();
 }

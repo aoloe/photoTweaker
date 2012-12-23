@@ -4,13 +4,26 @@
 
 TEMPLATE = app
 TARGET = 
+
+DESTDIR = bin
+OBJECTS_DIR = build
+MOC_DIR = build
+UI_DIR = build
+
+
 DEPENDPATH += .
-INCLUDEPATH += . /usr/include/ImageMagick
+;INCLUDEPATH += . /usr/include/ImageMagick
+;INCLUDEPATH += .
 
 # Magick++
-LIBS += -lMagick++
+;LIBS += -lMagick++
 
 # Input
-HEADERS += photoTweak.h
 FORMS += photoTweak.ui
-SOURCES += main.cpp photoTweak.cpp
+SOURCES += main.cpp\
+    photoTweak.cpp \
+    photo.cpp \
+    undocommand.cpp
+HEADERS += photoTweak.h \
+    photo.h \
+    undocommand.h

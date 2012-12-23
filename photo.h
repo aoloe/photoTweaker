@@ -1,25 +1,45 @@
 #ifndef PHOTO_H
 #define PHOTO_H
+
+#include <QWidget>
+
+class QUndoStack;
+class UndoCommand;
+
+class AbstractInstrument;
+class AbstractEffect;
+
+
 class Photo : public QWidget
 {
     Q_OBJECT
 public:
-    void open(const QString &filepath);
+    // explicit ImageArea(const bool &isOpen = false, const QString &filePath = "", QWidget *parent = 0);
+    Photo();
+    ~Photo();
+
+    void open();
+    void open(const QString filePath);
     void save();
     void saveAs();
 
-    inline QString getFilename() { return filepath.split('/').last(); }
+    void update(); // needed for compatibility with EasyPaint's ImageArea
+
+    void setFilePath(QString filePath) {this->filePath = filePath;}
+    inline QString getFileName() { return filePath.split('/').last(); }
     inline QImage* getImage() { return image; }
     inline void setImage(const QImage &image) { *this->image = image; }
 
+    const uchar* getData();
 
-    inline void setEdited(bool flag) { isEdited = flag; }
+
+    inline void setEdited(bool flag) { isEdited = flag; } // needed for compatibility with EasyPaint's ImageArea
     inline bool getEdited() { return isEdited; }
 
     void resize();
     void scale();
 
-    void applyEffect(EffectsEnum effect);
+    // void applyEffect(EffectsEnum effect);
 
     void restoreCursor();
 
@@ -27,14 +47,17 @@ public:
 
     /**
      * @brief Save all image changes to image copy.
+     * needed for compatibility with EasyPaint's ImageArea
      *
      */
     void saveImageChanges();
     /**
      * @brief Removes selection borders from image and clears all selection varaibles to default.
+     * needed for compatibility with EasyPaint's ImageArea
      *
      */
-    void clearSelection(); // TODO: move to the selection tool?
+    void clearSelection();
+
     /**
      * @brief Push current image to undo stack.
      *
@@ -43,7 +66,7 @@ public:
 
 private:
     QImage *image;
-    QString filepath;
+    QString filePath;
     bool isEdited;
     QPixmap *pixmap;
     QCursor *currentCursor;
@@ -54,12 +77,16 @@ private:
     QVector<AbstractEffect*> effectsHandlers;
     AbstractEffect *effectHandler;
 
+    inline void emitShow() { emit show(); }
+
+
 signals:
-void sendCursorPosition(const QPoint&);
+    void show();
+    void sendCursorPosition(const QPoint&);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-}
+};
 #endif // PHOTO_H
