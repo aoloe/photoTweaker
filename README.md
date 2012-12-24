@@ -48,6 +48,37 @@ Possible inspirations:
 
 - EasyPaint implements crop by resizing the image "window"
 
+
+Lot of code comes from EasyPaint (https://github.com/Gr1N/EasyPaint) 
+- the undo
+- the filters
+- the selection tool
+
+... it's still in the starting blocks and i'm not the best at c++ / qt... but i try to improve
+but i'm open to comments and hints!
+
+The goal is to create an application that allows me to crop and scale one image in a very fast way....
+
+Tt should work on linux, without KDE or Gnome and i should be able to call it from a script. If possible, it should be multiplatform.
+
+I've been looking for alternatives but didn't find any matching my needs:
+- while Gimp does does crop and scale in a more then satisfactory way, it takes me between one and two minutes to achieve my result...  I've been using for years for this task. And the Gimp (GUI) guys have been very clear that they're not interested in supporting this type of tasks. They're targetting professional graphic designers spending hours on a single image.
+gimp is scriptable. I could have written a bunch of scripts to help me in my workflow, but i'm sure that at the end it would have not been as good and it would have been less fun!
+- imagemagick?  i've tried imagemagick but it's not what i'm looking for.
+
+I should be able to crop the image in about 2 seconds...
+
+One usecase is getting the image as a screenshot or getting it from the camera connected as usb, crop and scale it and upload it to a server in max 5 seconds. photoTweak will only take care of the part scale/crop/filter, and be callable from scripts that take the screenshot, upload the image to a server and puts the URL in the clipboard.
+
+
+the problem is that i have to crop / scale (and white balance) each picture i upload... but very few image need more care than a few automatic clicks.
+
+i'd like to create a gui which is focused on such a fast workflow.
+
+The toolbar will onyl have scale buttons... and one button for each available filter (like the white balance)
+The image is automatically cropped to the current selection when saving:  since you can only apply filters to the whole image, the only goal for selecting will be to crop.
+And if you start the application in "scripter mode" it will automatically save on quit, without asking anything.
+
 #History
 
 I am creating a simple photo tweaking applications. It can open and save one image at a time. It has singe window, where the image is shown in a way that it fills it (proportions are kept, overflowing part is shown as gray).
@@ -69,3 +100,6 @@ The constructor sets up the user interface, creates the photo object and connect
 photoTweak.cpp manages the dialogs (open, save, save as and quit) and passes the commands and values to the ptwPhoto object.
 
 ## The .pro file
+
+
+
