@@ -34,13 +34,14 @@ void PhotoTweak::run()
 void PhotoTweak::open()
 {
     filePath = QFileDialog::getOpenFileName(this, tr("Select File"), QDir::homePath());
+    qDebug() << "filePath:" << filePath;
 
     if (filePath.isEmpty())
         return;
 
-    qDebug() << "filePath:" << filePath;
+    photo->open(filePath);
+    photo->update();
 
-    show();
 }
 
 void PhotoTweak::show()
@@ -79,36 +80,27 @@ void PhotoTweak::show()
     pixmap->loadFromData(imageData);
     label->setPixmap(*pixmap);
     */
-    /*
-    const QImage* image = photo->getImage();
-    // TODO: only do it if the image exists! otherwise it will crash...
-    if (image != NULL)
-    {
-        pixmap->fromImage(*image);
-        if (pixmap != NULL)
-            // label->setPixmap(pixmap->scaled(label->size(), Qt::KeepAspectRatio));
-            label->setPixmap(*pixmap);
-        else
-            qDebug() << "pixmap is null";
-        // label->setPixmap(*pixmap);
-    }
-    */
-    /*
-    QImage image;
-    qDebug() << "file path" << filePath;
-    qDebug() << "exists" << QFile::exists(filePath);
-    bool result = image.load(filePath);
-    qDebug() << "result" << result;
-    QPixmap pixmap;
-    // pixmap.fromImage(image);
-    pixmap = QPixmap::fromImage(image);
-    */
     pixmap = QPixmap::fromImage(photo->getImage());
+
+    qDebug() << "image size" << photo->getImage().byteCount();
+    qDebug() << "label width" << label->width();
+    qDebug() << "pixmap width" << pixmap.width();
+    qDebug() << "qimage width" << photo->getImage().width();
     
     if (!pixmap.isNull())
-        label->setPixmap(pixmap);
+    {
+        qDebug() << "setting the pixmap";
+        if (pixmap.width() > label->width())
+            label->setPixmap(pixmap.scaled(label->size(), Qt::KeepAspectRatio));
+        else
+            label->setPixmap(pixmap);
+    }
     else
+    {
+        pixmap = QPixmap();
+        label->setPixmap(pixmap);
         qDebug() << "pixmap is not valid";
+    }
     label->show();
 
 }

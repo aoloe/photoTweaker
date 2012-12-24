@@ -30,6 +30,7 @@ This is not an image editor.
 
 Maybe:
 - offer a way to open directly the image in gimp (or any other image editor)
+- eventually read the image from standard IO (not the filename) and output it to standard IO; but: does it make sense?
 
 No:
 - zoom: always fills (proportions kept) the window,

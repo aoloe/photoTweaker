@@ -18,8 +18,8 @@ public:
     Photo();
     ~Photo();
 
-    void open();
-    void open(const QString filePath);
+    bool open();
+    bool open(const QString filePath);
     void save();
     void saveAs();
 

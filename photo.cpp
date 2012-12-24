@@ -66,32 +66,42 @@ Photo::~Photo()
     // connect(this, SIGNAL(update()), photoTweak, SLOT(show()));
 }
 
-void Photo::open()
+bool Photo::open()
 {
     if (!filePath.isEmpty())
-        open(filePath);
+    {
+        return open(filePath);
+    }
+    else
+    {
+        image = QImage();
+        return false;
+    }
 }
 
-void Photo::open(const QString filePath)
+bool Photo::open(const QString filePath)
 {
+    bool loaded = true;
     this->filePath = filePath;
-    bool result = image.load(filePath);
-    qDebug() << "result:" << result;
-    qDebug() << "opened file" << filePath;
-    image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    loaded = image.load(filePath);
+    qDebug() << "loaded:" << loaded;
+    if (loaded)
+    {
+        qDebug() << "opened file" << filePath;
+        image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    }
+    else
+    {
+        image = QImage();
+        qDebug() << "failed to open file" << filePath;
+    }
+    return loaded;
 }
 
 void Photo::update()
 {
     emitShow();
 }
-
-/*
-void Photo::update()
-{
-
-}
-*/
 
 const uchar* Photo::getData()
 {
