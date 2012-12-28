@@ -91,7 +91,7 @@ Photo::Photo()
 
 Photo::~Photo()
 {
-    // connect(this, SIGNAL(update()), photoTweak, SLOT(show()));
+    // connect(this, SIGNAL(update()), photoTweaker, SLOT(show()));
 }
 
 bool Photo::open()

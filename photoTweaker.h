@@ -1,7 +1,7 @@
-#ifndef PHOTOTWEAK_H
-#define PHOTOTWEAK_H
+#ifndef PHOTOTWEAKER_H
+#define PHOTOTWEAKER_H
 
-#include "ui_photoTweak.h"
+#include "ui_photoTweaker.h"
 #include "photo.h"
 
 class Photo;
@@ -9,11 +9,11 @@ class Photo;
 
 // using namespace Magick;
 
-class PhotoTweak : public QMainWindow, public Ui::PhotoTweak
+class PhotoTweaker : public QMainWindow, public Ui::PhotoTweaker
 {
 	Q_OBJECT
 public:
-	PhotoTweak();
+	PhotoTweaker();
     void setFilePath(QString filePath) {this->filePath = filePath;}
 	void run();
 	
@@ -33,4 +33,4 @@ private:
 	// Blob 			blob;
 };
 
-#endif // PHOTOTWEAK_H
+#endif // PHOTOTWEAKER_H

@@ -1,19 +1,19 @@
 // --- MAIN ---
 
 #include <QApplication>
-#include "photoTweak.h"
+#include "photoTweaker.h"
 
 int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 
 
-	PhotoTweak photoTweak;
+	PhotoTweaker photoTweaker;
     if (argc == 2)
     {
-        photoTweak.setFilePath(argv[1]);   
+        photoTweaker.setFilePath(argv[1]);   
     }
-	photoTweak.run();
+	photoTweaker.run();
 
 	return app.exec();
 }

@@ -82,7 +82,7 @@ gimp is scriptable. I could have written a bunch of scripts to help me in my wor
 
 I should be able to crop the image in about 2 seconds...
 
-One usecase is getting the image as a screenshot or getting it from the camera connected as usb, crop and scale it and upload it to a server in max 5 seconds. photoTweak will only take care of the part scale/crop/filter, and be callable from scripts that take the screenshot, upload the image to a server and puts the URL in the clipboard.
+One usecase is getting the image as a screenshot or getting it from the camera connected as usb, crop and scale it and upload it to a server in max 5 seconds. photoTweaker will only take care of the part scale/crop/filter, and be callable from scripts that take the screenshot, upload the image to a server and puts the URL in the clipboard.
 
 
 the problem is that i have to crop / scale (and white balance) each picture i upload... but very few image need more care than a few automatic clicks.
@@ -103,15 +103,15 @@ With Qt Designer i've created a simple QMainWindow with the entries "Open", "Sav
 
 ## The main.cpp file
 
-The main.cpp file, creates a photoTweak application object, parses the parameters and passes them to the Application and finally runs photoTweak.
+The main.cpp file, creates a photoTweaker application object, parses the parameters and passes them to the Application and finally runs photoTweaker.
 
-## The photoTweak.cpp file
+## The photoTweaker.cpp file
 
-The photoTweak is an application extending the photoTweak.ui file.
+The photoTweaker is an application extending the photoTweaker.ui file.
 
 The constructor sets up the user interface, creates the photo object and connects the signals and slots relative to the application.
 
-photoTweak.cpp manages the dialogs (open, save, save as and quit) and passes the commands and values to the ptwPhoto object.
+photoTweaker.cpp manages the dialogs (open, save, save as and quit) and passes the commands and values to the ptwPhoto object.
 
 ## The .pro file
 

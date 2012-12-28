@@ -1,11 +1,11 @@
-#include "photoTweak.h"
+#include "photoTweaker.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
 
 #include "photo.h"
 
-PhotoTweak::PhotoTweak()
+PhotoTweaker::PhotoTweaker()
 {
     setupUi(this);
 
@@ -20,7 +20,7 @@ PhotoTweak::PhotoTweak()
     connect(photo, SIGNAL(show()), this, SLOT(show())); // XXX: no idea if this is needed...
 }
 
-void PhotoTweak::run()
+void PhotoTweaker::run()
 {
     QMainWindow::show();
     qDebug() << "filePath:" << filePath;
@@ -31,7 +31,7 @@ void PhotoTweak::run()
     }
 }
 
-void PhotoTweak::open()
+void PhotoTweaker::open()
 {
     filePath = QFileDialog::getOpenFileName(this, tr("Select File"), QDir::homePath());
     qDebug() << "filePath:" << filePath;
@@ -47,7 +47,7 @@ void PhotoTweak::open()
 
 }
 
-void PhotoTweak::save()
+void PhotoTweaker::save()
 {
     if(!filePath.isEmpty())
     {
@@ -55,7 +55,7 @@ void PhotoTweak::save()
     }
 }
 
-void PhotoTweak::show()
+void PhotoTweaker::show()
 {
     /*
     try 

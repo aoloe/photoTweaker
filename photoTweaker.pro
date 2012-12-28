@@ -19,15 +19,15 @@ DEPENDPATH += .
 ;LIBS += -lMagick++
 
 # Input
-FORMS += photoTweak.ui
+FORMS += photoTweaker.ui
 SOURCES += main.cpp\
-    photoTweak.cpp \
+    photoTweaker.cpp \
     datasingleton.cpp \
     undocommand.cpp \
     instrument/abstractinstrument.cpp \
     instrument/selection.cpp \
     photo.cpp
-HEADERS += photoTweak.h \
+HEADERS += photoTweaker.h \
     datasingleton.h \
     undocommand.h \
     instrument/abstractinstrument.h \
