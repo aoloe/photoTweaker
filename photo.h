@@ -21,7 +21,6 @@ public:
     bool open();
     bool open(const QString filePath);
     void save();
-    void saveAs();
 
     // void update(); // needed for compatibility with EasyPaint's ImageArea
     void updateImageView();
@@ -38,7 +37,7 @@ public:
     const uchar* getData();
 
 
-    inline void setEdited(bool flag) { isEdited = flag; } // needed for compatibility with EasyPaint's ImageArea
+    inline void setEdited(bool flag) { isEdited = flag; }
     inline bool getEdited() { return isEdited; }
 
     void resize();
@@ -52,7 +51,7 @@ public:
 
     /**
      * @brief Save all image changes to image copy.
-     * needed for compatibility with EasyPaint's ImageArea
+     * needed for compatibility with EasyPaint's ImageArea in undo code
      *
      */
     void saveImageChanges();

@@ -41,7 +41,6 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
     selection = QRect();
     viewScale = 0.0;
     isSelecting = false;
-    isSelection = false;
 }
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
@@ -68,7 +67,6 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 {
     // qDebug() << "mouse released";
     isSelecting = false;
-    isSelection = true;
     QRect selection = rubberBand->geometry();
     
     this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
@@ -76,7 +74,7 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 
 void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 {
-    if (isSelection)
+    if (!selection.isEmpty())
     {
         QRect selection = QRect(this->selection.topLeft() * viewScale, this->selection.size() * viewScale);
         // qDebug() << "new selection:" << selection;
@@ -87,9 +85,8 @@ void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 void SelectionInstrument::clearSelection()
 {
     isSelecting = false;
-    isSelection = false;
-    rubberBand->hide();
     selection = QRect();
+    rubberBand->hide();
 }
 
 void SelectionInstrument::paint(Photo &photo, bool, bool)

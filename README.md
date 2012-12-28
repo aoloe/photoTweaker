@@ -1,10 +1,18 @@
 #Todo
 
+- after having saved, should we show the original picture or the cropped part?
 - how to put dependencies in the qmake file?
   ->>> LIBS += -lpodofo
-- how to create a widget in the main window that is always full screen?
-- find the right way to call the show in photoTweak from the photo->show()
-  -> when photo triggers the "update()" signal, photoTweak should run its show() method
+- add the name of the current file in the title bar
+- add an asterisk in the title bar if the file has been changed (or a selection is active)
+- on quit, ask [ok, cancel] if image isEdited (if not in script modus)
+- implement the undo
+- implement modifying the selection with the mouse
+- implement modifying the selection with the keyboard
+- add a sample effect
+- add some preferences
+- add an about / help menu
+- eventually, put a semi transparent mask on the part not selected
 
 #Goal
 

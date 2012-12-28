@@ -9,16 +9,15 @@ PhotoTweak::PhotoTweak()
 {
     setupUi(this);
 
-    // label->setGeometry(this->geometry());
-
     photo = new Photo();
     setCentralWidget(photo);
 
     connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    connect(actionSave, SIGNAL(triggered()), this, SLOT(save()));
     connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
 
-    connect(photo, SIGNAL(show()), this, SLOT(show()));
+    connect(photo, SIGNAL(show()), this, SLOT(show())); // XXX: no idea if this is needed...
 }
 
 void PhotoTweak::run()
@@ -27,7 +26,6 @@ void PhotoTweak::run()
     qDebug() << "filePath:" << filePath;
     if (!filePath.isEmpty())
     {
-        // photo->setFilePath(filePath);
         photo->open(filePath);
         photo->update();
     }
@@ -41,13 +39,20 @@ void PhotoTweak::open()
     if (filePath.isEmpty())
         return;
 
-    photo->open(filePath);
+    if (!photo->open(filePath))
+    {
+        // TODO: disable the menus that need an image to be open (save)
+    }
     photo->update();
 
 }
 
 void PhotoTweak::save()
 {
+    if(!filePath.isEmpty())
+    {
+        photo->save();
+    }
 }
 
 void PhotoTweak::show()

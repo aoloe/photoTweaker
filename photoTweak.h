@@ -19,6 +19,7 @@ public:
 	
 public slots:
 	void open();
+	void save();
 	void show();
 
 private:

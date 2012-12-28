@@ -18,6 +18,7 @@ public:
     explicit SelectionInstrument(QObject *parent = 0);
     void clearSelection();
     QRect getSelection() {return selection;} // return the selection in image coordinates
+    bool isSelection() {return !selection.isEmpty();}
 
 protected:
     void paint(Photo &photo, bool = false, bool = false);
@@ -25,7 +26,6 @@ protected:
     QRubberBand* rubberBand;
     QRect selection; // selection in image coordinates
     bool isSelecting;
-    bool isSelection;
 private:
     void mousePressEvent(QMouseEvent *event, Photo &photo);
     void mouseMoveEvent(QMouseEvent *event, Photo &photo);

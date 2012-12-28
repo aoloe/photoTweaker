@@ -53,6 +53,8 @@ Photo::Photo()
 
     zoomFactor = 1; // XXX: could be useful for calculating the relationship between screen and image coordinates
 
+    isEdited = false;
+
     undoStack = new QUndoStack(this);
     undoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
 
@@ -130,7 +132,24 @@ bool Photo::open(const QString filePath)
     }
     // qDebug() << "image size" << image.byteCount();
     updateImageView();
+    isEdited = false;
     return loaded;
+}
+
+void Photo::save()
+{
+    if(!filePath.isEmpty())
+    {
+        SelectionInstrument *instrument = static_cast <SelectionInstrument*> (instrumentsHandlers.at(CURSOR));
+        if (isEdited || instrument->isSelection())
+        {
+            qDebug() << "saving selection:" << instrument->getSelection();
+            qDebug() << "filePath:" << filePath;
+            image.copy(instrument->getSelection()).save(filePath);
+        }
+    }
+
+    isEdited = false;
 }
 
 void Photo::updateImageView()
