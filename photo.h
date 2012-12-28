@@ -28,6 +28,7 @@ public:
     void setFilePath(QString filePath) {this->filePath = filePath;}
     inline QString getFileName() { return filePath.split('/').last(); }
     inline QImage getImage() { return image; }
+    inline QImage* getImagePointer() { return &image; }
     inline void setImage(const QImage image) { this->image = image; }
 
     const uchar* getData();
@@ -62,14 +63,19 @@ public:
      * @brief Push current image to undo stack.
      *
      */
-    void undo(UndoCommand *command);
+    void undo(UndoCommand *command); // pushUndoCommand() in ImageArea
+
+public:
+    static const int INSTRUMENTS_COUNT;
+    static const int NONE_INSTRUMENT;
+    static const int CURSOR;
 
 private:
     QImage image;
     QString filePath;
     bool isEdited;
     QPixmap pixmap;
-    QCursor *currentCursor;
+    QCursor currentCursor;
     qreal zoomFactor;
     QUndoStack *undoStack;
     QVector<AbstractInstrument*> instrumentsHandlers;

@@ -22,8 +22,14 @@ DEPENDPATH += .
 FORMS += photoTweak.ui
 SOURCES += main.cpp\
     photoTweak.cpp \
-    photo.cpp \
-    undocommand.cpp
+    datasingleton.cpp \
+    undocommand.cpp \
+    instrument/abstractinstrument.cpp \
+    instrument/selection.cpp \
+    photo.cpp
 HEADERS += photoTweak.h \
-    photo.h \
-    undocommand.h
+    datasingleton.h \
+    undocommand.h \
+    instrument/abstractinstrument.h \
+    instrument/selection.h \
+    photo.h

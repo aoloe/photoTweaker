@@ -24,7 +24,7 @@
  */
 
 #include "abstractinstrument.h"
-#include "../imagearea.h"
+#include "../photo.h"
 #include "../undocommand.h"
 
 AbstractInstrument::AbstractInstrument(QObject *parent) :
@@ -32,7 +32,7 @@ AbstractInstrument::AbstractInstrument(QObject *parent) :
 {
 }
 
-void AbstractInstrument::makeUndoCommand(ImageArea &imageArea)
+void AbstractInstrument::makeUndoCommand(Photo &photo)
 {
-    imageArea.pushUndoCommand(new UndoCommand(imageArea.getImage(), imageArea));
+    photo.undo(new UndoCommand(photo.getImagePointer(), photo));
 }
