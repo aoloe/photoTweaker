@@ -27,6 +27,7 @@ public:
     void updateImageView();
     void clear();
     void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
     void setFilePath(QString filePath) {this->filePath = filePath;}
     inline QString getFileName() { return filePath.split('/').last(); }

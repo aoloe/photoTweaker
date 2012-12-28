@@ -97,19 +97,27 @@ bool Photo::open(const QString filePath)
         image = QImage();
         qDebug() << "failed to open file" << filePath;
     }
-    qDebug() << "image size" << image.byteCount();
-    qDebug() << "window width" << width();
-    qDebug() << "image width" << image.width();
+    // qDebug() << "image size" << image.byteCount();
+    updateImageView();
     return loaded;
 }
 
 void Photo::updateImageView()
 {
-    QSize newSize = image.size().expandedTo(size());
-    imageView = image;
-    resizeImage(&loadedImage, newSize);
-    image = loadedImage;
-    modified = false;
+    // qDebug() << "image size" << image.size();
+    // qDebug() << "window size" << size();
+    // qDebug() << "image size bounded" << image.size().boundedTo(size());
+
+    if (size() == image.size().boundedTo(size()))
+    {
+        QSize newSize = image.size().boundedTo(size());
+        imageView = image.scaled(newSize, Qt::KeepAspectRatio);
+        // qDebug() << "imageView size:" << imageView.size();
+    }
+    else
+    {
+        imageView = image.copy();
+    }
     update();
 }
 
@@ -120,11 +128,17 @@ void Photo::update()
 }
 */
 void Photo::paintEvent(QPaintEvent *event)
- {
+{
      QPainter painter(this);
      QRect dirtyRect = event->rect();
-     painter.drawImage(dirtyRect, image, dirtyRect);
- }
+     painter.drawImage(dirtyRect, imageView, dirtyRect);
+}
+
+void Photo::resizeEvent(QResizeEvent *event)
+{
+    updateImageView();
+    QWidget::resizeEvent(event);
+}
 
  void Photo::clear()
  {
@@ -156,8 +170,8 @@ void Photo::clearSelection()
 void Photo::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << "mouse pressed";
-    instrumentHandler = instrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
-    instrumentHandler->mousePressEvent(event, *this);
+    // instrumentHandler = instrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
+    // instrumentHandler->mousePressEvent(event, *this);
 }
 
 void Photo::mouseMoveEvent(QMouseEvent *event)
