@@ -23,7 +23,10 @@ public:
     void save();
     void saveAs();
 
-    void update(); // needed for compatibility with EasyPaint's ImageArea
+    // void update(); // needed for compatibility with EasyPaint's ImageArea
+    void updateImageView();
+    void clear();
+    void paintEvent(QPaintEvent *event);
 
     void setFilePath(QString filePath) {this->filePath = filePath;}
     inline QString getFileName() { return filePath.split('/').last(); }
@@ -71,7 +74,8 @@ public:
     static const int CURSOR;
 
 private:
-    QImage image;
+    QImage image; // the original image, as loaded and as it will be saved
+    QImage imageView; // the image resized for viewing
     QString filePath;
     bool isEdited;
     QPixmap pixmap;

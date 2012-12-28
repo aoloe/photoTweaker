@@ -9,9 +9,10 @@ PhotoTweak::PhotoTweak()
 {
     setupUi(this);
 
-    label->setGeometry(this->geometry());
+    // label->setGeometry(this->geometry());
 
     photo = new Photo();
+    setCentralWidget(photo);
 
     connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -69,38 +70,6 @@ void PhotoTweak::show()
     // *mImage = mImage->convertToFormat(QImage::Format_ARGB32_Premultiplied);
     // mImage = new QImage(DataSingleton::Instance()->getBaseSize(), QImage::Format_ARGB32_Premultiplied);
     // resize(mImage->rect().right() + 6, mImage->rect().bottom() + 6);
-
     
-    // STEP 3 - Display
-    //pixmap.loadFromData(imgData, "XPM");
-    // pixmap = new QPixmap(filePath);
-    // label->setPixmap( *pixmap );
-    /*
-    const uchar* imageData = photo->getData();
-    pixmap->loadFromData(imageData);
-    label->setPixmap(*pixmap);
-    */
-    pixmap = QPixmap::fromImage(photo->getImage());
-
-    qDebug() << "image size" << photo->getImage().byteCount();
-    qDebug() << "label width" << label->width();
-    qDebug() << "pixmap width" << pixmap.width();
-    qDebug() << "qimage width" << photo->getImage().width();
-    
-    if (!pixmap.isNull())
-    {
-        qDebug() << "setting the pixmap";
-        if (pixmap.width() > label->width())
-            label->setPixmap(pixmap.scaled(label->size(), Qt::KeepAspectRatio));
-        else
-            label->setPixmap(pixmap);
-    }
-    else
-    {
-        pixmap = QPixmap();
-        label->setPixmap(pixmap);
-        qDebug() << "pixmap is not valid";
-    }
-    label->show();
 
 }

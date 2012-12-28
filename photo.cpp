@@ -1,5 +1,7 @@
 #include <QDebug>
 #include <QtGui/QApplication>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QPainter>
 
 #include "photo.h"
 #include "undocommand.h"
@@ -95,13 +97,41 @@ bool Photo::open(const QString filePath)
         image = QImage();
         qDebug() << "failed to open file" << filePath;
     }
+    qDebug() << "image size" << image.byteCount();
+    qDebug() << "window width" << width();
+    qDebug() << "image width" << image.width();
     return loaded;
 }
 
+void Photo::updateImageView()
+{
+    QSize newSize = image.size().expandedTo(size());
+    imageView = image;
+    resizeImage(&loadedImage, newSize);
+    image = loadedImage;
+    modified = false;
+    update();
+}
+
+/*
 void Photo::update()
 {
     emitShow();
 }
+*/
+void Photo::paintEvent(QPaintEvent *event)
+ {
+     QPainter painter(this);
+     QRect dirtyRect = event->rect();
+     painter.drawImage(dirtyRect, image, dirtyRect);
+ }
+
+ void Photo::clear()
+ {
+     image.fill(qRgb(255, 255, 255));
+     // modified = true;
+     update();
+ }
 
 const uchar* Photo::getData()
 {

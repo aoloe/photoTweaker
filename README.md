@@ -38,6 +38,7 @@ No:
 Inspired by
 - https://github.com/Gr1N/EasyPaint
 - MagickLoader.zip from http://www.qtcentre.org/threads/6553-Qt-ImageMagick
+- Scrible: http://doc.qt.digia.com/qt/widgets-scribble.html
 
 Possible inspirations:
 - http://cropper.codeplex.com/
