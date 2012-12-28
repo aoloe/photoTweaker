@@ -45,6 +45,10 @@ Possible inspirations:
 - http://code.google.com/p/imageclipper/
 - http://code.google.com/p/imageclipper/
 
+#Thanks to
+
+ntome, cbreak and the other friendly guys on #qt
+
 
 #Notes
 

@@ -47,10 +47,16 @@ public:
     virtual void mousePressEvent(QMouseEvent *event, Photo &photo) = 0;
     virtual void mouseMoveEvent(QMouseEvent *event, Photo &photo) = 0;
     virtual void mouseReleaseEvent(QMouseEvent *event, Photo &photo) = 0;
+
+    void setViewScale(float scale) {viewScale = scale;}
+
+    virtual void resizeEvent(QResizeEvent *event, Photo &photo) = 0;
     
 signals:
     
 protected:
+    float viewScale;
+
     QPoint startPoint, endPoint; /**< Point for events. */
     QImage imageCopy; /**< Image for storing copy of current image on photo, needed for some instruments. */
 

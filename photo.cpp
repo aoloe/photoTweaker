@@ -1,3 +1,28 @@
+/*
+ * This source file is part of photoTweaker.
+ *
+ * Copyright (c) 2012 Ale Rimoldi <https://github.com/aoloe/photoTweaker>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 #include <QDebug>
 #include <QtGui/QApplication>
 #include <QtGui/QPaintEvent>
@@ -13,8 +38,8 @@
 // #include "effect/gray.h"
 
 const int Photo::INSTRUMENTS_COUNT = 1;
-const int Photo::NONE_INSTRUMENT = 1;
-const int Photo::CURSOR = 2;
+const int Photo::NONE_INSTRUMENT = -1;
+const int Photo::CURSOR = 0;
 
 Photo::Photo()
 // ImageArea::ImageArea(const bool &isOpen, const QString &filePath, QWidget *parent) :
@@ -31,7 +56,6 @@ Photo::Photo()
     undoStack = new QUndoStack(this);
     undoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
 
-    // TODO: connect here the signal for the window resize
 
 
     SelectionInstrument *selectionInstrument = new SelectionInstrument(this);
@@ -39,7 +63,12 @@ Photo::Photo()
     // connect(selectionInstrument, SIGNAL(sendEnableSelectionInstrument(bool)), this, SIGNAL(sendEnableSelectionInstrument(bool)));
 
     instrumentsHandlers.fill(0, (int)INSTRUMENTS_COUNT);
+    // qDebug() << "CURSOR" << CURSOR;
+    // qDebug() << "selectionInstrument" << selectionInstrument;
     instrumentsHandlers[CURSOR] = selectionInstrument;
+    // qDebug() << "instrumentsHandlers" << instrumentsHandlers;
+    DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
+
 
     currentCursor = QCursor(Qt::CrossCursor);
     setCursor(currentCursor);
@@ -89,12 +118,14 @@ bool Photo::open(const QString filePath)
     qDebug() << "loaded:" << loaded;
     if (loaded)
     {
-        qDebug() << "opened file" << filePath;
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        DataSingleton::Instance()->setInstrument(CURSOR);
+        qDebug() << "opened file" << filePath;
     }
     else
     {
         image = QImage();
+        DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
         qDebug() << "failed to open file" << filePath;
     }
     // qDebug() << "image size" << image.byteCount();
@@ -110,6 +141,7 @@ void Photo::updateImageView()
 
     if (size() == image.size().boundedTo(size()))
     {
+        // TODO: scale to a bigger area than the current window size, in order to be able to show the scaling steps without rescaling each time the image
         QSize newSize = image.size().boundedTo(size());
         imageView = image.scaled(newSize, Qt::KeepAspectRatio);
         // qDebug() << "imageView size:" << imageView.size();
@@ -118,15 +150,10 @@ void Photo::updateImageView()
     {
         imageView = image.copy();
     }
+    viewScale = (float) imageView.width() / (float) image.width();
     update();
 }
 
-/*
-void Photo::update()
-{
-    emitShow();
-}
-*/
 void Photo::paintEvent(QPaintEvent *event)
 {
      QPainter painter(this);
@@ -136,8 +163,15 @@ void Photo::paintEvent(QPaintEvent *event)
 
 void Photo::resizeEvent(QResizeEvent *event)
 {
+    qDebug() << "Photo::resize()";
     updateImageView();
     QWidget::resizeEvent(event);
+    if (DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
+    {
+        instrumentHandler = instrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
+        instrumentHandler->setViewScale(viewScale);
+        instrumentHandler->resizeEvent(event, *this);
+    }
 }
 
  void Photo::clear()
@@ -158,35 +192,41 @@ void Photo::saveImageChanges()
 
 void Photo::clearSelection()
 {
-    /*
-    foreach (AbstractInstrument* instrument, instrumentsHandlers)
-    {
-        if (AbstractSelection *selection = qobject_cast<AbstractSelection*>(instrument))
-            selection->clearSelection(*this);
-    }
-    */
+    SelectionInstrument *instrument = static_cast <SelectionInstrument*> (instrumentsHandlers.at(CURSOR));
+    instrument->clearSelection();
 }
 
 void Photo::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "mouse pressed";
-    // instrumentHandler = instrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
-    // instrumentHandler->mousePressEvent(event, *this);
+    int instrument = DataSingleton::Instance()->getInstrument();
+    if (instrument >= 0)
+    {
+        instrumentHandler = instrumentsHandlers.at(instrument);
+        instrumentHandler->mousePressEvent(event, *this);
+    }
 }
 
 void Photo::mouseMoveEvent(QMouseEvent *event)
 {
+    int instrument = DataSingleton::Instance()->getInstrument();
+    if (instrument >= 0)
+    {
+        instrumentHandler = instrumentsHandlers.at(instrument);
+        instrumentHandler->mouseMoveEvent(event, *this);
+    }
 }
 
 void Photo::mouseReleaseEvent(QMouseEvent *event)
 {
+    int instrument = DataSingleton::Instance()->getInstrument();
+    if (instrument >= 0)
+    {
+        instrumentHandler = instrumentsHandlers.at(instrument);
+        instrumentHandler->mouseReleaseEvent(event, *this);
+    }
 }
 
 void Photo::undo(UndoCommand *command)
-{
-}
-
-void Photo::resize()
 {
 }
 

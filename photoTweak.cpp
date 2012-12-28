@@ -16,6 +16,7 @@ PhotoTweak::PhotoTweak()
 
     connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
 
     connect(photo, SIGNAL(show()), this, SLOT(show()));
 }
@@ -43,6 +44,10 @@ void PhotoTweak::open()
     photo->open(filePath);
     photo->update();
 
+}
+
+void PhotoTweak::save()
+{
 }
 
 void PhotoTweak::show()

@@ -56,12 +56,6 @@ public:
      *
      */
     void saveImageChanges();
-    /**
-     * @brief Removes selection borders from image and clears all selection varaibles to default.
-     * needed for compatibility with EasyPaint's ImageArea
-     *
-     */
-    void clearSelection();
 
     /**
      * @brief Push current image to undo stack.
@@ -74,9 +68,16 @@ public:
     static const int NONE_INSTRUMENT;
     static const int CURSOR;
 
+public slots:
+    /**
+     * @brief Removes selection borders from image and clears all selection varaibles to default.
+     */
+    void clearSelection();
+
 private:
     QImage image; // the original image, as loaded and as it will be saved
     QImage imageView; // the image resized for viewing
+    float viewScale;
     QString filePath;
     bool isEdited;
     QPixmap pixmap;
