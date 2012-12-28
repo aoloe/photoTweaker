@@ -84,9 +84,11 @@ void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 
 void SelectionInstrument::clearSelection()
 {
+    qDebug() << "clear selection";
     isSelecting = false;
     selection = QRect();
-    rubberBand->hide();
+    if (rubberBand)
+        rubberBand->hide();
 }
 
 void SelectionInstrument::paint(Photo &photo, bool, bool)

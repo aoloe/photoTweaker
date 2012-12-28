@@ -1,5 +1,6 @@
 #Todo
 
+- when opening a file, the selection should be cleared
 - after having saved, should we show the original picture or the cropped part?
 - how to put dependencies in the qmake file?
   ->>> LIBS += -lpodofo

@@ -131,6 +131,7 @@ bool Photo::open(const QString filePath)
         qDebug() << "failed to open file" << filePath;
     }
     // qDebug() << "image size" << image.byteCount();
+    clearSelection();
     updateImageView();
     isEdited = false;
     return loaded;
