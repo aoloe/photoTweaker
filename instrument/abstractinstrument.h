@@ -47,6 +47,7 @@ public:
     virtual void mousePressEvent(QMouseEvent *event, Photo &photo) = 0;
     virtual void mouseMoveEvent(QMouseEvent *event, Photo &photo) = 0;
     virtual void mouseReleaseEvent(QMouseEvent *event, Photo &photo) = 0;
+    virtual void paintEvent(QPaintEvent *event, Photo &photo) = 0;
 
     void setViewScale(float scale) {viewScale = scale;}
 

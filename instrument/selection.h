@@ -31,6 +31,7 @@ private:
     void mouseMoveEvent(QMouseEvent *event, Photo &photo);
     void mouseReleaseEvent(QMouseEvent *event, Photo &photo);
     void resizeEvent(QResizeEvent *event, Photo &photo);
+    void paintEvent(QPaintEvent *event, Photo &photo);
 
 };
 

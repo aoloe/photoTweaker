@@ -176,9 +176,16 @@ void Photo::updateImageView()
 
 void Photo::paintEvent(QPaintEvent *event)
 {
-     QPainter painter(this);
-     QRect dirtyRect = event->rect();
-     painter.drawImage(dirtyRect, imageView, dirtyRect);
+    QPainter painter(this);
+    QRect dirtyRect = event->rect();
+    painter.drawImage(dirtyRect, imageView, dirtyRect);
+
+    int instrument = DataSingleton::Instance()->getInstrument();
+    if (instrument >= 0)
+    {
+        instrumentHandler = instrumentsHandlers.at(instrument);
+        instrumentHandler->paintEvent(event, *this);
+    }
 }
 
 void Photo::resizeEvent(QResizeEvent *event)

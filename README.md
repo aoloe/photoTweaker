@@ -1,7 +1,6 @@
 #Todo
 
-- when opening a file, the selection should be cleared
-- after having saved, should we show the original picture or the cropped part?
+- after having saved, should we show the original picture or the cropped part? at least document it well...
 - how to put dependencies in the qmake file?
   ->>> LIBS += -lpodofo
 - add the name of the current file in the title bar
@@ -14,6 +13,7 @@
 - add some preferences
 - add an about / help menu
 - eventually, put a semi transparent mask on the part not selected
+- add a filter to auto white balance
 
 #Goal
 

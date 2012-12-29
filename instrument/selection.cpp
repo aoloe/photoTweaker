@@ -33,6 +33,9 @@
 #include <QtGui/QPainter>
 #include <QtGui/QApplication>
 #include <QtGui/QRubberBand>
+#include <QtGui/QWidget> // for painting the emi transparent background
+#include <QtGui/QPainterPath> // for painting the emi transparent background
+// #include <QtGui/QBrush> // for painting the emi transparent background
 
 SelectionInstrument::SelectionInstrument(QObject *parent) :
     AbstractInstrument(parent)
@@ -93,4 +96,31 @@ void SelectionInstrument::clearSelection()
 
 void SelectionInstrument::paint(Photo &photo, bool, bool)
 {
+}
+
+void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
+{
+    // this should put a shade on the non selected area but does not really work..
+    // should be improved, before it can be activated...
+    /*
+    if (rubberBand && isSelection())
+    {
+        qDebug() << "paintEvent";
+        qDebug() << "parent" << parent();
+        QWidget* parentWidget = static_cast <QWidget*> (parent());
+        qDebug() << "geometry" << parentWidget->geometry();
+        qDebug() << "parent geometry" << parentWidget->geometry();
+        qDebug() << "photo geometry" << photo.geometry();
+        QRect surface = (static_cast <QWidget*> (parent()))->geometry();
+        qDebug() << "surface" << surface;
+        QPainterPath path = QPainterPath();
+        path.setFillRule(Qt::OddEvenFill);
+        path.addRect(static_cast <QRectF>(surface));
+        // path.addRect(static_cast <QRectF>(rubberBand->geometry()));
+        QPainter painter(parentWidget);
+        painter.setBrush(QBrush(QColor(100, 100, 100, 70)));
+        painter.setPen(QPen(QColor(0, 0, 0, 80)));
+        painter.drawPath(path);
+    }
+    */
 }
