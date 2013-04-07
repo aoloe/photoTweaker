@@ -117,4 +117,67 @@ photoTweaker.cpp manages the dialogs (open, save, save as and quit) and passes t
 ## The .pro file
 
 
+# Random links
+
+- http://qt-apps.org/content/show.php/EasyPaint?content=140877
+- http://qt-apps.org/content/show.php/Painter?content=134450
+- http://www.qtcentre.org/threads/43787-WYSIWYG-editor-with-good-image-handling-Not-web-based
+- http://code.google.com/p/picworks/
+- http://maemo.gitorious.org/meego-image-editor/qt-image-editor-demo
+- http://www.qtforum.org/article/3942/image-editor-in-qt.html?s=cf09d808fccc94de43348bf6b035ff40f69b65af#post16960
+- http://www.qtcentre.org/threads/6553-Qt-ImageMagick
+- http://www.imagemagick.org/api/Magick++/classMagick_1_1ColorGray.html
+- http://www.imagemagick.org/Magick++/Image.html
+- http://code.google.com/p/imageclipper/
+- http://www.gnu.org/software/gpaint/
+- https://bbs.archlinux.org/viewtopic.php?id=121545
+- http://softwaretopic.informer.com/crop-or-resize-fotos-linux/
+- http://linuxundich.de/de/freiesmagazin/mirage-ein-schneller-bildbetrachter/
+- http://www.imagemagick.org/Usage/crop/
+- http://www.imagemagick.org/script/command-line-options.php
+- http://stackoverflow.com/questions/7854830/how-can-i-trim-just-the-left-and-right-side-of-an-image-using-imagemagick-in-php
+- http://ps-scripts.com/bb/viewtopic.php?p=16749
+- http://ps-scripts.com/bb/viewtopic.php?p=16815
+- http://media.unpythonic.net/emergent-files/01235516977/cropgui.py
+- http://emergent.unpythonic.net/01248401946
+- http://tips.webdesign10.com/general/imagemagick
+- http://imgur.com/apps
+- http://argandgahandapandpa.wordpress.com/2010/11/08/command-line-script-to-upload-images-to-imagebin/
+- https://help.gnome.org/users/zenity/stable/forms.html.en
+- http://linux.byexamples.com/archives/265/a-complete-zenity-dialog-examples-2/
+- http://ubuntuforums.org/showthread.php?t=274567
+ 
+
+- http://stackoverflow.com/questions/7010611/how-can-i-crop-an-image-in-qt
+- http://stackoverflow.com/questions/11887425/how-to-crop-a-qimage-to-its-opaque-area
+- http://www.qtcentre.org/threads/9965-QImage-crop
+- http://linuxappfinder.com/blog/create_photo_mosaics_with_metapixel
+
+
+- http://unix.stackexchange.com/questions/3728/how-to-do-a-print-screen-or-capture-an-area-of-the-screen
+- http://stackoverflow.com/questions/847924/how-can-i-find-out-when-a-pyqt-application-is-idle
+- http://pastebin.com/7YvzE9Yh  How can I find out when a PyQt-application is idle
+- http://stackoverflow.com/questions/6468981/qthread-signal-logic
+- http://qt-project.org/doc/qt-4.8/QThread.html
+- http://en.wikibooks.org/wiki/Python_Programming/PyQt4
+- http://stackoverflow.com/questions/4938723/what-is-the-correct-way-to-make-my-pyqt-application-quit-when-killed-from-the-co
+- http://www.qtcentre.org/threads/34947-How-can-i-draw-on-desktop%EF%BC%9F
+- http://qt-project.org/forums/viewthread/16216
+- http://stackoverflow.com/questions/1909092/qt4-transparent-window-with-rounded-corners
+- http://zetcode.com/gui/qt4/painting/
+- http://www.qtforum.org/article/3851/how-to-mouse-select-as-you-do-on-desktop.html
+- http://stackoverflow.com/questions/5565206/how-to-draw-rectangle-using-qt-to-xlib-window
+
+
+- http://www.streamzoo.com/home
+- http://pixlr.com/o-matic/
+- https://chrome.google.com/webstore/detail/pixlr-o-matic/ehcibdjmpjlekgjhepbfmenfppliikcj?hl=en-US Pixlr-o-matic
+- http://imm.io/
+- http://imgh.us/old_test.jpg
+- http://linux.about.com/od/softgraphics/Linux_Software_Graphics_Image.htm
+- http://www.doc-diy.net/photo/image_processing_linux
+- http://www.imagemagick.org/script/index.php
+- http://www.imagemagick.org/discourse-server/viewtopic.php?f=1&t=13393&start=0
+- http://softwaretopic.informer.com/image-magick-vintage-filter/
+- http://rubydoc.info/gems/filtr/0.0.3/frames
 
