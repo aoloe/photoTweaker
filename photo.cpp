@@ -259,4 +259,6 @@ void Photo::undo(UndoCommand *command)
 
 void Photo::restoreCursor()
 {
+    setCursor(Qt::CrossCursor);
+
 }

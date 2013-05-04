@@ -64,6 +64,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
     // qDebug() << "mouse moved";
     if (isSelecting && rubberBand)
         rubberBand->setGeometry(QRect(origin, event->pos()).normalized());
+    updateCursor(event, photo);
 }
 
 void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
@@ -73,6 +74,8 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
     QRect selection = rubberBand->geometry();
     
     this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
+
+    updateCursor(event, photo);
 }
 
 void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
@@ -123,4 +126,31 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
         painter.drawPath(path);
     }
     */
+}
+
+
+void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
+{
+    qDebug() << "update cursor";
+    if (!selection.isEmpty())
+    {
+        const QRect selection = this->rubberBand->geometry();
+        if (selection.adjusted(3, 3, -3, -3).contains(event->pos(), true))
+        {
+            photo.setCursor(Qt::SizeAllCursor);
+        }
+        else if (selection.adjusted(-6, -6, 6, 6).contains(event->pos(), true))
+        {
+            photo.setCursor(Qt::SizeFDiagCursor);
+        }
+        else
+        {
+            photo.restoreCursor();
+        }
+
+    }
+    else
+    {
+        photo.restoreCursor();
+    }
 }
