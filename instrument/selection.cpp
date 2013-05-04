@@ -43,7 +43,9 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
     rubberBand = 0;
     selection = QRect();
     viewScale = 0.0;
-    isSelecting = false;
+    selectionCreating = false;
+    selectionResizing = NONE;
+    selectionMoving = false;
 }
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
@@ -56,21 +58,44 @@ void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
         rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
     rubberBand->setGeometry(QRect(origin, QSize()));
     rubberBand->show();
-    isSelecting = true;
+    selectionCreating = true;
 }
 
 void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
     // qDebug() << "mouse moved";
-    if (isSelecting && rubberBand)
+    if (selectionCreating && rubberBand)
         rubberBand->setGeometry(QRect(origin, event->pos()).normalized());
+    else if (selectionResizing != NONE)
+    {
+        switch (selectionResizing) {
+            case N:
+            break;
+            case NE:
+            break;
+            case E:
+            break;
+            case SE:
+            break;
+            case S:
+            break;
+            case SW:
+            break;
+            case W:
+            break;
+            case NW:
+            break;
+            default:
+                photo.restoreCursor();
+        }
+    }
     updateCursor(event, photo);
 }
 
 void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 {
     // qDebug() << "mouse released";
-    isSelecting = false;
+    selectionCreating = false;
     QRect selection = rubberBand->geometry();
     
     this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
@@ -91,7 +116,7 @@ void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 void SelectionInstrument::clearSelection()
 {
     qDebug() << "clear selection";
-    isSelecting = false;
+    selectionCreating = false;
     selection = QRect();
     if (rubberBand)
         rubberBand->hide();
@@ -131,58 +156,62 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 
 void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
 {
-    // TODO: shouldn't the same routine say how to change the cursor and start the current selection move/resize mode? (returing n, ne, e, se, s, sw, w, nw ? is there a qt data structure for it?)
-    qDebug() << "update cursor";
+    // qDebug() << "update cursor";
     if (!selection.isEmpty())
     {
         const QRect selection = this->rubberBand->geometry();
         QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
         QRect selectionInner = selection.adjusted(3, 3, -3, -3);
+        selectionResizing = NONE;
+        selectionMoving = false;
         if (selectionOuter.contains(event->pos()))
         {
             if (selectionInner.contains(event->pos()))
             {
                 photo.setCursor(Qt::SizeAllCursor);
+                selectionMoving = true;
             }
             else
             {
-                bool n = (event->pos().y() < selectionInner.top());
-                bool s = (event->pos().y() > selectionInner.bottom());
-                bool e = (event->pos().x() < selectionInner.left());
-                bool w = (event->pos().x() > selectionInner.right());
-                if (n && w)
+                if (event->pos().y() < selectionInner.top())
                 {
-                    photo.setCursor(Qt::SizeBDiagCursor);
+                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | N);
                 }
-                else if (n && e)
+                else if (event->pos().y() > selectionInner.bottom())
                 {
-                    photo.setCursor(Qt::SizeFDiagCursor);
-                }
-                else if (n)
-                {
-                    photo.setCursor(Qt::SizeVerCursor);
-                }
-                else if (s && w)
-                {
-                    photo.setCursor(Qt::SizeFDiagCursor);
-                }
-                else if (s && e)
-                {
-                    photo.setCursor(Qt::SizeBDiagCursor);
-                }
-                else if (s)
-                {
-                    photo.setCursor(Qt::SizeVerCursor);
-                }
-                else if (e)
-                {
-                    photo.setCursor(Qt::SizeHorCursor);
-                }
-                else if (w)
-                {
-                    photo.setCursor(Qt::SizeHorCursor);
+                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | S);
                 }
 
+                if (event->pos().x() < selectionInner.left())
+                {
+                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | E);
+                }
+                else if (event->pos().x() > selectionInner.right())
+                {
+                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | W);
+                }
+                // qDebug() << "selectionResizing" << selectionResizing;
+
+                switch (selectionResizing) {
+                    case N:
+                    case S:
+                        photo.setCursor(Qt::SizeVerCursor);
+                    break;
+                    case W:
+                    case E:
+                        photo.setCursor(Qt::SizeHorCursor);
+                    break;
+                    case SE:
+                    case NW:
+                        photo.setCursor(Qt::SizeBDiagCursor);
+                    break;
+                    case SW:
+                    case NE:
+                        photo.setCursor(Qt::SizeFDiagCursor);
+                    break;
+                    default:
+                        photo.restoreCursor();
+                }
             }
         }
         else

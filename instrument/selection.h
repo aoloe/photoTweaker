@@ -25,7 +25,25 @@ protected:
     QPoint origin;
     QRubberBand* rubberBand;
     QRect selection; // selection in image coordinates
-    bool isSelecting;
+    bool selectionCreating;
+    enum SelectionDirection
+    {
+        NONE = 0,
+        N = 1,
+        S = 2,
+        E = 4,
+        W = 8,
+        NE = N | E,
+        SE = S | E,
+        NW = N | W,
+        SW = S | W
+    };
+    /*
+    inline SelectionDirection operator|(SelectionDirection a, SelectionDirection b)
+        {return static_cast<SelectionDirection>(static_cast<int>(a) | static_cast<int>(b));}
+    */
+    enum SelectionDirection selectionResizing;
+    bool selectionMoving;
 private:
     void mousePressEvent(QMouseEvent *event, Photo &photo);
     void mouseMoveEvent(QMouseEvent *event, Photo &photo);
@@ -35,5 +53,6 @@ private:
     void updateCursor(QMouseEvent *event, Photo &photo);
 
 };
+
 
 #endif // SELECTIONINSTRUMENT_H
