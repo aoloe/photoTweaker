@@ -131,23 +131,64 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 
 void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
 {
+    // TODO: shouldn't the same routine say how to change the cursor and start the current selection move/resize mode? (returing n, ne, e, se, s, sw, w, nw ? is there a qt data structure for it?)
     qDebug() << "update cursor";
     if (!selection.isEmpty())
     {
         const QRect selection = this->rubberBand->geometry();
-        if (selection.adjusted(3, 3, -3, -3).contains(event->pos(), true))
+        QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
+        QRect selectionInner = selection.adjusted(3, 3, -3, -3);
+        if (selectionOuter.contains(event->pos()))
         {
-            photo.setCursor(Qt::SizeAllCursor);
-        }
-        else if (selection.adjusted(-6, -6, 6, 6).contains(event->pos(), true))
-        {
-            photo.setCursor(Qt::SizeFDiagCursor);
+            if (selectionInner.contains(event->pos()))
+            {
+                photo.setCursor(Qt::SizeAllCursor);
+            }
+            else
+            {
+                bool n = (event->pos().y() < selectionInner.top());
+                bool s = (event->pos().y() > selectionInner.bottom());
+                bool e = (event->pos().x() < selectionInner.left());
+                bool w = (event->pos().x() > selectionInner.right());
+                if (n && w)
+                {
+                    photo.setCursor(Qt::SizeBDiagCursor);
+                }
+                else if (n && e)
+                {
+                    photo.setCursor(Qt::SizeFDiagCursor);
+                }
+                else if (n)
+                {
+                    photo.setCursor(Qt::SizeVerCursor);
+                }
+                else if (s && w)
+                {
+                    photo.setCursor(Qt::SizeFDiagCursor);
+                }
+                else if (s && e)
+                {
+                    photo.setCursor(Qt::SizeBDiagCursor);
+                }
+                else if (s)
+                {
+                    photo.setCursor(Qt::SizeVerCursor);
+                }
+                else if (e)
+                {
+                    photo.setCursor(Qt::SizeHorCursor);
+                }
+                else if (w)
+                {
+                    photo.setCursor(Qt::SizeHorCursor);
+                }
+
+            }
         }
         else
         {
             photo.restoreCursor();
         }
-
     }
     else
     {

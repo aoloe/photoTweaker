@@ -14,6 +14,7 @@
 - add an about / help menu
 - eventually, put a semi transparent mask on the part not selected
 - add a filter to auto white balance
+- show the image size and the selection size in a status bar (or in a tooltip?)
 
 #Goal
 
