@@ -162,7 +162,7 @@ void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
         const QRect selection = this->rubberBand->geometry();
         QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
         QRect selectionInner = selection.adjusted(3, 3, -3, -3);
-        selectionResizing = NONE;
+        mouseOnSelection = NONE;
         selectionMoving = false;
         if (selectionOuter.contains(event->pos()))
         {
@@ -170,57 +170,53 @@ void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
             {
                 photo.setCursor(Qt::SizeAllCursor);
                 selectionMoving = true;
+                mouseOnSelection = C;
             }
             else
             {
                 if (event->pos().y() < selectionInner.top())
                 {
-                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | N);
+                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | N);
                 }
                 else if (event->pos().y() > selectionInner.bottom())
                 {
-                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | S);
+                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | S);
                 }
 
                 if (event->pos().x() < selectionInner.left())
                 {
-                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | E);
+                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | E);
                 }
                 else if (event->pos().x() > selectionInner.right())
                 {
-                    selectionResizing = static_cast<SelectionDirection>(selectionResizing | W);
+                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | W);
                 }
-                // qDebug() << "selectionResizing" << selectionResizing;
 
-                switch (selectionResizing) {
-                    case N:
-                    case S:
-                        photo.setCursor(Qt::SizeVerCursor);
-                    break;
-                    case W:
-                    case E:
-                        photo.setCursor(Qt::SizeHorCursor);
-                    break;
-                    case SE:
-                    case NW:
-                        photo.setCursor(Qt::SizeBDiagCursor);
-                    break;
-                    case SW:
-                    case NE:
-                        photo.setCursor(Qt::SizeFDiagCursor);
-                    break;
-                    default:
-                        photo.restoreCursor();
-                }
             }
-        }
-        else
-        {
-            photo.restoreCursor();
+            qDebug() << "mouseOnSelection" << mouseOnSelection;
         }
     }
-    else
-    {
-        photo.restoreCursor();
+    switch (mouseOnSelection) {
+        case N:
+        case S:
+            photo.setCursor(Qt::SizeVerCursor);
+        break;
+        case W:
+        case E:
+            photo.setCursor(Qt::SizeHorCursor);
+        break;
+        case SE:
+        case NW:
+            photo.setCursor(Qt::SizeBDiagCursor);
+        break;
+        case SW:
+        case NE:
+            photo.setCursor(Qt::SizeFDiagCursor);
+        break;
+        case C:
+            photo.setCursor(Qt::SizeAllCursor);
+        break;
+        default:
+            photo.restoreCursor();
     }
 }

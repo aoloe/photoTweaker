@@ -26,13 +26,14 @@ protected:
     QRubberBand* rubberBand;
     QRect selection; // selection in image coordinates
     bool selectionCreating;
-    enum SelectionDirection
+    enum Direction
     {
         NONE = 0,
-        N = 1,
-        S = 2,
-        E = 4,
-        W = 8,
+        C = 1, // center: it's in the selection area, not the border
+        N = 2,
+        S = 4,
+        E = 8,
+        W = 16,
         NE = N | E,
         SE = S | E,
         NW = N | W,
@@ -42,7 +43,8 @@ protected:
     inline SelectionDirection operator|(SelectionDirection a, SelectionDirection b)
         {return static_cast<SelectionDirection>(static_cast<int>(a) | static_cast<int>(b));}
     */
-    enum SelectionDirection selectionResizing;
+    enum Direction mouseOnSelection; // TODO: rename it!
+    enum Direction selectionResizing;
     bool selectionMoving;
 private:
     void mousePressEvent(QMouseEvent *event, Photo &photo);
