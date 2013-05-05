@@ -168,8 +168,7 @@ void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
         {
             if (selectionInner.contains(event->pos()))
             {
-                photo.setCursor(Qt::SizeAllCursor);
-                selectionMoving = true;
+                selectionMoving = true; // TODO: move this out of updateCursor, probably to onmouseclick()
                 mouseOnSelection = C;
             }
             else
