@@ -31,6 +31,7 @@ public:
     void setFilePath(QString filePath) {this->filePath = filePath;}
     inline QString getFileName() { return filePath.split('/').last(); }
     inline QImage getImage() { return image; }
+    inline QImage getImageView() { return imageView; }
     inline QImage* getImagePointer() { return &image; }
     inline void setImage(const QImage image) { this->image = image; }
 

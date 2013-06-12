@@ -44,8 +44,8 @@ protected:
         {return static_cast<SelectionDirection>(static_cast<int>(a) | static_cast<int>(b));}
     */
     enum Direction mouseOnSelection; // TODO: rename it!
-    enum Direction selectionResizing;
-    bool selectionMoving;
+    enum Direction clickOnSelection;
+    QPoint mouseLastPosition;
 private:
     void mousePressEvent(QMouseEvent *event, Photo &photo);
     void mouseMoveEvent(QMouseEvent *event, Photo &photo);
