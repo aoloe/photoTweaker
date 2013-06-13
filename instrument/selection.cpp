@@ -75,7 +75,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
     // qDebug() << "mouse moved";
     if (selectionCreating && rubberBand)
-        rubberBand->setGeometry(QRect(origin, event->pos()).normalized());
+        rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos()).normalized()));
     else if (clickOnSelection != NONE)
     {
         QRect selection = rubberBand->geometry();
@@ -83,10 +83,19 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         int dx2 = 0;
         int dy1 = 0;
         int dy2 = 0;
+        // TODO: limit the resizing to te image's border
         // TODO: catch the cases where the selections becomes "negative" and change the origin accordingly (even if it's an uninteresting corner case...)
         // TODO: check if it's possible to keep the mouse at the same place in the selection when the border is reached
         //
+        // TODO: check that its inside of the image
         // if (event->pos().y() 
+        qDebug() << "x" << event->pos().x();
+        qDebug() << "image width" << photo.getImageView().width();
+        /*
+        if (event->pos().x() > photo.getImageView().width()) {
+            return;
+        }
+        */
         switch (clickOnSelection) {
             case N:
                 dy1 = event->pos().y() - selection.top();
@@ -143,7 +152,8 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                 mouseLastPosition = position;
             break;
         }
-        rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
+        // update the selection with the adjusted selection, but do not go outside of the image boundaries
+        rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
         // qDebug() << "updating the selection";
     }
     else
@@ -158,11 +168,6 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
     // qDebug() << "mouse released";
     selectionCreating = false;
     QRect selection = rubberBand->geometry();
-
-    // qDebug() << "x" << event->pos().x();
-    qDebug() << "selection left" << selection.left();
-    qDebug() << "selection width" << selection.width();
-    qDebug() << "image width" << photo.getImageView().width();
     
     this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
 
