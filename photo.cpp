@@ -159,16 +159,27 @@ void Photo::updateImageView()
     // qDebug() << "window size" << size();
     // qDebug() << "image size bounded" << image.size().boundedTo(size());
 
-    if (size() == image.size().boundedTo(size()))
+    if (width() > image.width())
     {
-        // TODO: scale to a bigger area than the current window size, in order to be able to show the scaling steps without rescaling each time the image
-        QSize newSize = image.size().boundedTo(size());
-        imageView = image.scaled(newSize, Qt::KeepAspectRatio);
-        // qDebug() << "imageView size:" << imageView.size();
+        if (height() > image.height())
+        {
+            QSize newSize = image.size();
+            imageView = image.scaled(newSize, Qt::KeepAspectRatio);
+        }
+        else
+        {
+            imageView = image.scaledToHeight(height());
+        }
+    }
+    else if (height() > image.height())
+    {
+        imageView = image.scaledToWidth(width());
     }
     else
     {
-        imageView = image.copy();
+        QSize newSize = image.size().boundedTo(size());
+        imageView = image.scaled(newSize, Qt::KeepAspectRatio);
+        // qDebug() << "imageView size:" << imageView.size();
     }
     viewScale = (float) imageView.width() / (float) image.width();
     update();
