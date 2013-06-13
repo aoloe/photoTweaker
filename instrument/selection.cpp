@@ -89,8 +89,9 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         //
         // TODO: check that its inside of the image
         // if (event->pos().y() 
-        qDebug() << "x" << event->pos().x();
-        qDebug() << "image width" << photo.getImageView().width();
+        // qDebug() << "x" << event->pos().x();
+        // qDebug() << "y" << event->pos().y();
+        // qDebug() << "image width" << photo.getImageView().width();
         /*
         if (event->pos().x() > photo.getImageView().width()) {
             return;
@@ -144,7 +145,6 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     dx1 += dx;
                     dx2 += dx;
                 }
-                qDebug() << "dy" << dy;
                 if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height()))
                 {
                     dy1 += dy;
