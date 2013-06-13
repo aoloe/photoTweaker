@@ -137,6 +137,8 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                 dy1 =  event->pos().y() - selection.topRight().y();
             break;
             case C:
+                // TODO: block the selection to the imageview border and only move again the selection when the mouse is again on the image view
+                // bool mouseOnPhoto = photo.getImageView().rect().contains(event->pos());
                 QPoint position = event->pos();
                 int dx = position.x() - mouseLastPosition.x();
                 int dy = position.y() - mouseLastPosition.y();
