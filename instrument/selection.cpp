@@ -144,6 +144,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     dx1 += dx;
                     dx2 += dx;
                 }
+                qDebug() << "dy" << dy;
                 if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height()))
                 {
                     dy1 += dy;
