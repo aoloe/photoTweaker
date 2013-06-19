@@ -27,6 +27,7 @@ protected:
     QRect selection; // selection in image coordinates
     bool selectionCreating;
     /*
+    // TODO: find how avoid the static cast when doing the | in getCardinalDirection()
     inline SelectionDirection operator|(SelectionDirection a, SelectionDirection b)
         {return static_cast<SelectionDirection>(static_cast<int>(a) | static_cast<int>(b));}
     */
