@@ -76,6 +76,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos()).normalized()));
     else if (clickOnSelection != NONE)
     {
+        // TODO: according to http://harmattan-dev.nokia.com/docs/platform-api-reference/xml/daily-docs/libqt4/qrect.html#coordinates we should use x() + width() and y() + height(), and avoid right() and bottom().
         QRect selection = rubberBand->geometry();
         int dx1 = 0;
         int dx2 = 0;
@@ -122,15 +123,15 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     {
                         dy1 = view.rect().top() - selection.top(); 
                     }
+                    else if ((direction & S) && (selection.bottom() < view.rect().bottom()))
+                    {
+                        dy1 = view.rect().bottom() - selection.bottom(); 
+                    }
                     if ((direction & E) && (selection.right() < view.rect().right()))
                     {
                         dx1 = view.rect().right() - selection.right(); 
                     }
-                    if ((direction & S) && (selection.bottom() < view.rect().bottom()))
-                    {
-                        dy1 = view.rect().bottom() - selection.bottom(); 
-                    }
-                    if ((direction & W) && (selection.left() > view.rect().left()))
+                    else if ((direction & W) && (selection.left() > view.rect().left()))
                     {
                         dx1 =  view.rect().left() - selection.left(); 
                     }
@@ -172,7 +173,9 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                 break;
             }
             // update the selection with the adjusted selection, but do not go outside of the image boundaries
-            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
+            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)).normalized());
+            // TODO: ensure that the selection is at least 1x1 and don't allow negative selections
+            rubberBand->setGeometry(
         }
         // qDebug() << "updating the selection";
     }
