@@ -82,28 +82,10 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         int dx2 = 0;
         int dy1 = 0;
         int dy2 = 0;
-        // TODO: limit the resizing to te image's border
-        // TODO: catch the cases where the selections becomes "negative" and change the origin accordingly (even if it's an uninteresting corner case...)
-        // TODO: check if it's possible to keep the mouse at the same place in the selection when the border is reached
-        //
-        // TODO: check that its inside of the image
-        // if (event->pos().y() 
-        // qDebug() << "x" << event->pos().x();
-        // qDebug() << "y" << event->pos().y();
-        // qDebug() << "image width" << photo.getImageView().width();
-        /*
-        if (event->pos().x() > photo.getImageView().width()) {
-            return;
-        }
-        */
         if (clickOnSelection == C) {
             // moving around the selection
                 QPoint position = event->pos();
                 QImage view = photo.getImageView();
-                // qDebug() << "selection right" << selection.right();
-                // qDebug() << "view width" << view.width();
-                // qDebug() << "x" << position.x();
-                // qDebug() << "y" << position.y();
                 if (view.rect().contains(position)) {
                     int dx = position.x() - mouseLastPosition.x();
                     int dy = position.y() - mouseLastPosition.y();
@@ -172,6 +154,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     dy1 =  event->pos().y() - selection.topRight().y();
                 break;
             }
+            // ensure that the selection is at least 1x1 and don't allow negative selections
             if (event->pos().x() <= selection.left())
             {
                 dx2 = 0;
@@ -182,7 +165,6 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
             }
             // update the selection with the adjusted selection, but do not go outside of the image boundaries
             rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
-            // TODO: ensure that the selection is at least 1x1 and don't allow negative selections
         }
         // qDebug() << "updating the selection";
     }
