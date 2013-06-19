@@ -19,13 +19,6 @@ public:
     void clearSelection();
     QRect getSelection() {return selection;} // return the selection in image coordinates
     bool isSelection() {return !selection.isEmpty();}
-
-protected:
-    void paint(Photo &photo, bool = false, bool = false);
-    QPoint origin;
-    QRubberBand* rubberBand;
-    QRect selection; // selection in image coordinates
-    bool selectionCreating;
     enum Direction
     {
         NONE = 0,
@@ -39,6 +32,13 @@ protected:
         NW = N | W,
         SW = S | W
     };
+
+protected:
+    void paint(Photo &photo, bool = false, bool = false);
+    QPoint origin;
+    QRubberBand* rubberBand;
+    QRect selection; // selection in image coordinates
+    bool selectionCreating;
     /*
     inline SelectionDirection operator|(SelectionDirection a, SelectionDirection b)
         {return static_cast<SelectionDirection>(static_cast<int>(a) | static_cast<int>(b));}
@@ -52,6 +52,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *event, Photo &photo);
     void resizeEvent(QResizeEvent *event, Photo &photo);
     void paintEvent(QPaintEvent *event, Photo &photo);
+    Direction getCardinalDirection(QPoint point, QRect area);
     void updateCursor(QMouseEvent *event, Photo &photo);
 
 };

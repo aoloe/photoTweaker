@@ -97,72 +97,85 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
             return;
         }
         */
-        switch (clickOnSelection) {
-            case N:
-                dy1 = event->pos().y() - selection.top();
-            break;
-            case S:
-                qDebug() << "move S";
-                dy2 =  event->pos().y() - selection.bottom();
-                qDebug() << "dy2" << dy2;
-            break;
-            case W:
-                qDebug() << "move W";
-                dx1 =  event->pos().x() - selection.left();
-            break;
-            case E:
-                qDebug() << "move E";
-                dx2 =  event->pos().x() - selection.right();
-            break;
-            case SE:
-                qDebug() << "move SE";
-                dx2 = event->pos().x() - selection.bottomRight().x();
-                dy2 = event->pos().y() - selection.bottomRight().y();
-            break;
-            case NW:
-                qDebug() << "move NW";
-                dx1 =  event->pos().x() - selection.topLeft().x();
-                dy1 =  event->pos().y() - selection.topLeft().y();
-                // rubberBand->setGeometry(QRect(selection.bottomRight(), QSize(width, height)));
-                // rubberBand->setGeometry(QRect(origin, QSize())
-            break;
-            case SW:
-                qDebug() << "move SW";
-                dx1 = event->pos().x() - selection.bottomLeft().x();
-                dy2 = event->pos().y() - selection.bottomLeft().y();
-            break;
-            case NE:
-                qDebug() << "move NE";
-                dx2 =  event->pos().x() - selection.topRight().x();
-                dy1 =  event->pos().y() - selection.topRight().y();
-            break;
-            case C:
+        if (clickOnSelection == C) {
+            // moving around the selection
                 // TODO: block the selection to the imageview border and only move again the selection when the mouse is again on the image view
-                // bool mouseOnPhoto = photo.getImageView().rect().contains(event->pos());
                 QPoint position = event->pos();
-                int dx = position.x() - mouseLastPosition.x();
-                int dy = position.y() - mouseLastPosition.y();
-                if ((selection.left() + dx >= 0) && (selection.right() + dx <= photo.getImageView().width()))
-                {
-                    dx1 += dx;
-                    dx2 += dx;
-                }
-                if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height()))
-                {
-                    dy1 += dy;
-                    dy2 += dy;
+                QImage view = photo.getImageView();
+                // qDebug() << "selection right" << selection.right();
+                // qDebug() << "view width" << view.width();
+                // qDebug() << "x" << position.x();
+                // qDebug() << "y" << position.y();
+                if (view.rect().contains(position)) {
+                    int dx = position.x() - mouseLastPosition.x();
+                    int dy = position.y() - mouseLastPosition.y();
+                    if ((selection.left() + dx >= 0) && (selection.right() + dx <= photo.getImageView().width() - 1))
+                    {
+                        dx1 += dx;
+                        dx2 += dx;
+                    }
+                    if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height() - 1))
+                    {
+                        dy1 += dy;
+                        dy2 += dy;
+                    }
+                } else {
+                    // (position.x() > view.width() && selection.right() < view.width() - 1) ||
+                    // (position.y() < 0 && selection.top() > 0)
                 }
                 mouseLastPosition = position;
-            break;
+                rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
+        } else {
+            // extending / shrinking the selection
+            switch (clickOnSelection) {
+                case N:
+                    dy1 = event->pos().y() - selection.top();
+                break;
+                case S:
+                    qDebug() << "move S";
+                    dy2 =  event->pos().y() - selection.bottom();
+                    qDebug() << "dy2" << dy2;
+                break;
+                case W:
+                    qDebug() << "move W";
+                    dx1 =  event->pos().x() - selection.left();
+                break;
+                case E:
+                    qDebug() << "move E";
+                    dx2 =  event->pos().x() - selection.right();
+                break;
+                case SE:
+                    qDebug() << "move SE";
+                    dx2 = event->pos().x() - selection.bottomRight().x();
+                    dy2 = event->pos().y() - selection.bottomRight().y();
+                break;
+                case NW:
+                    qDebug() << "move NW";
+                    dx1 =  event->pos().x() - selection.topLeft().x();
+                    dy1 =  event->pos().y() - selection.topLeft().y();
+                    // rubberBand->setGeometry(QRect(selection.bottomRight(), QSize(width, height)));
+                    // rubberBand->setGeometry(QRect(origin, QSize())
+                break;
+                case SW:
+                    qDebug() << "move SW";
+                    dx1 = event->pos().x() - selection.bottomLeft().x();
+                    dy2 = event->pos().y() - selection.bottomLeft().y();
+                break;
+                case NE:
+                    qDebug() << "move NE";
+                    dx2 =  event->pos().x() - selection.topRight().x();
+                    dy1 =  event->pos().y() - selection.topRight().y();
+                break;
+            }
+            // update the selection with the adjusted selection, but do not go outside of the image boundaries
+            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
         }
-        // update the selection with the adjusted selection, but do not go outside of the image boundaries
-        rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
         // qDebug() << "updating the selection";
     }
     else
     {
-        // qDebug() << "updating the cursor";
-        updateCursor(event, photo);
+    // qDebug() << "updating the cursor";
+    updateCursor(event, photo);
     }
 }
 
@@ -230,6 +243,40 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
     */
 }
 
+/**
+ * get the relative position of a point inside or around a rectangular area
+ */
+SelectionInstrument::Direction getCardinalDirection(QPoint point, QRect area)
+{
+    enum SelectionInstrument::Direction result = NONE;
+
+    if (area.contains(point))
+    {
+        result = C;
+    }
+    else
+    {
+        if (point.y() < area.top())
+        {
+            result = static_cast<Direction>(result | N);
+        }
+        else if (point.y() > area.bottom())
+        {
+            result = static_cast<Direction>(result | S);
+        }
+
+        if (point.x() < area.left())
+        {
+            result = static_cast<Direction>(result | W);
+        }
+        else if (point.x() > area.right())
+        {
+            result = static_cast<Direction>(result | E);
+        }
+
+    }
+    return result;
+}
 
 void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
 {
@@ -242,31 +289,7 @@ void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
         mouseOnSelection = NONE;
         if (selectionOuter.contains(event->pos()))
         {
-            if (selectionInner.contains(event->pos()))
-            {
-                mouseOnSelection = C;
-            }
-            else
-            {
-                if (event->pos().y() < selectionInner.top())
-                {
-                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | N);
-                }
-                else if (event->pos().y() > selectionInner.bottom())
-                {
-                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | S);
-                }
-
-                if (event->pos().x() < selectionInner.left())
-                {
-                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | W);
-                }
-                else if (event->pos().x() > selectionInner.right())
-                {
-                    mouseOnSelection = static_cast<Direction>(mouseOnSelection | E);
-                }
-
-            }
+            mouseOnSelection = getCardinalDirection(event->pos(), selectionInner);
             // qDebug() << "mouseOnSelection" << mouseOnSelection;
         }
     }
