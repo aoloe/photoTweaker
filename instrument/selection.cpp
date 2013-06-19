@@ -121,23 +121,21 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     if ((direction & N) &&  (selection.top() > view.rect().top()))
                     {
                         dy1 = view.rect().top() - selection.top(); 
-                        dy2 = dy1;
                     }
                     if ((direction & E) && (selection.right() < view.rect().right()))
                     {
-                        dx2 = view.rect().right() - selection.right(); 
-                        dx1 = dx2;
+                        dx1 = view.rect().right() - selection.right(); 
                     }
                     if ((direction & S) && (selection.bottom() < view.rect().bottom()))
                     {
                         dy1 = view.rect().bottom() - selection.bottom(); 
-                        dy2 = dy1;
                     }
                     if ((direction & W) && (selection.left() > view.rect().left()))
                     {
                         dx1 =  view.rect().left() - selection.left(); 
-                        dx2 = dx1;
                     }
+                    dy2 = dy1;
+                    dx2 = dx1;
                 }
                 mouseLastPosition = position;
                 rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
