@@ -201,7 +201,6 @@ void Photo::paintEvent(QPaintEvent *event)
 
 void Photo::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "Photo::resize()";
     updateImageView();
     QWidget::resizeEvent(event);
     if (DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)

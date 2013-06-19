@@ -51,7 +51,6 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 {
-    // qDebug() << "mouse pressed";
     if (mouseOnSelection == NONE)
     {
         origin = event->pos();
@@ -73,7 +72,6 @@ void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 
 void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
-    // qDebug() << "mouse moved";
     if (selectionCreating && rubberBand)
         rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos()).normalized()));
     else if (clickOnSelection != NONE)
@@ -99,7 +97,6 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         */
         if (clickOnSelection == C) {
             // moving around the selection
-                // TODO: block the selection to the imageview border and only move again the selection when the mouse is again on the image view
                 QPoint position = event->pos();
                 QImage view = photo.getImageView();
                 // qDebug() << "selection right" << selection.right();
@@ -120,8 +117,27 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                         dy2 += dy;
                     }
                 } else {
-                    // (position.x() > view.width() && selection.right() < view.width() - 1) ||
-                    // (position.y() < 0 && selection.top() > 0)
+                    Direction direction = getCardinalDirection(position, view.rect());
+                    if ((direction & N) &&  (selection.top() > view.rect().top()))
+                    {
+                        dy1 = view.rect().top() - selection.top(); 
+                        dy2 = dy1;
+                    }
+                    if ((direction & E) && (selection.right() < view.rect().right()))
+                    {
+                        dx2 = view.rect().right() - selection.right(); 
+                        dx1 = dx2;
+                    }
+                    if ((direction & S) && (selection.bottom() < view.rect().bottom()))
+                    {
+                        dy1 = view.rect().bottom() - selection.bottom(); 
+                        dy2 = dy1;
+                    }
+                    if ((direction & W) && (selection.left() > view.rect().left()))
+                    {
+                        dx1 =  view.rect().left() - selection.left(); 
+                        dx2 = dx1;
+                    }
                 }
                 mouseLastPosition = position;
                 rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
@@ -132,37 +148,27 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     dy1 = event->pos().y() - selection.top();
                 break;
                 case S:
-                    qDebug() << "move S";
                     dy2 =  event->pos().y() - selection.bottom();
-                    qDebug() << "dy2" << dy2;
                 break;
                 case W:
-                    qDebug() << "move W";
                     dx1 =  event->pos().x() - selection.left();
                 break;
                 case E:
-                    qDebug() << "move E";
                     dx2 =  event->pos().x() - selection.right();
                 break;
                 case SE:
-                    qDebug() << "move SE";
                     dx2 = event->pos().x() - selection.bottomRight().x();
                     dy2 = event->pos().y() - selection.bottomRight().y();
                 break;
                 case NW:
-                    qDebug() << "move NW";
                     dx1 =  event->pos().x() - selection.topLeft().x();
                     dy1 =  event->pos().y() - selection.topLeft().y();
-                    // rubberBand->setGeometry(QRect(selection.bottomRight(), QSize(width, height)));
-                    // rubberBand->setGeometry(QRect(origin, QSize())
                 break;
                 case SW:
-                    qDebug() << "move SW";
                     dx1 = event->pos().x() - selection.bottomLeft().x();
                     dy2 = event->pos().y() - selection.bottomLeft().y();
                 break;
                 case NE:
-                    qDebug() << "move NE";
                     dx2 =  event->pos().x() - selection.topRight().x();
                     dy1 =  event->pos().y() - selection.topRight().y();
                 break;
@@ -205,7 +211,6 @@ void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 
 void SelectionInstrument::clearSelection()
 {
-    qDebug() << "clear selection";
     selectionCreating = false;
     selection = QRect();
     if (rubberBand)
@@ -246,32 +251,32 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 /**
  * get the relative position of a point inside or around a rectangular area
  */
-SelectionInstrument::Direction getCardinalDirection(QPoint point, QRect area)
+SelectionInstrument::Direction SelectionInstrument::getCardinalDirection(QPoint point, QRect area)
 {
-    enum SelectionInstrument::Direction result = NONE;
+    enum SelectionInstrument::Direction result = SelectionInstrument::NONE;
 
     if (area.contains(point))
     {
-        result = C;
+        result = SelectionInstrument::C;
     }
     else
     {
         if (point.y() < area.top())
         {
-            result = static_cast<Direction>(result | N);
+            result = static_cast<Direction>(result | SelectionInstrument::N);
         }
         else if (point.y() > area.bottom())
         {
-            result = static_cast<Direction>(result | S);
+            result = static_cast<Direction>(result | SelectionInstrument::S);
         }
 
         if (point.x() < area.left())
         {
-            result = static_cast<Direction>(result | W);
+            result = static_cast<Direction>(result | SelectionInstrument::W);
         }
         else if (point.x() > area.right())
         {
-            result = static_cast<Direction>(result | E);
+            result = static_cast<Direction>(result | SelectionInstrument::E);
         }
 
     }
