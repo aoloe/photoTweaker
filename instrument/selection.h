@@ -57,7 +57,4 @@ private:
 
 };
 
-
-
-
 #endif // SELECTIONINSTRUMENT_H
