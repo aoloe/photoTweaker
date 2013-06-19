@@ -172,10 +172,17 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
                     dy1 =  event->pos().y() - selection.topRight().y();
                 break;
             }
+            if (event->pos().x() <= selection.left())
+            {
+                dx2 = 0;
+            }
+            if (event->pos().y() <= selection.top())
+            {
+                dy2 = 0;
+            }
             // update the selection with the adjusted selection, but do not go outside of the image boundaries
-            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)).normalized());
+            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
             // TODO: ensure that the selection is at least 1x1 and don't allow negative selections
-            rubberBand->setGeometry(
         }
         // qDebug() << "updating the selection";
     }
