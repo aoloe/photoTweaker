@@ -4,6 +4,9 @@
 #include "ui_photoTweaker.h"
 #include "photo.h"
 
+class QLabel;
+class QStatusBar;
+
 class Photo;
 // #include <Magick++.h>
 
@@ -21,8 +24,19 @@ public slots:
 	void open();
 	void save();
 	void show();
+	void setStatusSize(int width, int height);
+	void setStatusMouse(int x, int y);
+	void setStatusMouse();
+	void setStatusMessage(QString message);
+	void setTitle(QString title);
 
 private:
+    void initializeStatusBar();
+    QStatusBar* statusBar;
+    QLabel* statusBarSize;
+    QLabel* statusBarMouse;
+    QLabel* statusBarMessage;
+    void initializeToolBar();
 	QString filePath;
     Photo *photo;
 

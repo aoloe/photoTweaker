@@ -96,6 +96,12 @@ signals:
     void show();
     void sendCursorPosition(const QPoint&);
 
+    void setStatusSize(int width, int height);
+    void setStatusMouse(int x, int y);
+    void setStatusMouse();
+    void setStatusMessage(QString message);
+    void setWindowTitle(QString message);
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

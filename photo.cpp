@@ -27,6 +27,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
+#include <QFileInfo>
 
 #include "photo.h"
 #include "undocommand.h"
@@ -116,6 +117,7 @@ bool Photo::open(const QString filePath)
 {
     bool loaded = true;
     this->filePath = filePath;
+    emit setWindowTitle(QFileInfo(filePath).fileName());
     loaded = image.load(filePath);
     qDebug() << "loaded:" << loaded;
     if (loaded)
@@ -123,6 +125,7 @@ bool Photo::open(const QString filePath)
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         DataSingleton::Instance()->setInstrument(CURSOR);
         qDebug() << "opened file" << filePath;
+        emit setStatusSize(image.width(), image.height());
     }
     else
     {
@@ -250,6 +253,14 @@ void Photo::mouseMoveEvent(QMouseEvent *event)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
         instrumentHandler->mouseMoveEvent(event, *this);
+    }
+    if (image.rect().contains(event->pos()))
+    {
+        emit setStatusMouse(event->pos().x(), event->pos().y());
+    }
+    else
+    {
+        emit setStatusMouse();
     }
 }
 

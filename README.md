@@ -7,7 +7,6 @@
 - add an asterisk in the title bar if the file has been changed (or a selection is active)
 - on quit, ask [ok, cancel] if image isEdited (if not in script modus)
 - implement the undo
-- implement modifying the selection with the mouse
 - implement modifying the selection with the keyboard
 - add a sample effect
 - add some preferences
@@ -15,6 +14,7 @@
 - eventually, put a semi transparent mask on the part not selected
 - add a filter to auto white balance
 - show the image size and the selection size in a status bar (or in a tooltip?)
+- in the code rename "instrument" to "tool" or "plugin"
 
 #Goal
 
@@ -94,6 +94,10 @@ i'd like to create a gui which is focused on such a fast workflow.
 The toolbar will onyl have scale buttons... and one button for each available filter (like the white balance)
 The image is automatically cropped to the current selection when saving:  since you can only apply filters to the whole image, the only goal for selecting will be to crop.
 And if you start the application in "scripter mode" it will automatically save on quit, without asking anything.
+
+# The status bar
+
+
 
 #History
 
