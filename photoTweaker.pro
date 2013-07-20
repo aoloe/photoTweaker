@@ -25,11 +25,13 @@ SOURCES += main.cpp\
     datasingleton.cpp \
     undocommand.cpp \
     instrument/abstractinstrument.cpp \
+    instrument/selectionInstrument.cpp \
     instrument/selection.cpp \
     photo.cpp
 HEADERS += photoTweaker.h \
     datasingleton.h \
     undocommand.h \
     instrument/abstractinstrument.h \
+    instrument/selectionInstrument.h \
     instrument/selection.h \
     photo.h

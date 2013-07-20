@@ -36,6 +36,23 @@ void PhotoTweaker::initializeToolBar()
     // TODO: make it a setting where the toolbar is set (default left?)
     QToolBar* toolBar = new QToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar );
+
+    QAction *actionRotate = new QAction(tr("Rotate"), this);
+    // actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
+    actionRotate->setIcon(QIcon(":/media/icons/curve.png"));
+    connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(instumentsAct(bool)));
+    toolBar->addAction(actionRotate);
+/*
+
+    QAction *mCursorAction = new QAction(tr("Selection"), this);
+    mCursorAction->setCheckable(true);
+    mCursorAction->setIcon(QIcon(":/media/instruments-icons/cursor.png"));
+    connect(mCursorAction, SIGNAL(triggered(bool)), this, SLOT(instumentsAct(bool)));
+    mInstrumentsMenu->addAction(mCursorAction);
+    mInstrumentsActMap.insert(CURSOR, mCursorAction);
+*/
+
+
 }
 void PhotoTweaker::initializeStatusBar()
 {

@@ -6,6 +6,7 @@
 QT_BEGIN_NAMESPACE
 class QUndoStack;
 class Photo;
+class Selection;
 QT_END_NAMESPACE
 
 class QRubberBand;
@@ -25,6 +26,7 @@ protected:
     QPoint origin;
     QRubberBand* rubberBand;
     QRect selection; // selection in image coordinates
+    Selection* selection_o; // the selection entity
     bool selectionCreating;
     /*
     // TODO: find how avoid the static cast when doing the | in getCardinalDirection()
@@ -53,6 +55,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *event, Photo &photo);
     void resizeEvent(QResizeEvent *event, Photo &photo);
     void paintEvent(QPaintEvent *event, Photo &photo);
+    Direction abcd(QRect selection, QPoint pos);
     Direction getCardinalDirection(QPoint point, QRect area);
     void updateCursor(QMouseEvent *event, Photo &photo);
 

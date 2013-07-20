@@ -24,6 +24,7 @@
  */
 
 #include "instrument/abstractinstrument.h"
+#include "selectionInstrument.h"
 #include "selection.h"
 #include "../photo.h"
 #include "../undocommand.h"
@@ -37,6 +38,22 @@
 #include <QtGui/QPainterPath> // for painting the emi transparent background
 // #include <QtGui/QBrush> // for painting the emi transparent background
 
+/*
+void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
+void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
+void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
+void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
+void SelectionInstrument::clearSelection()
+void SelectionInstrument::paint(Photo &photo, bool, bool)
+void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
+void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
+
+
+
+
+SelectionInstrument::Direction SelectionInstrument::getCardinalDirection(QPoint point, QRect area)
+*/
+
 SelectionInstrument::SelectionInstrument(QObject *parent) :
     AbstractInstrument(parent)
 {
@@ -49,8 +66,38 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
     clickOnSelection = NONE;
 }
 
+// --> entity-control-boundary pattern
+
+SelectionInstrument::Direction SelectionInstrument::abcd(QRect selection, QPoint pos)
+{
+    enum Direction mouseOnSelection = NONE;
+    if (!selection.isEmpty())
+    {
+        QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
+        QRect selectionInner = selection.adjusted(3, 3, -3, -3);
+        if (selectionOuter.contains(pos))
+        {
+            mouseOnSelection = getCardinalDirection(pos, selectionInner);
+            // qDebug() << "mouseOnSelection" << mouseOnSelection;
+        }
+    }
+    return mouseOnSelection;
+}
+
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 {
+    // TODO: rename selection_o to selection and only define it there is actually a selection
+    selection_o = new Selection();
+    if (this->rubberBand != NULL)
+    {
+        selection_o->setSelection(this->rubberBand->geometry());
+    }
+    selection_o->detectActiveHandle(event->pos())
+
+    enum Direction mouseOnSelection = NONE;
+    mouseOnSelection = abcd(this->rubberBand == NULL ? QRect() : this->rubberBand->geometry(), event->pos());
+
+
     if (mouseOnSelection == NONE)
     {
         origin = event->pos();
@@ -73,7 +120,7 @@ void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
     if (selectionCreating && rubberBand)
-        rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos()).normalized()));
+        rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos())));
     else if (clickOnSelection != NONE)
     {
         // TODO: according to http://harmattan-dev.nokia.com/docs/platform-api-reference/xml/daily-docs/libqt4/qrect.html#coordinates we should use x() + width() and y() + height(), and avoid right() and bottom().
@@ -84,44 +131,44 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         int dy2 = 0;
         if (clickOnSelection == C) {
             // moving around the selection
-                QPoint position = event->pos();
-                QImage view = photo.getImageView();
-                if (view.rect().contains(position)) {
-                    int dx = position.x() - mouseLastPosition.x();
-                    int dy = position.y() - mouseLastPosition.y();
-                    if ((selection.left() + dx >= 0) && (selection.right() + dx <= photo.getImageView().width() - 1))
-                    {
-                        dx1 += dx;
-                        dx2 += dx;
-                    }
-                    if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height() - 1))
-                    {
-                        dy1 += dy;
-                        dy2 += dy;
-                    }
-                } else {
-                    Direction direction = getCardinalDirection(position, view.rect());
-                    if ((direction & N) &&  (selection.top() > view.rect().top()))
-                    {
-                        dy1 = view.rect().top() - selection.top(); 
-                    }
-                    else if ((direction & S) && (selection.bottom() < view.rect().bottom()))
-                    {
-                        dy1 = view.rect().bottom() - selection.bottom(); 
-                    }
-                    if ((direction & E) && (selection.right() < view.rect().right()))
-                    {
-                        dx1 = view.rect().right() - selection.right(); 
-                    }
-                    else if ((direction & W) && (selection.left() > view.rect().left()))
-                    {
-                        dx1 =  view.rect().left() - selection.left(); 
-                    }
-                    dy2 = dy1;
-                    dx2 = dx1;
+            QPoint position = event->pos();
+            QImage view = photo.getImageView();
+            if (view.rect().contains(position)) {
+                int dx = position.x() - mouseLastPosition.x();
+                int dy = position.y() - mouseLastPosition.y();
+                if ((selection.left() + dx >= 0) && (selection.right() + dx <= photo.getImageView().width() - 1))
+                {
+                    dx1 += dx;
+                    dx2 += dx;
                 }
-                mouseLastPosition = position;
-                rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
+                if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height() - 1))
+                {
+                    dy1 += dy;
+                    dy2 += dy;
+                }
+            } else {
+                Direction direction = getCardinalDirection(position, view.rect());
+                if ((direction & N) &&  (selection.top() > view.rect().top()))
+                {
+                    dy1 = view.rect().top() - selection.top(); 
+                }
+                else if ((direction & S) && (selection.bottom() < view.rect().bottom()))
+                {
+                    dy1 = view.rect().bottom() - selection.bottom(); 
+                }
+                if ((direction & E) && (selection.right() < view.rect().right()))
+                {
+                    dx1 = view.rect().right() - selection.right(); 
+                }
+                else if ((direction & W) && (selection.left() > view.rect().left()))
+                {
+                    dx1 =  view.rect().left() - selection.left(); 
+                }
+                dy2 = dy1;
+                dx2 = dx1;
+            }
+            mouseLastPosition = position;
+            rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
         } else {
             // extending / shrinking the selection
             switch (clickOnSelection) {

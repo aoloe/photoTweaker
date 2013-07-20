@@ -34,7 +34,7 @@
 #include "datasingleton.h"
 
 #include "instrument/abstractinstrument.h"
-#include "instrument/selection.h"
+#include "instrument/selectionInstrument.h"
 
 // #include "effect/gray.h"
 
