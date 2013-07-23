@@ -1,6 +1,7 @@
 // --- MAIN ---
 
 #include <QApplication>
+#include <QDebug>
 #include "photoTweaker.h"
 
 int main(int argc, char **argv)
@@ -11,6 +12,8 @@ int main(int argc, char **argv)
 	PhotoTweaker photoTweaker;
     if (argc == 2)
     {
+        qDebug() << "arg 0" << argv[0];
+        qDebug() << "arg 1" << argv[1];
         photoTweaker.setFilePath(argv[1]);   
     }
 	photoTweaker.run();

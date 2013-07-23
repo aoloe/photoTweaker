@@ -86,13 +86,16 @@ SelectionInstrument::Direction SelectionInstrument::abcd(QRect selection, QPoint
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 {
-    // TODO: rename selection_o to selection and only define it there is actually a selection
+    // TODO: rename selection_o to selection and only define if there is actually a selection
     selection_o = new Selection();
     if (this->rubberBand != NULL)
     {
         selection_o->setSelection(this->rubberBand->geometry());
     }
-    selection_o->detectActiveHandle(event->pos())
+    if (selection_o->isMouseInSelection(event->pos()))
+    {
+        selection_o->detectActiveHandle(event->pos());
+    }
 
     enum Direction mouseOnSelection = NONE;
     mouseOnSelection = abcd(this->rubberBand == NULL ? QRect() : this->rubberBand->geometry(), event->pos());

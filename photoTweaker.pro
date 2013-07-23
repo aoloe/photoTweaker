@@ -20,7 +20,8 @@ DEPENDPATH += .
 
 # Input
 FORMS += photoTweaker.ui
-SOURCES += main.cpp\
+SOURCES += \
+    main.cpp \
     photoTweaker.cpp \
     datasingleton.cpp \
     undocommand.cpp \
@@ -28,7 +29,8 @@ SOURCES += main.cpp\
     instrument/selectionInstrument.cpp \
     instrument/selection.cpp \
     photo.cpp
-HEADERS += photoTweaker.h \
+HEADERS += \
+    photoTweaker.h \
     datasingleton.h \
     undocommand.h \
     instrument/abstractinstrument.h \
