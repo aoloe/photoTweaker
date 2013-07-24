@@ -28,7 +28,10 @@ SOURCES += \
     instrument/abstractinstrument.cpp \
     instrument/selectionInstrument.cpp \
     instrument/selection.cpp \
-    photo.cpp
+    photo.cpp \
+    effect/abstracteffect.cpp \
+    effect/grayscale.cpp \
+    effect/rotation.cpp
 HEADERS += \
     photoTweaker.h \
     datasingleton.h \
@@ -36,4 +39,10 @@ HEADERS += \
     instrument/abstractinstrument.h \
     instrument/selectionInstrument.h \
     instrument/selection.h \
-    photo.h
+    photo.h \
+    effect/abstracteffect.h \
+    effect/grayscale.h \
+    effect/rotation.h
+
+RESOURCES += \
+    resources.qrc
