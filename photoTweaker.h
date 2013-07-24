@@ -19,7 +19,12 @@ public:
 	PhotoTweaker();
     void setFilePath(QString filePath) {this->filePath = filePath;}
 	void run();
-	
+
+    static const int EFFECT_COUNT;
+    static const int EFFECT_NONE;
+    static const int EFFECT_ROTATION;
+    static const int EFFECT_GRAYSCALE;
+
 public slots:
 	void open();
 	void save();
@@ -29,8 +34,10 @@ public slots:
 	void setStatusMouse();
 	void setStatusMessage(QString message);
 	void setTitle(QString title);
+    void doEffect(bool state);
 
 private:
+
     void initializeStatusBar();
     QStatusBar* statusBar;
     QLabel* statusBarSize;
@@ -38,8 +45,9 @@ private:
     QLabel* statusBarMessage;
     void initializeToolBar();
 	QString filePath;
-    Photo *photo;
+    Photo* photo;
 
+    QVector<QAction*> effectActions;
 	// Magick++ Objects
 	QByteArray 	imgData;
 	QPixmap	pixmap;
