@@ -5,8 +5,20 @@
 #include <QToolBar>
 #include <QLabel>
 #include <QDebug>
+#include <QAction> //insert by Katrin
 
 #include "photo.h"
+#include "effect/grayscale.h"
+#include "effect/rotation.h"
+
+const int PhotoTweaker::EFFECT_COUNT = 2;
+const int PhotoTweaker::EFFECT_NONE = -1; // TODO: is it needed? (ale/20130724)
+const int PhotoTweaker::EFFECT_ROTATION = 0;
+const int PhotoTweaker::EFFECT_GRAYSCALE = 1;
+
+/**
+ * @brief PhotoTweaker::PhotoTweaker manages the application's main window
+ */
 
 PhotoTweaker::PhotoTweaker()
 {
@@ -31,29 +43,32 @@ PhotoTweaker::PhotoTweaker()
     connect(photo, SIGNAL(setStatusMessage(QString)), this, SLOT(setStatusMessage(QString)));
     connect(photo, SIGNAL(setWindowTitle(QString)), this, SLOT(setTitle(QString)));
 }
+
+/**
+ * @brief PhotoTweaker::initializeToolBar adds the effect buttons to the toolbar
+ * and creates a list of effet actions.
+ */
 void PhotoTweaker::initializeToolBar()
 {
     // TODO: make it a setting where the toolbar is set (default left?)
     QToolBar* toolBar = new QToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar );
 
+    effectActions.fill(0, (int)EFFECT_COUNT);
+
     QAction *actionRotate = new QAction(tr("Rotate"), this);
-    // actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
-    actionRotate->setIcon(QIcon(":/media/icons/curve.png"));
-    connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(instumentsAct(bool)));
+    actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
+    connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
     toolBar->addAction(actionRotate);
-/*
+    effectActions[EFFECT_ROTATION] = actionRotate;
 
-    QAction *mCursorAction = new QAction(tr("Selection"), this);
-    mCursorAction->setCheckable(true);
-    mCursorAction->setIcon(QIcon(":/media/instruments-icons/cursor.png"));
-    connect(mCursorAction, SIGNAL(triggered(bool)), this, SLOT(instumentsAct(bool)));
-    mInstrumentsMenu->addAction(mCursorAction);
-    mInstrumentsActMap.insert(CURSOR, mCursorAction);
-*/
-
-
+    QAction *actionGrayscale= new QAction(tr("Gray"), this);
+    actionGrayscale->setIcon(QIcon(":/media/icons/grayscale.png"));
+    connect(actionGrayscale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
+    toolBar->addAction(actionGrayscale);
+    effectActions[EFFECT_GRAYSCALE] = actionGrayscale;
 }
+
 void PhotoTweaker::initializeStatusBar()
 {
     statusBar = new QStatusBar();
@@ -72,7 +87,6 @@ void PhotoTweaker::initializeStatusBar()
 
 }
 
-
 void PhotoTweaker::run()
 {
     QMainWindow::show();
@@ -82,6 +96,46 @@ void PhotoTweaker::run()
         photo->open(filePath);
         photo->update();
     }
+}
+
+/**
+ * @brief PhotoTweaker::effectsAct
+ * @param bool state wether the button is down or up
+ */
+void PhotoTweaker::doEffect(bool state)
+{
+     QAction *currentAction = static_cast<QAction*>(sender());
+     if (currentAction == effectActions[EFFECT_ROTATION])
+     {
+         EffectRotation* effect = new EffectRotation(this);
+         effect->apply(*photo);
+     }
+     else if (currentAction == effectActions[EFFECT_GRAYSCALE])
+     {
+         EffectGrayscale* effect = new EffectGrayscale(this);
+         effect->apply(*photo);
+     }
+
+/*
+        TODO: is this an "abstract" way to call the effects?
+            if(currentAction == mInstrumentsActMap[COLORPICKER] && !mPrevInstrumentSetted)
+            {
+                DataSingleton::Instance()->setPreviousInstrument(DataSingleton::Instance()->getInstrument());
+                mPrevInstrumentSetted = true;
+            }
+            setAllInstrumentsUnchecked(currentAction);
+            currentAction->setChecked(true);
+            DataSingleton::Instance()->setInstrument(mInstrumentsActMap.key(currentAction));
+            emit sendInstrumentChecked(mInstrumentsActMap.key(currentAction));
+        }
+        else
+        {
+            setAllInstrumentsUnchecked(NULL);
+            DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
+            emit sendInstrumentChecked(NONE_INSTRUMENT);
+            if(currentAction == mInstrumentsActMap[CURSOR])
+                DataSingleton::Instance()->setPreviousInstrument(mInstrumentsActMap.key(currentAction));
+*/
 }
 
 void PhotoTweaker::setStatusSize(int width, int height)

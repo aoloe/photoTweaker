@@ -31,8 +31,3 @@ AbstractEffect::AbstractEffect(QObject *parent) :
     QObject(parent)
 {
 }
-
-void AbstractEffect::makeUndoCommand(Photo &photo)
-{
-    photo.pushUndoCommand(new UndoCommand(photo.getImage(), photo));
-}
