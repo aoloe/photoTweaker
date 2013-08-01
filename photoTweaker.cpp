@@ -10,11 +10,14 @@
 #include "photo.h"
 #include "effect/grayscale.h"
 #include "effect/rotation.h"
+#include "effect/scale.h"
 
-const int PhotoTweaker::EFFECT_COUNT = 2;
+
+const int PhotoTweaker::EFFECT_COUNT = 3;
 const int PhotoTweaker::EFFECT_NONE = -1; // TODO: is it needed? (ale/20130724)
 const int PhotoTweaker::EFFECT_ROTATION = 0;
 const int PhotoTweaker::EFFECT_GRAYSCALE = 1;
+const int PhotoTweaker::EFFECT_SCALE = 2;
 
 /**
  * @brief PhotoTweaker::PhotoTweaker manages the application's main window
@@ -67,6 +70,12 @@ void PhotoTweaker::initializeToolBar()
     connect(actionGrayscale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
     toolBar->addAction(actionGrayscale);
     effectActions[EFFECT_GRAYSCALE] = actionGrayscale;
+
+    QAction *actionScale= new QAction(tr("Scale"), this);
+    actionScale->setIcon(QIcon(":/media/icons/scale.png"));
+    connect(actionScale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
+    toolBar->addAction(actionScale);
+    effectActions[EFFECT_SCALE] = actionScale;
 }
 
 void PhotoTweaker::initializeStatusBar()
@@ -113,6 +122,11 @@ void PhotoTweaker::doEffect(bool state)
      else if (currentAction == effectActions[EFFECT_GRAYSCALE])
      {
          EffectGrayscale* effect = new EffectGrayscale(this);
+         effect->apply(*photo);
+     }
+     else if (currentAction == effectActions[EFFECT_SCALE])
+     {
+         EffectScale* effect = new EffectScale(this);
          effect->apply(*photo);
      }
 

@@ -152,7 +152,17 @@ void Photo::save()
             image.copy(instrument->getSelection()).save(filePath);
         }
     }
+    /**
+     * TODO: save (actionInstruments and) actionEvent
+     */
+    /* SCALE:
+                mPImageArea->setImage(mPImageArea->getImage()->scaled(resizeDialog.getNewSize()));
+                mPImageArea->resize(mPImageArea->getImage()->rect().right() + 6,
+                                    mPImageArea->getImage()->rect().bottom() + 6);
+                mPImageArea->setEdited(true);
+                mPImageArea->clearSelection();
 
+    */
     isEdited = false;
 }
 
@@ -186,6 +196,7 @@ void Photo::updateImageView()
     }
     viewScale = (float) imageView.width() / (float) image.width();
     update();
+    emit setStatusSize(image.width(), image.height());
 }
 
 void Photo::paintEvent(QPaintEvent *event)

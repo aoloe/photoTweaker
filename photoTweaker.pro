@@ -31,7 +31,8 @@ SOURCES += \
     photo.cpp \
     effect/abstracteffect.cpp \
     effect/grayscale.cpp \
-    effect/rotation.cpp
+    effect/rotation.cpp \
+    effect/scale.cpp
 HEADERS += \
     photoTweaker.h \
     datasingleton.h \
@@ -42,7 +43,8 @@ HEADERS += \
     photo.h \
     effect/abstracteffect.h \
     effect/grayscale.h \
-    effect/rotation.h
+    effect/rotation.h \
+    effect/scale.h
 
 RESOURCES += \
     resources.qrc

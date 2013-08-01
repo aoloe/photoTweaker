@@ -230,9 +230,10 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
     // qDebug() << "mouse released";
     selectionCreating = false;
     QRect selection = rubberBand->geometry();
-    
-    this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
-
+    if (viewScale != 0)
+    {
+        this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
+    }
     mouseOnSelection = NONE;
     clickOnSelection = NONE;
 
