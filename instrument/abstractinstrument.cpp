@@ -31,8 +31,3 @@ AbstractInstrument::AbstractInstrument(QObject *parent) :
     QObject(parent)
 {
 }
-
-void AbstractInstrument::makeUndoCommand(Photo &photo)
-{
-    photo.undo(new UndoCommand(photo.getImagePointer(), photo));
-}

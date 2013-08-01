@@ -6,6 +6,7 @@
 
 class QLabel;
 class QStatusBar;
+class QUndoGroup;
 
 class Photo;
 // #include <Magick++.h>
@@ -28,6 +29,7 @@ public:
 public slots:
 	void open();
 	void save();
+	void preferences();
 	void show();
 	void setStatusSize(int width, int height);
 	void setStatusMouse(int x, int y);
@@ -44,6 +46,13 @@ private:
     QLabel* statusBarMouse;
     QLabel* statusBarMessage;
     void initializeToolBar();
+    void initializeMenu();
+
+    QAction *actionFileOpen, *actionFileSave, *actionFileQuit, 
+    *actionEditUndo, *actionEditRedo, *actionEditPreferences;
+
+    QUndoGroup *undoGroup;
+
 	QString filePath;
     Photo* photo;
 

@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QUndoStack;
+class QUndoGroup;
 class UndoCommand;
 
 class AbstractInstrument;
@@ -39,6 +40,7 @@ public:
 
 
     inline void setEdited(bool flag) { isEdited = flag; }
+    inline void setEdited() { isEdited = true; }
     inline bool getEdited() { return isEdited; }
 
     void resize();
@@ -61,7 +63,7 @@ public:
      * @brief Push current image to undo stack.
      *
      */
-    void undo(UndoCommand *command); // pushUndoCommand() in ImageArea
+    void addUndoInformation();
 
 public:
     static const int INSTRUMENTS_COUNT;
@@ -77,7 +79,7 @@ public slots:
 private:
     QImage image; // the original image, as loaded and as it will be saved
     QImage imageView; // the image resized for viewing
-    float viewScale;
+    qreal viewScale;
     QString filePath;
     bool isEdited;
     QPixmap pixmap;
@@ -90,7 +92,6 @@ private:
     AbstractEffect *effectHandler;
 
     inline void emitShow() { emit show(); }
-
 
 signals:
     void show();

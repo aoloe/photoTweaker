@@ -29,6 +29,8 @@
 #include <QtGui/QPainter>
 #include <QFileInfo>
 
+#include <QUndoStack>
+
 #include "photo.h"
 #include "undocommand.h"
 #include "datasingleton.h"
@@ -57,9 +59,7 @@ Photo::Photo()
     isEdited = false;
 
     undoStack = new QUndoStack(this);
-    undoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
-
-
+    undoStack->setUndoLimit(1); // by design, we only support one undo step
 
     SelectionInstrument *selectionInstrument = new SelectionInstrument(this);
     // connect(instrumentSelection, SIGNAL(sendEnableCropAction(bool)), this, SIGNAL(sendEnableCropAction(bool)));
@@ -145,11 +145,22 @@ void Photo::save()
     if(!filePath.isEmpty())
     {
         SelectionInstrument *instrument = static_cast <SelectionInstrument*> (instrumentsHandlers.at(CURSOR));
+        qDebug() << "isSelection" << instrument->isSelection();
         if (isEdited || instrument->isSelection())
         {
             qDebug() << "saving selection:" << instrument->getSelection();
             qDebug() << "filePath:" << filePath;
             image.copy(instrument->getSelection()).save(filePath);
+
+            /*
+            // TODO: implement the following abstraction
+            // TODO: how to define an order of execution (crop before size!)
+            foreach instrument in instrumentsHandlers:
+                instrument->applyOnSave(image)
+            foreach effect in effectsHandlers:
+                effect->applyOnSave(image)
+            image.save(filePath)
+            */
         }
     }
 
@@ -274,8 +285,11 @@ void Photo::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void Photo::undo(UndoCommand *command)
+void Photo::addUndoInformation()
 {
+    UndoCommand *command = new UndoCommand(getImage(), *this);
+    undoStack->push(command);
+
 }
 
 void Photo::restoreCursor()

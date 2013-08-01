@@ -10,7 +10,7 @@ AbstractEffect(parent)
 
 void EffectGrayscale::apply(Photo &photo)
 {
-
+    photo.addUndoInformation();
     // photo.clearSelection();
     // makeUndoCommand(imageArea);
     QImage image = photo.getImage();
@@ -27,7 +27,7 @@ void EffectGrayscale::apply(Photo &photo)
             image.setPixel(i, y, pixel);
         }
     }
-    // photo.setEdited(true);
+    photo.setEdited(true);
     photo.setImage(image);
     photo.updateImageView();
 

@@ -39,7 +39,7 @@
 class UndoCommand : public QUndoCommand
 {
 public:
-    UndoCommand(const QImage* image, Photo &photo, QUndoCommand *parent = 0);
+    UndoCommand(const QImage image, Photo &photo, QUndoCommand *parent = 0);
 
     virtual void undo();
     virtual void redo();

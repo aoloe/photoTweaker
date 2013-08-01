@@ -34,227 +34,112 @@
 #include <QtGui/QPainter>
 #include <QtGui/QApplication>
 #include <QtGui/QRubberBand>
-#include <QtGui/QWidget> // for painting the emi transparent background
-#include <QtGui/QPainterPath> // for painting the emi transparent background
-// #include <QtGui/QBrush> // for painting the emi transparent background
-
-/*
-void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
-void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
-void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
-void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
-void SelectionInstrument::clearSelection()
-void SelectionInstrument::paint(Photo &photo, bool, bool)
-void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
-void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
-
-
-
-
-SelectionInstrument::Direction SelectionInstrument::getCardinalDirection(QPoint point, QRect area)
-*/
+#include <QtGui/QWidget> // for painting the semi-transparent background
+#include <QtGui/QPainterPath> // for painting the semi-transparent background
+// #include <QtGui/QBrush> // for painting the semi-transparent background
 
 SelectionInstrument::SelectionInstrument(QObject *parent) :
     AbstractInstrument(parent)
 {
     rubberBand = 0;
-    selection = QRect();
-    viewScale = 0.0;
-    selectionCreating = false;
-    mouseLastPosition = QPoint(0,0);
-    mouseOnSelection = NONE;
-    clickOnSelection = NONE;
+    selection_o = 0;
 }
 
 // --> entity-control-boundary pattern
 
-SelectionInstrument::Direction SelectionInstrument::abcd(QRect selection, QPoint pos)
+void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
 {
-    enum Direction mouseOnSelection = NONE;
-    if (!selection.isEmpty())
-    {
-        QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
-        QRect selectionInner = selection.adjusted(3, 3, -3, -3);
-        if (selectionOuter.contains(pos))
-        {
-            mouseOnSelection = getCardinalDirection(pos, selectionInner);
-            // qDebug() << "mouseOnSelection" << mouseOnSelection;
-        }
-    }
-    return mouseOnSelection;
+    // TODO: rename selection_o to selection
+    selection_o = new Selection();
+    selection_o->setImageArea(photo.getImageView().rect());
+    selection_o->setMousePosition(origin); // necessary to calculate C movements
+    selection_o->setOrigin(origin);
+    selection_o->setActiveHandleCreation();
+    rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
 }
+
+void SelectionInstrument::destructSelection()
+{
+    if (selection_o != NULL)
+    {
+        selection_o = NULL; // TODO: check if we should free the object's memory (ale/20130726)
+        rubberBand->hide(); // TODO: check if necessary
+        rubberBand = NULL;
+    }
+}
+
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 {
-    // TODO: rename selection_o to selection and only define if there is actually a selection
-    selection_o = new Selection();
-    if (this->rubberBand != NULL)
+    if (selection_o == NULL)
     {
-        selection_o->setSelection(this->rubberBand->geometry());
-    }
-    if (selection_o->isMouseInSelection(event->pos()))
-    {
-        selection_o->detectActiveHandle(event->pos());
-    }
-
-    enum Direction mouseOnSelection = NONE;
-    mouseOnSelection = abcd(this->rubberBand == NULL ? QRect() : this->rubberBand->geometry(), event->pos());
-
-
-    if (mouseOnSelection == NONE)
-    {
-        origin = event->pos();
-        if (!rubberBand)
-            rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
-        rubberBand->setGeometry(QRect(origin, QSize()));
-        rubberBand->show();
-        selectionCreating = true;
+        createSelection(event->pos(), photo);
     }
     else
     {
-        clickOnSelection = mouseOnSelection;
-        if (clickOnSelection == C)
+        selection_o->setMousePosition(event->pos()); // necessary to calculate C movements
+        if (selection_o->isMouseInSelection(event->pos()))
         {
-            mouseLastPosition = event->pos();
+            selection_o->detectActiveHandle(event->pos());
+        } 
+        else
+        {
+            selection_o->setOrigin(event->pos());
+            selection_o->setSize();
+            selection_o->setActiveHandleCreation();
+            rubberBand->setGeometry(QRect());
         }
     }
 }
 
 void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
-    if (selectionCreating && rubberBand)
-        rubberBand->setGeometry(photo.getImageView().rect().intersected(QRect(origin, event->pos())));
-    else if (clickOnSelection != NONE)
+
+    if (selection_o != NULL)
     {
-        // TODO: according to http://harmattan-dev.nokia.com/docs/platform-api-reference/xml/daily-docs/libqt4/qrect.html#coordinates we should use x() + width() and y() + height(), and avoid right() and bottom().
-        QRect selection = rubberBand->geometry();
-        int dx1 = 0;
-        int dx2 = 0;
-        int dy1 = 0;
-        int dy2 = 0;
-        if (clickOnSelection == C) {
-            // moving around the selection
-            QPoint position = event->pos();
-            QImage view = photo.getImageView();
-            if (view.rect().contains(position)) {
-                int dx = position.x() - mouseLastPosition.x();
-                int dy = position.y() - mouseLastPosition.y();
-                if ((selection.left() + dx >= 0) && (selection.right() + dx <= photo.getImageView().width() - 1))
-                {
-                    dx1 += dx;
-                    dx2 += dx;
-                }
-                if ((selection.top() + dy >= 0) && (selection.bottom() + dy <= photo.getImageView().height() - 1))
-                {
-                    dy1 += dy;
-                    dy2 += dy;
-                }
-            } else {
-                Direction direction = getCardinalDirection(position, view.rect());
-                if ((direction & N) &&  (selection.top() > view.rect().top()))
-                {
-                    dy1 = view.rect().top() - selection.top(); 
-                }
-                else if ((direction & S) && (selection.bottom() < view.rect().bottom()))
-                {
-                    dy1 = view.rect().bottom() - selection.bottom(); 
-                }
-                if ((direction & E) && (selection.right() < view.rect().right()))
-                {
-                    dx1 = view.rect().right() - selection.right(); 
-                }
-                else if ((direction & W) && (selection.left() > view.rect().left()))
-                {
-                    dx1 =  view.rect().left() - selection.left(); 
-                }
-                dy2 = dy1;
-                dx2 = dx1;
-            }
-            mouseLastPosition = position;
-            rubberBand->setGeometry(selection.adjusted(dx1, dy1, dx2, dy2));
-        } else {
-            // extending / shrinking the selection
-            switch (clickOnSelection) {
-                case N:
-                    dy1 = event->pos().y() - selection.top();
-                break;
-                case S:
-                    dy2 =  event->pos().y() - selection.bottom();
-                break;
-                case W:
-                    dx1 =  event->pos().x() - selection.left();
-                break;
-                case E:
-                    dx2 =  event->pos().x() - selection.right();
-                break;
-                case SE:
-                    dx2 = event->pos().x() - selection.bottomRight().x();
-                    dy2 = event->pos().y() - selection.bottomRight().y();
-                break;
-                case NW:
-                    dx1 =  event->pos().x() - selection.topLeft().x();
-                    dy1 =  event->pos().y() - selection.topLeft().y();
-                break;
-                case SW:
-                    dx1 = event->pos().x() - selection.bottomLeft().x();
-                    dy2 = event->pos().y() - selection.bottomLeft().y();
-                break;
-                case NE:
-                    dx2 =  event->pos().x() - selection.topRight().x();
-                    dy1 =  event->pos().y() - selection.topRight().y();
-                break;
-            }
-            // ensure that the selection is at least 1x1 and don't allow negative selections
-            if (event->pos().x() <= selection.left())
-            {
-                dx2 = 0;
-            }
-            if (event->pos().y() <= selection.top())
-            {
-                dy2 = 0;
-            }
-            // update the selection with the adjusted selection, but do not go outside of the image boundaries
-            rubberBand->setGeometry(photo.getImageView().rect().intersected(selection.adjusted(dx1, dy1, dx2, dy2)));
+        if (selection_o->hasActiveHandle())
+        {
+            selection_o->calculateArea(event->pos());
+            selection_o->setMousePosition(event->pos()); // necessary to calculate C movements
+            qDebug() << "getArea" << selection_o->getArea();
+            rubberBand->setGeometry(selection_o->getArea()); // TODO: or selection_o->draw()?
+            rubberBand->show();
         }
-        // qDebug() << "updating the selection";
-    }
-    else
-    {
-    // qDebug() << "updating the cursor";
-    updateCursor(event, photo);
+        updateCursor(event, photo);
     }
 }
 
 void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 {
-    // qDebug() << "mouse released";
-    selectionCreating = false;
-    QRect selection = rubberBand->geometry();
-    
-    this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
+    // this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
 
-    mouseOnSelection = NONE;
-    clickOnSelection = NONE;
-
+    if (selection_o->isEmpty())
+    {
+        destructSelection();
+    }
+    else
+    {
+        selection_o->releaseActiveHandle();
+    }
     updateCursor(event, photo);
 }
 
 void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 {
-    if (!selection.isEmpty())
+    if (selection_o != NULL)
     {
-        QRect selection = QRect(this->selection.topLeft() * viewScale, this->selection.size() * viewScale);
-        // qDebug() << "new selection:" << selection;
-        rubberBand->setGeometry(selection);
+        selection_o->setImageArea(photo.getImageView().rect());
+        selection_o->resize(viewScale);
+        rubberBand->setGeometry(selection_o->getArea()); // TODO: or selection_o->draw()?
     }
 }
 
+/**
+ * called by Photo when opening a new file
+ */
 void SelectionInstrument::clearSelection()
 {
-    selectionCreating = false;
-    selection = QRect();
-    if (rubberBand)
-        rubberBand->hide();
+    destructSelection();
 }
 
 void SelectionInstrument::paint(Photo &photo, bool, bool)
@@ -289,73 +174,37 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 }
 
 /**
- * get the relative position of a point inside or around a rectangular area
+ * TODO: probably, if other instruments are created (or some effects want to set a cursor) this method
+ * will overwrite the value of the cursor: find a better way to do it!
  */
-SelectionInstrument::Direction SelectionInstrument::getCardinalDirection(QPoint point, QRect area)
-{
-    enum SelectionInstrument::Direction result = SelectionInstrument::NONE;
-
-    if (area.contains(point))
-    {
-        result = SelectionInstrument::C;
-    }
-    else
-    {
-        if (point.y() < area.top())
-        {
-            result = static_cast<Direction>(result | SelectionInstrument::N);
-        }
-        else if (point.y() > area.bottom())
-        {
-            result = static_cast<Direction>(result | SelectionInstrument::S);
-        }
-
-        if (point.x() < area.left())
-        {
-            result = static_cast<Direction>(result | SelectionInstrument::W);
-        }
-        else if (point.x() > area.right())
-        {
-            result = static_cast<Direction>(result | SelectionInstrument::E);
-        }
-
-    }
-    return result;
-}
-
 void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
 {
-    // qDebug() << "update cursor";
-    if (!selection.isEmpty())
+    Selection::Direction handle = Selection::NONE;
+    if (selection_o != NULL)
     {
-        const QRect selection = this->rubberBand->geometry();
-        QRect selectionOuter = selection.adjusted(-6, -6, 6, 6);
-        QRect selectionInner = selection.adjusted(3, 3, -3, -3);
-        mouseOnSelection = NONE;
-        if (selectionOuter.contains(event->pos()))
+        if (selection_o->isMouseInSelection(event->pos()))
         {
-            mouseOnSelection = getCardinalDirection(event->pos(), selectionInner);
-            // qDebug() << "mouseOnSelection" << mouseOnSelection;
+            handle = selection_o->getActiveHandle(event->pos());
         }
     }
-    switch (mouseOnSelection) {
-        case N:
-        case S:
+    switch (handle) {
+        case Selection::N:
+        case Selection::S:
             photo.setCursor(Qt::SizeVerCursor);
         break;
-        case W:
-        case E:
+        case Selection::W:
+        case Selection::E:
             photo.setCursor(Qt::SizeHorCursor);
         break;
-        case SW:
-        case NE:
+        case Selection::SW:
+        case Selection::NE:
             photo.setCursor(Qt::SizeBDiagCursor);
         break;
-        case SE:
-        case NW:
+        case Selection::SE:
+        case Selection::NW:
             photo.setCursor(Qt::SizeFDiagCursor);
         break;
-        case C:
+        case Selection::INNER:
             photo.setCursor(Qt::SizeAllCursor);
         break;
         default:

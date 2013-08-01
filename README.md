@@ -8,27 +8,44 @@
 - on quit, ask [ok, cancel] if image isEdited (if not in script modus)
 - implement the undo
 - implement modifying the selection with the keyboard
-- add a sample effect
 - add some preferences
 - add an about / help menu
 - eventually, put a semi transparent mask on the part not selected
 - add a filter to auto white balance
 - show the image size and the selection size in a status bar (or in a tooltip?)
 - in the code rename "instrument" to "tool" or "plugin"
+- ESC to stop selection changes and to release current selection (or is undo enough?)
+
+
+for version 1.0 we have to do:
+- everything implemented works correctly.
+- scale picture
+- (white balance)
+- settings + variable number of buttons per effect / plugin
+- undo (1 step)
+- save on quit option (script mode)
+- help / about menu entry
+
+further taks:
+- implement the effects and instruments as plugin?
+- make it testable and implement tests
 
 #Goal
 
-A simple photo "tweaker" allowing to fast crop and resize an image and (eventually) apply a bunch of predefined filter.
+A simple photo "tweaker" allowing to fast crop and resize an image and (eventually) apply a bunch of predefined filter. PhotoTweaker is thought as an interactive step inside of a workflow.
 
-This is not an image editor.
+This is not -- and never will be -- a full fledged image editor.
 
+Applying effects should not trigger any dialog. Settings for the effects can be defined in the preferences and effects may have several button, one for each defined set of values.
+
+## Features
 - crop
 - canvas resize
-- apply predefined filter
+- apply predefined filters
   - auto white
   - vintage
 - one picture open per session
-- undo
+- one step undo
 - effects are always on the full image (except red eyes?)
 - expand the selection wotj keys
 - rotate in 90° steps
@@ -36,14 +53,15 @@ This is not an image editor.
 - scripting mode (by parameter):
   - "save" and "save as" also quit the program.
   - on quit the filename is returned for further processing.
-  - if a filename is passed as parameter, "open" is not available.
+  - a filename must be passed as parameter and "open" is not available.
 
-Maybe:
-- offer a way to open directly the image in gimp (or any other image editor)
+## Possible future features
+- offer a way to open directly the image in gimp (or any other image editor).
 - eventually read the image from standard IO (not the filename) and output it to standard IO; but: does it make sense?
+- a way to trigger ImageMagick filters.
 
-No:
-- zoom: always fills (proportions kept) the window,
+## Features that are unlikely to be 
+- Zoom: the only way to zoom is to change the window size. If you need a real zoom tool, you should use a real image editor.
 
 Inspired by
 - https://github.com/Gr1N/EasyPaint
@@ -52,7 +70,6 @@ Inspired by
 
 Possible inspirations:
 - http://cropper.codeplex.com/
-- http://code.google.com/p/imageclipper/
 - http://code.google.com/p/imageclipper/
 
 #Thanks to

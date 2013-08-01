@@ -1,7 +1,7 @@
 /*
- * This source file is part of EasyPaint.
+ * This source file is part of photoTweaker.
  *
- * Copyright (c) 2012 EasyPaint <https://github.com/Gr1N/EasyPaint>
+ * Copyright (c) 2012 Ale Rimoldi <https://github.com/aoloe/photoTweaker>
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -25,8 +25,8 @@
 
 #include "undocommand.h"
 
-UndoCommand::UndoCommand(const QImage *image, Photo &pPhoto, QUndoCommand *parent)
-    : QUndoCommand(parent), prevImage(*image), photo(pPhoto)
+UndoCommand::UndoCommand(const QImage image, Photo &pPhoto, QUndoCommand *parent)
+    : QUndoCommand(parent), prevImage(image), photo(pPhoto)
 {
     currImage = prevImage;
 }
@@ -37,12 +37,14 @@ void UndoCommand::undo()
     currImage = photo.getImage();
     photo.setImage(prevImage);
     photo.update();
-    photo.saveImageChanges();
+    photo.updateImageView();
+    // photo.saveImageChanges();
 }
 
 void UndoCommand::redo()
 {
     photo.setImage(currImage);
     photo.update();
-    photo.saveImageChanges();
+    photo.updateImageView();
+    // photo.saveImageChanges();
 }

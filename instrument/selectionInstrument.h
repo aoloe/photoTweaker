@@ -2,11 +2,11 @@
 #define SELECTIONINSTRUMENT_H
 
 #include "abstractinstrument.h"
+#include "selection.h"
 
 QT_BEGIN_NAMESPACE
 class QUndoStack;
 class Photo;
-class Selection;
 QT_END_NAMESPACE
 
 class QRubberBand;
@@ -17,9 +17,11 @@ class SelectionInstrument : public AbstractInstrument
 
 public:
     explicit SelectionInstrument(QObject *parent = 0);
+    void createSelection(QPoint origin, Photo &photo);
+    void destructSelection();
     void clearSelection();
-    QRect getSelection() {return selection;} // return the selection in image coordinates
-    bool isSelection() {return !selection.isEmpty();}
+    QRect getSelection() {return selection_o->getArea();} // return the selection in image coordinates
+    bool isSelection() {return (selection_o != NULL) && (!selection_o->isEmpty());}
 
 protected:
     void paint(Photo &photo, bool = false, bool = false);

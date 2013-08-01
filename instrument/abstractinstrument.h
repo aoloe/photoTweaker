@@ -49,27 +49,19 @@ public:
     virtual void mouseReleaseEvent(QMouseEvent *event, Photo &photo) = 0;
     virtual void paintEvent(QPaintEvent *event, Photo &photo) = 0;
 
-    void setViewScale(float scale) {viewScale = scale;}
+    void setViewScale(qreal scale) {viewScale = scale;}
 
     virtual void resizeEvent(QResizeEvent *event, Photo &photo) = 0;
     
 signals:
     
 protected:
-    float viewScale;
+    qreal viewScale;
 
     QPoint startPoint, endPoint; /**< Point for events. */
     QImage imageCopy; /**< Image for storing copy of current image on photo, needed for some instruments. */
 
     virtual void paint(Photo &photo, bool isSecondaryColor = false, bool additionalFlag = false) = 0;
-
-    /**
-     * @brief Creates UndoCommand & pushes it to UndoStack.
-     *
-     * Base realisation simply save all image to UndoStack
-     * @param photo corresponse to image, which is edited
-     */
-    virtual void makeUndoCommand(Photo &photo);
     
 };
 

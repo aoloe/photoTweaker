@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QToolBar>
+#include <QUndoGroup>
 #include <QLabel>
 #include <QDebug>
 #include <QAction> //insert by Katrin
@@ -24,16 +25,18 @@ PhotoTweaker::PhotoTweaker()
 {
     setupUi(this);
 
+    undoGroup = new QUndoGroup(this);
+
+
     initializeStatusBar();
     initializeToolBar();
 
     photo = new Photo();
     setCentralWidget(photo);
 
-    connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
-    connect(actionSave, SIGNAL(triggered()), this, SLOT(save()));
-    connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
+
+
+    initializeMenu();
 
     connect(photo, SIGNAL(show()), this, SLOT(show())); // XXX: no idea if this is needed...
 
@@ -42,6 +45,70 @@ PhotoTweaker::PhotoTweaker()
     connect(photo, SIGNAL(setStatusMouse()), this, SLOT(setStatusMouse()));
     connect(photo, SIGNAL(setStatusMessage(QString)), this, SLOT(setStatusMessage(QString)));
     connect(photo, SIGNAL(setWindowTitle(QString)), this, SLOT(setTitle(QString)));
+}
+
+void PhotoTweaker::initializeMenu()
+{
+    /*
+     * file   edit          select         effects
+     *  open   undo          none
+     *  --     redo          --
+     *  save   --            v move    m
+     *  --     preferences     grow    >
+     *  quit                   shrink  <
+     *                       --
+     *                       ... left  h
+     *                       ... up    j
+     *                       ... down  k
+     *                       ... right l
+     * 
+     */
+
+    QMenu *menuFile = menuBar()->addMenu(tr("&File"));
+
+    actionFileOpen = new QAction(tr("&Open"), this);
+    connect(actionFileOpen, SIGNAL(triggered()), this, SLOT(open()));
+    actionFileOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+    menuFile->addAction(actionFileOpen);
+
+    menuFile->addSeparator();
+
+    actionFileSave = new QAction(tr("&Save"), this);
+    connect(actionFileOpen, SIGNAL(triggered()), this, SLOT(save()));
+    actionFileSave->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+    menuFile->addAction(actionFileSave);
+
+    menuFile->addSeparator();
+
+    actionFileQuit = new QAction(tr("&Quit"), this);
+    connect(actionFileQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+    menuFile->addAction(actionFileQuit);
+
+    QMenu *menuEdit = menuBar()->addMenu(tr("&Edit"));
+
+    actionEditUndo = undoGroup->createUndoAction(this, tr("&Undo"));
+    actionEditUndo->setEnabled(false);
+    actionEditUndo->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z));
+    menuEdit->addAction(actionEditUndo);
+
+    actionEditRedo = undoGroup->createRedoAction(this, tr("&Redo"));
+    actionEditRedo->setEnabled(false);
+    actionEditRedo->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z));
+    menuEdit->addAction(actionEditRedo);
+
+    menuEdit->addSeparator();
+
+    actionEditPreferences = new QAction(tr("&Preferences"), this);
+    connect(actionEditPreferences, SIGNAL(triggered()), this, SLOT(preferences()));
+    menuEdit->addAction(actionEditPreferences);
+    // actionPreferences->setMenuRole(QAction::PreferencesRole);
+
+    // connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
+
+
+
+
 }
 
 /**
@@ -55,6 +122,8 @@ void PhotoTweaker::initializeToolBar()
     addToolBar(Qt::TopToolBarArea, toolBar );
 
     effectActions.fill(0, (int)EFFECT_COUNT);
+
+    // TODO: let the effects add themselves to the toolbar
 
     QAction *actionRotate = new QAction(tr("Rotate"), this);
     actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
@@ -93,8 +162,7 @@ void PhotoTweaker::run()
     qDebug() << "filePath:" << filePath;
     if (!filePath.isEmpty())
     {
-        photo->open(filePath);
-        photo->update();
+        open();
     }
 }
 
@@ -165,7 +233,11 @@ void PhotoTweaker::setTitle(QString title)
 
 void PhotoTweaker::open()
 {
-    filePath = QFileDialog::getOpenFileName(this, tr("Select File"), QDir::homePath());
+    QAction *currentAction = static_cast<QAction*>(sender());
+    if (currentAction == actionFileOpen)
+    {
+        filePath = QFileDialog::getOpenFileName(this, tr("Select File"), QDir::homePath());
+    }
     qDebug() << "filePath:" << filePath;
 
     if (filePath.isEmpty())
@@ -176,7 +248,8 @@ void PhotoTweaker::open()
         // TODO: disable the menus that need an image to be open (save)
     }
     photo->update();
-
+    undoGroup->addStack(photo->getUndoStack());
+    undoGroup->setActiveStack(photo->getUndoStack());
 }
 
 void PhotoTweaker::save()
@@ -185,6 +258,10 @@ void PhotoTweaker::save()
     {
         photo->save();
     }
+}
+
+void PhotoTweaker::preferences()
+{
 }
 
 void PhotoTweaker::show()
