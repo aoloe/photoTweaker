@@ -145,7 +145,6 @@ void SelectionInstrument::clearSelection()
 void SelectionInstrument::paint(Photo &photo, bool, bool)
 {
 }
-
 void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 {
     // this should put a shade on the non selected area but does not really work..
