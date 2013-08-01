@@ -17,6 +17,8 @@ AbstractEffect(parent)
  */
 void EffectScale::apply(Photo &photo)
 {
+    photo.addUndoInformation();
+
     QImage image = photo.getImage();
     if(image.width() >= image.height())
     {
