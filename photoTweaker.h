@@ -24,6 +24,7 @@ public:
     static const int EFFECT_NONE;
     static const int EFFECT_ROTATION;
     static const int EFFECT_GRAYSCALE;
+    static const int EFFECT_SCALE;
 
 public slots:
 	void open();
