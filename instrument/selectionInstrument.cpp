@@ -122,6 +122,7 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
         selection_o->releaseActiveHandle();
     }
     updateCursor(event, photo);
+    photo.setEdited(true);
 }
 
 void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)

@@ -146,11 +146,18 @@ void Photo::save()
     {
         SelectionInstrument *instrument = static_cast <SelectionInstrument*> (instrumentsHandlers.at(CURSOR));
         qDebug() << "isSelection" << instrument->isSelection();
-        if (isEdited || instrument->isSelection())
+        if (isEdited)
         {
-            qDebug() << "saving selection:" << instrument->getSelection();
             qDebug() << "filePath:" << filePath;
-            image.copy(instrument->getSelection()).save(filePath);
+            if (instrument->isSelection())
+            {
+                qDebug() << "saving selection:" << instrument->getSelection();
+                image.copy(instrument->getSelection()).save(filePath);
+            }
+            else
+            {
+                image.save(filePath);
+            }
 
             /*
             // TODO: implement the following abstraction

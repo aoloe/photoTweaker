@@ -77,7 +77,7 @@ void PhotoTweaker::initializeMenu()
     menuFile->addSeparator();
 
     actionFileSave = new QAction(tr("&Save"), this);
-    connect(actionFileOpen, SIGNAL(triggered()), this, SLOT(save()));
+    connect(actionFileSave, SIGNAL(triggered()), this, SLOT(save()));
     actionFileSave->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
     menuFile->addAction(actionFileSave);
 
@@ -268,8 +268,10 @@ void PhotoTweaker::open()
 
 void PhotoTweaker::save()
 {
+    qDebug() << "trying to save";
     if(!filePath.isEmpty())
     {
+        qDebug() << "save " << filePath;
         photo->save();
     }
 }
