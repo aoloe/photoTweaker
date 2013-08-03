@@ -7,11 +7,13 @@
 #include <QLabel>
 #include <QDebug>
 #include <QAction> //insert by Katrin
+#include <QToolButton>
 
 #include "photo.h"
 #include "effect/grayscale.h"
 #include "effect/rotation.h"
 #include "effect/scale.h"
+#include "preferencesDialog.h"
 
 
 const int PhotoTweaker::EFFECT_COUNT = 3;
@@ -85,7 +87,13 @@ void PhotoTweaker::initializeMenu()
 
     actionFileQuit = new QAction(tr("&Quit"), this);
     connect(actionFileQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+    // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+    // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
+    actionFileQuit->setShortcuts(
+        QList<QKeySequence>()
+            << Qt::CTRL + Qt::Key_Q
+            << Qt::CTRL + Qt::Key_W
+    );
     menuFile->addAction(actionFileQuit);
 
     QMenu *menuEdit = menuBar()->addMenu(tr("&Edit"));
@@ -124,6 +132,8 @@ void PhotoTweaker::initializeToolBar()
     QToolBar* toolBar = new QToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar );
 
+    // toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
     effectActions.fill(0, (int)EFFECT_COUNT);
 
     // TODO: let the effects add themselves to the toolbar
@@ -140,11 +150,45 @@ void PhotoTweaker::initializeToolBar()
     toolBar->addAction(actionGrayscale);
     effectActions[EFFECT_GRAYSCALE] = actionGrayscale;
 
-    QAction *actionScale= new QAction(tr("Scale"), this);
+    // TODO: find a way to cleanly add a button with a label
+    // - the tooltip should be different than the text shown ("Scale 900" vs. "900")
+    // - it would be nice to have only one action with different parameters for each target size
+    QAction *actionScale= new QAction(tr("900"), this);
     actionScale->setIcon(QIcon(":/media/icons/scale.png"));
     connect(actionScale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
-    toolBar->addAction(actionScale);
     effectActions[EFFECT_SCALE] = actionScale;
+
+    // QPushButton *scaleButton = new QPushButton();
+    QToolButton *scaleButton = new QToolButton();
+    scaleButton->setIcon(QIcon(":/media/icons/scale.png"));
+    scaleButton->setText("900");
+    scaleButton->setFocusPolicy(Qt::NoFocus);
+    scaleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    scaleButton->setDefaultAction(actionScale);
+    toolBar->addWidget(scaleButton);
+
+    /*
+    // failed try to use a widget in order to put a label right of the button
+    // QPushButton *scaleButton = new QPushButton();
+    QHBoxLayout *layout = new QHBoxLayout();
+
+    QToolButton *sculeButton = new QToolButton();
+    sculeButton->setIcon(QIcon(":/media/icons/scale.png"));
+    // sculeButton->setText("600");
+    scaleButton->setAutoRaise(true);
+    sculeButton->setFocusPolicy(Qt::NoFocus);
+    layout->addWidget(sculeButton);
+
+    QWidget *scoleWidget = new QWidget();
+    // scoleButton->setIcon(QIcon(":/media/icons/scale.png"));
+    scoleWidget->setLayout(layout);
+    // scoleButton->setText("600");
+    // scoleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    scoleWidget->setDefaultAction(actionScale);
+    toolBar->addWidget(scoleWidget);
+    */
+
+
 }
 
 void PhotoTweaker::initializeStatusBar()
@@ -278,6 +322,8 @@ void PhotoTweaker::save()
 
 void PhotoTweaker::preferences()
 {
+        PreferencesDialog* dialog = new PreferencesDialog(this);
+        dialog->show();
 }
 
 void PhotoTweaker::show()

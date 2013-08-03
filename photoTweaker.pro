@@ -19,12 +19,16 @@ DEPENDPATH += .
 ;LIBS += -lMagick++
 
 # Input
-FORMS += photoTweaker.ui
+FORMS += \
+    photoTweaker.ui \
+    preferencesDialog.ui\
+    effect/scalePreferences.ui
 SOURCES += \
     main.cpp \
     photoTweaker.cpp \
     datasingleton.cpp \
     undocommand.cpp \
+    preferencesDialog.cpp \
     instrument/abstractinstrument.cpp \
     instrument/selectionInstrument.cpp \
     instrument/selection.cpp \
@@ -32,11 +36,13 @@ SOURCES += \
     effect/abstracteffect.cpp \
     effect/grayscale.cpp \
     effect/rotation.cpp \
-    effect/scale.cpp
+    effect/scale.cpp\
+    effect/scalePreferences.cpp
 HEADERS += \
     photoTweaker.h \
     datasingleton.h \
     undocommand.h \
+    preferencesDialog.h \
     instrument/abstractinstrument.h \
     instrument/selectionInstrument.h \
     instrument/selection.h \
@@ -44,7 +50,8 @@ HEADERS += \
     effect/abstracteffect.h \
     effect/grayscale.h \
     effect/rotation.h \
-    effect/scale.h
+    effect/scale.h\
+    effect/scalePreferences.h
 
 RESOURCES += \
     resources.qrc

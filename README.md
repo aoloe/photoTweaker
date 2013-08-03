@@ -15,11 +15,16 @@
 - show the image size and the selection size in a status bar (or in a tooltip?)
 - in the code rename "instrument" to "tool" or "plugin"
 - ESC to stop selection changes and to release current selection (or is undo enough?)
+- refactor the selection / selection tool
+  - selection should be a property of photo
+  - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
+  - add a constrained selection resizing
+- create a user documentation
+- create a developer documentation
 
 
 for version 1.0 we have to do:
 - everything implemented works correctly.
-- scale picture
 - (white balance)
 - settings + variable number of buttons per effect / plugin
 - undo (1 step)
