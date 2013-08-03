@@ -155,6 +155,7 @@ void PhotoTweaker::initializeToolBar()
     // - it would be nice to have only one action with different parameters for each target size
     QAction *actionScale= new QAction(tr("900"), this);
     actionScale->setIcon(QIcon(":/media/icons/scale.png"));
+    actionScale->setToolTip("Scale 900");
     connect(actionScale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
     effectActions[EFFECT_SCALE] = actionScale;
 
