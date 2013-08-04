@@ -1,3 +1,13 @@
+# Documentation
+
+- Fast
+- Simple
+
+The main goal is to make it incredibly fast to interactively apply some frequent used transformations to a specific picture.
+
+- One level undo
+
+
 #Todo
 
 - after having saved, should we show the original picture or the cropped part? at least document it well...
@@ -6,10 +16,7 @@
 - add the name of the current file in the title bar
 - add an asterisk in the title bar if the file has been changed (or a selection is active)
 - on quit, ask [ok, cancel] if image isEdited (if not in script modus)
-- implement the undo
 - implement modifying the selection with the keyboard
-- add some preferences
-- add an about / help menu
 - eventually, put a semi transparent mask on the part not selected
 - add a filter to auto white balance
 - show the image size and the selection size in a status bar (or in a tooltip?)
@@ -21,14 +28,20 @@
   - add a constrained selection resizing
 - create a user documentation
 - create a developer documentation
+- translate
+- release for windows and mac os
+- save and load profiles for the preferences
+- create a script that opens each file in a directory and let's edit a copy
 
 
 for version 1.0 we have to do:
 - everything implemented works correctly.
+- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress? (maybe for the future?)
+- on open without a file, show the file open dialog. quit on caNCel. and remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
 - (white balance)
 - settings + variable number of buttons per effect / plugin
-- undo (1 step)
-- save on quit option (script mode)
+- scale settings (variable number of buttons; adding scale values)
+- save on quit option (script mode; remove the file > quit entry)
 - help / about menu entry
 
 further taks:
@@ -37,7 +50,7 @@ further taks:
 
 #Goal
 
-A simple photo "tweaker" allowing to fast crop and resize an image and (eventually) apply a bunch of predefined filter. PhotoTweaker is thought as an interactive step inside of a workflow.
+A simple photo "tweaker" allowing to fast crop and resize an image and apply a bunch of predefined filter. PhotoTweaker is thought as an interactive step inside of a workflow.
 
 This is not -- and never will be -- a full fledged image editor.
 

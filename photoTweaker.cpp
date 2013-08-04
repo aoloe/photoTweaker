@@ -1,4 +1,9 @@
 #include "photoTweaker.h"
+
+#include <QSettings>
+
+#include <QCloseEvent>
+
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QStatusBar>
@@ -30,6 +35,8 @@ PhotoTweaker::PhotoTweaker()
 {
     setupUi(this);
 
+    readSettings();
+
     undoGroup = new QUndoGroup(this);
 
 
@@ -51,6 +58,27 @@ PhotoTweaker::PhotoTweaker()
     connect(photo, SIGNAL(setStatusMessage(QString)), this, SLOT(setStatusMessage(QString)));
     connect(photo, SIGNAL(setWindowTitle(QString)), this, SLOT(setTitle(QString)));
 }
+
+void PhotoTweaker::writeSettings()
+{
+// TODO: check, store and define in the window if it's floating: WM_WINDOW_TYPE property set to WINDOW_TYPE_NORMAL
+// https://github.com/LaurentGomila/SFML/issues/368#issuecomment-15143196
+// http://qt-project.org/doc/qt-4.8/widgets-windowflags.html or try setWindowFlags
+    QSettings settings("graphicslab.org", "photoTweaker");
+
+    settings.setValue("window/size", size());
+    settings.setValue("window/pos", pos());
+}
+
+void PhotoTweaker::readSettings()
+{
+    QSettings settings("graphicslab.org", "photoTweaker");
+    qDebug() << "size" << settings.value("window/size");
+    qDebug() << "pos" << settings.value("window/pos");
+    resize(settings.value("window/size", QSize(400, 400)).toSize()); // TODO: set a sane default
+    move(settings.value("window/pos", QPoint(200, 200)).toPoint()); // TODO: set a sane default
+}
+
 
 void PhotoTweaker::initializeMenu()
 {
@@ -86,6 +114,7 @@ void PhotoTweaker::initializeMenu()
     menuFile->addSeparator();
 
     actionFileQuit = new QAction(tr("&Quit"), this);
+    connect(actionFileQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actionFileQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
@@ -167,29 +196,6 @@ void PhotoTweaker::initializeToolBar()
     scaleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     scaleButton->setDefaultAction(actionScale);
     toolBar->addWidget(scaleButton);
-
-    /*
-    // failed try to use a widget in order to put a label right of the button
-    // QPushButton *scaleButton = new QPushButton();
-    QHBoxLayout *layout = new QHBoxLayout();
-
-    QToolButton *sculeButton = new QToolButton();
-    sculeButton->setIcon(QIcon(":/media/icons/scale.png"));
-    // sculeButton->setText("600");
-    scaleButton->setAutoRaise(true);
-    sculeButton->setFocusPolicy(Qt::NoFocus);
-    layout->addWidget(sculeButton);
-
-    QWidget *scoleWidget = new QWidget();
-    // scoleButton->setIcon(QIcon(":/media/icons/scale.png"));
-    scoleWidget->setLayout(layout);
-    // scoleButton->setText("600");
-    // scoleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    scoleWidget->setDefaultAction(actionScale);
-    toolBar->addWidget(scoleWidget);
-    */
-
-
 }
 
 void PhotoTweaker::initializeStatusBar()
@@ -326,6 +332,18 @@ void PhotoTweaker::preferences()
         PreferencesDialog* dialog = new PreferencesDialog(this);
         dialog->show();
 }
+
+ void PhotoTweaker::closeEvent(QCloseEvent *event)
+ {
+     qDebug() << "closing";
+     // if (userReallyWantsToQuit()) {
+         writeSettings();
+         event->accept();
+     // } else {
+         // event->ignore();
+     // }
+     QMainWindow::closeEvent(event);
+ }
 
 void PhotoTweaker::show()
 {

@@ -7,6 +7,7 @@
 class QLabel;
 class QStatusBar;
 class QUndoGroup;
+class QCloseEvent;
 
 class Photo;
 // #include <Magick++.h>
@@ -39,6 +40,9 @@ public slots:
 	void setTitle(QString title);
     void doEffect(bool state);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
 
     void initializeStatusBar();
@@ -46,6 +50,9 @@ private:
     QLabel* statusBarSize;
     QLabel* statusBarMouse;
     QLabel* statusBarMessage;
+    
+    void writeSettings();
+    void readSettings();
     void initializeToolBar();
     void initializeMenu();
 
