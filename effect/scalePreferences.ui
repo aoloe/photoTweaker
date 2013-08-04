@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScalePreferences</class>
+ <widget class="QWidget" name="ScalePreferences">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>341</width>
+    <height>199</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>341</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="title">
+    <string>GroupBox</string>
+   </property>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>85</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Active</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>83</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="removeButton">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>160</y>
+      <width>83</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>300</width>
+      <height>100</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
