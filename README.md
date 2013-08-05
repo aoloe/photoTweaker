@@ -21,6 +21,7 @@ The main goal is to make it incredibly fast to interactively apply some frequent
 - add a filter to auto white balance
 - show the image size and the selection size in a status bar (or in a tooltip?)
 - in the code rename "instrument" to "tool" or "plugin"
+  http://stackoverflow.com/questions/2802960/what-is-a-qt-plugin
 - ESC to stop selection changes and to release current selection (or is undo enough?)
 - refactor the selection / selection tool
   - selection should be a property of photo
@@ -32,15 +33,20 @@ The main goal is to make it incredibly fast to interactively apply some frequent
 - release for windows and mac os
 - save and load profiles for the preferences
 - create a script that opens each file in a directory and let's edit a copy
+- white balance
+- for the effects, rename active to enabled
 
 
 for version 1.0 we have to do:
 - everything implemented works correctly.
+- find out how to attach the scale value to the scale buttons.
+- add the toolbar buttons from each effect.
+- get the effects preferences from each effect.
 - scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress? (maybe for the future?)
 - on open without a file, show the file open dialog. quit on caNCel. and remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
-- (white balance)
 - settings + variable number of buttons per effect / plugin
 - scale settings (variable number of buttons; adding scale values)
+- rotate settings (left or right? should the button change?)
 - save on quit option (script mode; remove the file > quit entry)
 - help / about menu entry
 
