@@ -1,10 +1,41 @@
 #include <QDebug>
+#include <QToolBar>
+#include <QAction>
+#include <QToolButton>
+#include <QSignalMapper>
 #include "scale.h"
 #include "photo.h"
 
 EffectScale::EffectScale(QObject *parent) :
 AbstractEffect(parent)
 {
+}
+
+void EffectScale::addToToolBar(QToolBar &toolBar)
+{
+    signalMapper = new QSignalMapper(this);
+
+    QToolButton *button = new QToolButton();
+    button->setIcon(QIcon(":/media/icons/scale.png"));
+    button->setText("800");
+    button->setFocusPolicy(Qt::NoFocus);
+    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    toolBar.addWidget(button);
+
+    Q_ASSERT(connect(button, SIGNAL(clicked()), signalMapper, SLOT(map())));
+    signalMapper->setMapping(button, "800");
+
+    connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(doEffect(const QString &)));
+}
+
+void EffectScale::doEffect(const QString &value)
+{
+    qDebug() << "scale effect QString" << value;
+}
+
+void EffectScale::doEffect(bool status)
+{
+    qDebug() << "scale effect bool" << status;
 }
 
 /**

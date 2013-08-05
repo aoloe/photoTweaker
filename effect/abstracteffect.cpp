@@ -23,11 +23,20 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <QToolBar>
 #include "abstracteffect.h"
 #include "../undocommand.h"
 #include "../photo.h"
 
 AbstractEffect::AbstractEffect(QObject *parent) :
     QObject(parent)
+{
+}
+
+void AbstractEffect::addToToolBar(QToolBar &toolbar)
+{
+}
+
+void AbstractEffect::apply(Photo &photo)
 {
 }

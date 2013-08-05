@@ -29,6 +29,7 @@
 #include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
+class QToolBar;
 class Photo;
 QT_END_NAMESPACE
 
@@ -44,7 +45,8 @@ public:
     explicit AbstractEffect(QObject *parent = 0);
     virtual ~AbstractEffect(){}
 
-    virtual void apply(Photo &photo) = 0;
+    virtual void addToToolBar(QToolBar &toolbar);
+    virtual void apply(Photo &photo);
     
 protected:
     /**

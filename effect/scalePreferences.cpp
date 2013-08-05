@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QSettings>
 #include "scalePreferences.h"
 
 /**
@@ -38,6 +39,7 @@ ScalePreferences::ScalePreferences( QWidget * parent) : QWidget(parent)
 
     listWidget->setEditTriggers(QAbstractItemView::AnyKeyPressed);
 
+    /*
     QListWidgetItem* item;
     item = new QListWidgetItem();
     item->setData(Qt::DisplayRole, 600);
@@ -45,7 +47,40 @@ ScalePreferences::ScalePreferences( QWidget * parent) : QWidget(parent)
     item = new QListWidgetItem();
     item->setData(Qt::DisplayRole, 900);
     listWidget->addItem(item);
+    */
+}
 
+void ScalePreferences::writeSettings()
+{
+// TODO: check, store and define in the window if it's floating: WM_WINDOW_TYPE property set to WINDOW_TYPE_NORMAL
+// https://github.com/LaurentGomila/SFML/issues/368#issuecomment-15143196
+// http://qt-project.org/doc/qt-4.8/widgets-windowflags.html or try setWindowFlags
+    QSettings settings("graphicslab.org", "photoTweaker");
+
+    settings.setValue("scale/active", activeCheckBox->isChecked());
+    settings.beginWriteArray("scale/size");
+    for (int i = 0; i < listWidget->count(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("value", listWidget->item(i)->text().toInt());
+    }
+    settings.endArray();
+}
+
+void ScalePreferences::readSettings()
+{
+    QSettings settings("graphicslab.org", "photoTweaker");
+    activeCheckBox->setChecked(settings.value("scale/active", true).toBool());
+    QListWidgetItem* item;
+    int n = settings.beginReadArray("scale/size");
+    for (int i = 0; i < n; i++)
+    {
+        settings.setArrayIndex(i);
+        item = new QListWidgetItem();
+        item->setData(Qt::DisplayRole, settings.value("value").toInt());
+        listWidget->addItem(item);
+    }
+    settings.endArray();
 }
 
 void ScalePreferences::addItem()

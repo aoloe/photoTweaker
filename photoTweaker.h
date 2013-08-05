@@ -1,6 +1,7 @@
 #ifndef PHOTOTWEAKER_H
 #define PHOTOTWEAKER_H
 
+#include <QDebug>
 #include "ui_photoTweaker.h"
 #include "photo.h"
 
@@ -21,6 +22,14 @@ public:
 	PhotoTweaker();
     void setFilePath(QString filePath) {this->filePath = filePath;}
 	void run();
+
+    struct effectStruct {
+        int id;
+        QString name;
+        bool enabled;
+        AbstractEffect* effect;
+        QList<QAction*> action;
+    };
 
     static const int EFFECT_COUNT;
     static const int EFFECT_NONE;
@@ -45,6 +54,8 @@ protected:
 
 private:
 
+    void initializeEffects();
+    QList<effectStruct> effects; // temporary list of effects (enabled/disabled) until we have real plugins
     void initializeStatusBar();
     QStatusBar* statusBar;
     QLabel* statusBarSize;

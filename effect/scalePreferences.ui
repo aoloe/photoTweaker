@@ -37,7 +37,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="activeCheckBox">
     <property name="geometry">
      <rect>
       <x>20</x>

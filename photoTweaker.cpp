@@ -20,6 +20,8 @@
 #include "effect/scale.h"
 #include "preferencesDialog.h"
 
+QDebug operator<< (QDebug d, const PhotoTweaker::effectStruct &model);
+
 
 const int PhotoTweaker::EFFECT_COUNT = 3;
 const int PhotoTweaker::EFFECT_NONE = -1; // TODO: is it needed? (ale/20130724)
@@ -39,6 +41,7 @@ PhotoTweaker::PhotoTweaker()
 
     undoGroup = new QUndoGroup(this);
 
+    initializeEffects();
 
     initializeStatusBar();
     initializeToolBar();
@@ -68,17 +71,76 @@ void PhotoTweaker::writeSettings()
 
     settings.setValue("window/size", size());
     settings.setValue("window/pos", pos());
+    settings.beginWriteArray("application/effects");
+    for (int i = 0; i < effects.count(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("id", effects[i].id);
+        settings.setValue("name", effects[i].name);
+        settings.setValue("enabled", effects[i].enabled);
+    }
+    settings.endArray();
 }
 
 void PhotoTweaker::readSettings()
 {
     QSettings settings("graphicslab.org", "photoTweaker");
-    qDebug() << "size" << settings.value("window/size");
-    qDebug() << "pos" << settings.value("window/pos");
     resize(settings.value("window/size", QSize(400, 400)).toSize()); // TODO: set a sane default
     move(settings.value("window/pos", QPoint(200, 200)).toPoint()); // TODO: set a sane default
+    effects.clear();
+    int n = settings.beginReadArray("application/effects");
+    for (int i = 0; i < n; i++)
+    {
+        settings.setArrayIndex(i);
+        effectStruct item;
+        item.id = settings.value("id").toInt();
+        item.name = settings.value("name").toString();
+        item.enabled = settings.value("enabled").toBool();
+        effects << item;
+    }
+    settings.endArray();
+    if (effects.count() != EFFECT_COUNT)
+    {
+        // until we have real plugins: initialise the list of effects
+        effects.clear();
+        effectStruct item;
+        item.id = EFFECT_ROTATION;
+        item.name = "Rotation";
+        item.enabled = true;
+        effects << item;
+        item.id = EFFECT_GRAYSCALE;
+        item.name = "Grayscale";
+        item.enabled = true;
+        effects << item;
+        item.id = EFFECT_SCALE;
+        item.name = "Scale";
+        item.enabled = true;
+        effects << item;
+    }
+    qDebug() << "effects" << effects;
 }
 
+void PhotoTweaker::initializeEffects()
+{
+    for (int i = 0; i < EFFECT_COUNT; i++)
+    {
+        if (effects[i].enabled)
+        {
+            if (effects[i].id == EFFECT_ROTATION)
+            {
+                effects[i].effect = new EffectRotation();
+            }
+            else if (effects[i].id == EFFECT_GRAYSCALE)
+            {
+                effects[i].effect = new EffectGrayscale();
+            }
+            else if (effects[i].id == EFFECT_SCALE)
+            {
+                effects[i].effect = new EffectScale();
+            }
+        }
+    }
+}
 
 void PhotoTweaker::initializeMenu()
 {
@@ -146,9 +208,6 @@ void PhotoTweaker::initializeMenu()
 
     // connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
 
-
-
-
 }
 
 /**
@@ -164,6 +223,21 @@ void PhotoTweaker::initializeToolBar()
     // toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     effectActions.fill(0, (int)EFFECT_COUNT);
+
+    for (int i = 0; i < EFFECT_COUNT; i++)
+    {
+        if (effects[i].id == EFFECT_SCALE)
+        {
+            effects[i].effect->addToToolBar(*toolBar);
+        /*
+        QAction *action = new QAction(tr(effect.name), this);
+        actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
+        connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
+        toolBar->addAction(actionRotate);
+        effectActions[EFFECT_ROTATION] = actionRotate;
+        */
+        }
+    }
 
     // TODO: let the effects add themselves to the toolbar
 
@@ -330,7 +404,14 @@ void PhotoTweaker::save()
 void PhotoTweaker::preferences()
 {
         PreferencesDialog* dialog = new PreferencesDialog(this);
-        dialog->show();
+        dialog->readSettings();
+        if(dialog->exec() == QDialog::Accepted){
+            for (int i = 0; i < EFFECT_COUNT; i++)
+            {
+                dialog->addEffect(effects[i].effect);
+            }
+            dialog->writeSettings();
+        }
 }
 
  void PhotoTweaker::closeEvent(QCloseEvent *event)
@@ -372,4 +453,9 @@ void PhotoTweaker::show()
     // resize(mImage->rect().right() + 6, mImage->rect().bottom() + 6);
     
 
+}
+
+QDebug operator<< (QDebug d, const PhotoTweaker::effectStruct &model) {
+    d << "<id:" << model.id << ", name:" << model.name << ", enabled:" << model.enabled << ">";
+    return d;
 }

@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QToolBar>
 #include "rotation.h"
 #include "photo.h"
 
@@ -7,6 +8,9 @@ AbstractEffect(parent)
 {
 }
 
+void EffectRotation::addToToolBar(QToolBar &toolbar)
+{
+}
 
 void EffectRotation::apply(Photo &photo)
 {

@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QToolBar>
 #include "grayscale.h"
 #include "photo.h"
 
@@ -7,6 +8,9 @@ AbstractEffect(parent)
 {
 }
 
+void EffectGrayscale::addToToolBar(QToolBar &toolbar)
+{
+}
 
 void EffectGrayscale::apply(Photo &photo)
 {
