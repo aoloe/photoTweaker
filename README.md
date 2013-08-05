@@ -21,6 +21,7 @@
   - add a constrained selection resizing
 - create a user documentation
 - create a developer documentation
+- get it to build with jenkins
 
 
 for version 1.0 we have to do:
