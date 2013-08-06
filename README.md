@@ -1,11 +1,22 @@
 # Documentation
 
+photoTweake is a
+
 - Fast
 - Simple
+- Portable
 
-The main goal is to make it incredibly fast to interactively apply some frequent used transformations to a specific picture.
+image editor.
 
-- One level undo
+You should use it when you don't want to spend more than a few seconds to edit a picture. For more complex work, please use a "real" image editor like Gimp.
+
+The project's main goal is to provide a tool that allows you to be really fast when interactively applying a set of frequent used transformations to individual pictures.
+
+Some facts:
+
+- Actions are performed without showing a dialog.
+- Actions can be personalized in the preferences.
+- One level undo.
 
 
 #Todo
@@ -34,6 +45,7 @@ The main goal is to make it incredibly fast to interactively apply some frequent
 - save and load profiles for the preferences
 - create a script that opens each file in a directory and let's edit a copy
 - white balance
+- check the win software from lucern and get inspiration from it.
 
 for version 1.1.
 - get it to build with jenkins
@@ -43,7 +55,7 @@ for version 1.1.
 
 for version 1.0 we have to do:
 - everything implemented works correctly.
-- for the effects, rename active to enabled
+- for the effects, rename the checkbox from "active" to "enabled".
 - dynamically add the scale buttons from the scale effect.
 - add the toolbar buttons from each effect.
 - get the effects preferences from each effect (and not the dialog).
