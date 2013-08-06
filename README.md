@@ -62,6 +62,7 @@ for version 1.0 we have to do:
 - rotate settings (left or right? should the button change?)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
+- create a website, based on github files in this repository (ideale.ch/photoTweaker)
 
 further taks:
 - implement the effects and instruments as plugin?
