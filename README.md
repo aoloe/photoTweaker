@@ -18,9 +18,138 @@ Some facts:
 - Actions can be personalized in the preferences.
 - One level undo.
 
+## Features
+
+Currently, the following features have been implemented:
+
+- Fast loading of the application, only picture at a time.
+- Intuitive cropping of the image by selecting the cropping area.
+- Resize the image to sizes predefined in the preferences
+- You can undo (and redo) the last effect.
+- The effects are applied on the full image. The selection is only for cropping.
+- Rotation in 90° steps.
+
+For the near future, the following features are planned:
+- More filters:
+  - auto white balance
+  - vintage
+  - remove red eyes
+- expand the selection wotj keys
+
+- scripting mode (by parameter):
+  - "save" and "save as" also quit the program.
+  - on quit the filename is returned for further processing.
+  - a filename must be passed as parameter and "open" is not available.
+
+# Developers documentation
+
+## The general structure of photoTweaker
+
+- The entry point is main.cpp which builds the PhotoTweaker Qt application in `photoTweaker.cpp`, forwards the command line options and runs it
+- PhotoTweaker:
+  - Initializes the effects.
+    - For now the effects list and its loading is hard coded in PhotoTweaker, but a refactoring towards real plugins is planned.
+  - Initializes and coordinates the GUI.
+
+## Code conventions
+
+- Camel case method names.
+- All conditionals and loop are correctly "braced" and indented.
+- Indenting by 4 spaces.
+- `{` and `}` are on their own line.
+- Avoid inline comments, except when your doing something in an unusual way, then you have to comment it!
+- If you leave something unfinished, adda  `TODO:` comment with the details on what there is todo, your name and the date (`TODO: add the other effects (ale/2013087)`)
+- Use `foreach (const ItemType item, list)` instead of `foreach (i = 0; i < list.count; i++)` wherever it's possible. It's not faster but it's more readable.
+
+## photoTweaker for learning C++ and Qt
+
+This project aims at teaching some best practices when programming with C++ and Qt.
+
+photoTweaker is a real application, aimed at being the best program for its specific use case. It is not a demo or toy application created for teaching purposes. But during the whole development process, we have tried to keep its code and structure as small and clean as possible.
+
+We also always had an educative goal throughout the project: we were ourselves learning the best practices of Qt while programming it and we wanted people who are learning programming Qt to learn from its code and from contributing to its code!
+
+While we are trying to keep the documentation in the code itself as short as possible -- by only documenting the classes and methods content at their beginning and avoiding to put comments in the code itself, except where we thing that we have put "unusual hacks" in there. On the other side, we are providing a more detailed documentation in this document that will explain you "every" step of the program.
+
+By reading the source code of photoTweaker you can learn:
+
+- creating a simple Qt application.
+- compiling a Qt project on several platforms.
+- editing a .pro project file.
+- managing the menu bar.
+- managing the toolbar with normal and with parametrized buttons.
+- managing the status bar.
+- opening and saving files.
+- defining the Gui with Qt designer .ui files.
+- embedding .ui files into each other.
+- reading and writing settings.
+- writing modular code where each functionality is as isolated from the rest of the code as possible.
+- using `qDebug()` to output debugging information.
+
+We plan to created a detailed documentation showing where you can find the relevant snippets in the source code and explaining them.
+
+Of course, we are aware that not all the code is already as it should be and we are really interested in feedback to further improve the quality of the code.
+
+Some further goals are:
+
+- defining and loading plugins.
+- when to use pointers and heap.
+
+Tasks:
+- find a good (and short) introduction to C++ programming that matches the type of programming used in photoTweaker.
+- explain how to find help (Qt inline help, stackoverflow, ...)
+
+### Managing the menu bar
+
+see `PhotoTweaker::initializeMenu().
+
+- create a menu bar, attach shortcuts and actions to its items.
+- attach multiple shortcuts to one item (cf. file > quit).
+- enable and disable items (cf. edit > undo).
+
+### Write working code
+
+When working on your project, you don't have to try to get the perfect code from the beginning. Try to get working code that somehow does what you want to achieve. Further on, like when you're adding new tiles to a jigsaw puzzle, don't be scared to move things around: refactor your code.
+
+### Writing comments
+
+Don't write inline comments (add a sample with inline comments). There is a much higher risk to write trivial comments and when reading the code the flow is broken.
+
+Instead, describe at the beginning of the method (and of the class) what it is doing. This way it's much more likely that you only write relevant things, that you keep it short and it will be much easier for the reader to understand what your method is doing and how. On top of it, it will help you keeping the methods short and doing one specific thing.
+
+### Using QDebug
+
+- where is the output in Qt Creator?
+- defining custom `qDebug()` methos for your specific data types (cf. `QDebug operator<< (... effectStruct)` in `PhotoTweaker`)
 
 #Todo
 
+## For version 1.0 we have to do:
+- everything implemented works correctly.
+- refactor the relationship between the effect and its preferences
+    - get the effects preferences from each effect (and not the dialog).
+- dynamically add the scale buttons from its preferences.
+- add the toolbar buttons from each effect.
+- rotate settings (left or right? should the button change?)
+- save on quit option (script mode; remove the file > save entry)
+- help / about menu entry
+- add screenshots and screencasts.
+
+## After 1.0
+- provide packages for windows and os x.
+- create a website, based on github files in this repository (ideale.ch/photoTweaker)
+
+## For version 1.1.
+- get it to build with jenkins
+- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress? (maybe for the future?)
+- on open without a file, show the file open dialog. quit on cancel. and remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
+- create a doxygen code documentation.
+
+## Further taks:
+- implement the effects and instruments as plugin?
+- make it testable and implement tests
+
+## Notes
 - after having saved, should we show the original picture or the cropped part? at least document it well...
 - how to put dependencies in the qmake file?
   ->>> LIBS += -lpodofo
@@ -47,27 +176,6 @@ Some facts:
 - white balance
 - check the win software from lucern and get inspiration from it.
 
-for version 1.1.
-- get it to build with jenkins
-- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress? (maybe for the future?)
-- on open without a file, show the file open dialog. quit on cancel. and remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
-
-
-for version 1.0 we have to do:
-- everything implemented works correctly.
-- for the effects, rename the checkbox from "active" to "enabled".
-- dynamically add the scale buttons from the scale effect.
-- add the toolbar buttons from each effect.
-- get the effects preferences from each effect (and not the dialog).
-- rotate settings (left or right? should the button change?)
-- save on quit option (script mode; remove the file > save entry)
-- help / about menu entry
-- create a website, based on github files in this repository (ideale.ch/photoTweaker)
-
-further taks:
-- implement the effects and instruments as plugin?
-- make it testable and implement tests
-
 #Goal
 
 A simple photo "tweaker" allowing to fast crop and resize an image and apply a bunch of predefined filter. PhotoTweaker is thought as an interactive step inside of a workflow.
@@ -75,23 +183,6 @@ A simple photo "tweaker" allowing to fast crop and resize an image and apply a b
 This is not -- and never will be -- a full fledged image editor.
 
 Applying effects should not trigger any dialog. Settings for the effects can be defined in the preferences and effects may have several button, one for each defined set of values.
-
-## Features
-- crop
-- canvas resize
-- apply predefined filters
-  - auto white
-  - vintage
-- one picture open per session
-- one step undo
-- effects are always on the full image (except red eyes?)
-- expand the selection wotj keys
-- rotate in 90° steps
-
-- scripting mode (by parameter):
-  - "save" and "save as" also quit the program.
-  - on quit the filename is returned for further processing.
-  - a filename must be passed as parameter and "open" is not available.
 
 ## Possible future features
 - offer a way to open directly the image in gimp (or any other image editor).
