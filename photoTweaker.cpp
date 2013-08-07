@@ -15,6 +15,7 @@
 #include <QToolButton>
 
 #include "photo.h"
+#include "effect/disabled.h"
 #include "effect/grayscale.h"
 #include "effect/rotation.h"
 #include "effect/scale.h"
@@ -122,11 +123,11 @@ void PhotoTweaker::readSettings()
 
 void PhotoTweaker::initializeEffects()
 {
+    AbstractEffect* effect;
     for (int i = 0; i < EFFECT_COUNT; i++)
     {
         if (effects[i].enabled)
         {
-            AbstractEffect* effect;
             if (effects[i].id == EFFECT_ROTATION)
             {
                 effect = new EffectRotation();
@@ -139,9 +140,15 @@ void PhotoTweaker::initializeEffects()
             {
                 effect = new EffectScale();
             }
-            effect->readSettings();
-            effects[i].effect = effect;
         }
+        else
+        {
+            effect = new EffectDisabled();
+        }
+        effect->setEffectName(effects[i].name);
+        effect->setEnabled(effect[i].enabled);
+        effect->readSettings();
+        effects[i].effect = effect;
     }
 }
 
@@ -402,16 +409,18 @@ void PhotoTweaker::preferences()
         foreach(effectStruct item, effects)
         {
             dialog->addEffect(item.effect); // TODO: pass the full item?
+            // TODO: the slot should probably not be named accepted(). (ale/20130807)
+            // connect(dialog, SIGNAL(accepted()), item.effect, SLOT(accepted()));
         }
         if(dialog->exec() == QDialog::Accepted){
             // TODO: write the list of enabled settings
             // this->writeEffectSettings()
             foreach(effectStruct item, effects)
             {
-                // item->readValuesFromWidget();
-                // item.writeSettings();
+                item.effect->writeSettings();
+                item.enabled = item.effect->getEnabled();
             }
-            // TODO: for each effect write settings
+            writeSettings();
         }
 }
 

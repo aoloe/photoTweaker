@@ -10,5 +10,4 @@ public:
     void addEffect(AbstractEffect *effect);
 private:
     ScalePreferences* scalePreferences;
-    QList<AbstractEffect*> effects;
 };

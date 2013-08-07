@@ -1,7 +1,6 @@
 #include <QDebug>
 #include <QSettings>
 #include <QToolBar>
-#include <QAction>
 #include <QToolButton>
 #include <QSignalMapper>
 #include "scale.h"
@@ -15,18 +14,13 @@ AbstractEffect(parent)
 
 void EffectScale::writeSettings()
 {
-// TODO: check, store and define in the window if it's floating: WM_WINDOW_TYPE property set to WINDOW_TYPE_NORMAL
-// https://github.com/LaurentGomila/SFML/issues/368#issuecomment-15143196
-// http://qt-project.org/doc/qt-4.8/widgets-windowflags.html or try setWindowFlags
     QSettings settings("graphicslab.org", "photoTweaker");
 
-    // settings.setValue("scale/enabled", enabledCheckBox->isChecked()); // TODO: enabled should be set from photoTweaker
     settings.beginWriteArray("scale/size");
     const int n = size.count();
     for (int i = 0; i < n; i++)
     {
         settings.setArrayIndex(i);
-        // settings.setValue("value", listWidget->item(i)->text().toInt());
         settings.setValue("value", size[i]);
     }
     settings.endArray();
@@ -35,7 +29,6 @@ void EffectScale::writeSettings()
 void EffectScale::readSettings()
 {
     QSettings settings("graphicslab.org", "photoTweaker");
-    // enabledCheckBox->setChecked(settings.value("scale/enabled", true).toBool()); // TODO: pass the value of enabled to photoTweaker
     int const n = settings.beginReadArray("scale/size");
     for (int i = 0; i < n; i++)
     {
@@ -49,15 +42,20 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
 {
     signalMapper = new QSignalMapper(this);
 
-    QToolButton *button = new QToolButton();
-    button->setIcon(QIcon(":/media/icons/scale.png"));
-    button->setText("800");
-    button->setFocusPolicy(Qt::NoFocus);
-    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toolBar.addWidget(button);
+    QToolButton *button;
+    foreach (int item, size)
+    {
+        button = new QToolButton();
+        button->setIcon(QIcon(":/media/icons/scale.png"));
+        button->setText(QString::number(item));
+        button->setToolTip(tr("Scale")+ " " + QString::number(item));
+        button->setFocusPolicy(Qt::NoFocus);
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        toolBar.addWidget(button);
 
-    Q_ASSERT(connect(button, SIGNAL(clicked()), signalMapper, SLOT(map())));
-    signalMapper->setMapping(button, "800");
+        Q_ASSERT(connect(button, SIGNAL(clicked()), signalMapper, SLOT(map())));
+        signalMapper->setMapping(button, QString::number(item));
+    }
 
     // TODO: use apply() instead of doEffect() (ale/20130807)
     connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(doEffect(const QString &)));
@@ -65,21 +63,22 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
 
 QWidget* EffectScale::getPreferencesWidget()
 {
-    scalePreferences = new ScalePreferences();
+    ScalePreferences* scalePreferences = new ScalePreferences();
     scalePreferences->setMinimumSize(scalePreferences->size());
-    // enabledCheckBox->setChecked(settings.value("scale/enabled", true).toBool()); // TODO: pass the value of enabled to photoTweaker
+    scalePreferences->setEnabled(this->enabled);
     QListWidgetItem* widgetItem;
     foreach (int item, size)
     {
         scalePreferences->addItem(item);
     }
-    connect(scalePreferences, SIGNAL(accepted()), this, SLOT(acceptPreferencesWidget()));
+    connect(scalePreferences, SIGNAL(accepted(bool, QList<int>)), this, SLOT(acceptPreferencesWidget(bool, QList<int>)));
     return scalePreferences;
 }
 
-void EffectScale::acceptPreferencesWidget()
+void EffectScale::acceptPreferencesWidget(bool enabled, QList<int> size)
 {
-    qDebug() << "acceptedPreferencesWidget";
+    this->enabled = enabled;
+    this->size = size;
 }
 
 void EffectScale::doEffect(const QString &value)

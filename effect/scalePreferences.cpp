@@ -25,7 +25,6 @@
  * - When clicking [ Add ] an empty (0?) enry is added and selected
  * - the [ Remove ] button is only activated when an entry is selected
  * - when clicking on an item it gets editable
- *
  */
 ScalePreferences::ScalePreferences( QWidget * parent) : QWidget(parent)
 {
@@ -65,38 +64,23 @@ void ScalePreferences::addItem()
     listWidget->editItem(item);
 }
 
-QList<int> ScalePreferences::getItemList()
-{
-    QList<int>result;
-    // foreach does not work, because there is no way to get all the QListWidgetItems in listWidget
-    const int n = listWidget->count();
-    for (int i = 0; i < n; i++)
-    {
-        result << listWidget->item(i)->text().toInt();
-    }
-    return result;
-}
-
 void ScalePreferences::removeItem()
 {
     QListWidgetItem* item = listWidget->currentItem();
     if (item)
     {
-        qDebug() << "remove item";
         delete item;
     }
 }
 
 void ScalePreferences::activateItem(QListWidgetItem * itemClicked, QListWidgetItem *itemPrevious)
 {
-    qDebug() << "activate item";
     if (itemPrevious && (itemPrevious->text().toInt() == 0))
     {
         delete itemPrevious;
     }
     if (!removeButton->isEnabled())
     {
-        qDebug() << "enable removeButton";
         removeButton->setEnabled(true);
     }
 
@@ -122,5 +106,15 @@ void ScalePreferences::activateItem(QListWidgetItem * itemClicked, QListWidgetIt
 
 void ScalePreferences::accept()
 {
-    emit accepted();
+    bool enabled = enabledCheckBox->isChecked();
+
+    QList<int>list;
+    // foreach does not work, because there is no way to get all the QListWidgetItems in listWidget
+    const int n = listWidget->count();
+    for (int i = 0; i < n; i++)
+    {
+        list << listWidget->item(i)->text().toInt();
+    }
+
+    emit accepted(enabled, list);
 }

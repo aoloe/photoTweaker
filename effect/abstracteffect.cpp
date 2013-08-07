@@ -49,9 +49,10 @@ void AbstractEffect::readSettings()
 
 QWidget* AbstractEffect::getPreferencesWidget()
 {
-    qDebug() << "the enabled checkbox";
     EffectPreferences* effectPreferences = new EffectPreferences();
     effectPreferences->setMinimumSize(effectPreferences->size());
+    effectPreferences->setEnabled(enabled);
+    effectPreferences->setEffectName(effectName);
     return effectPreferences;
 }
 
