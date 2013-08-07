@@ -159,6 +159,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## After 1.0
 
+- announce on the create mailing list.
 - provide packages for windows and os x.
 - create a website, based on github files in this repository (ideale.ch/photoTweaker)
 
@@ -172,6 +173,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
   - selection should be a property of photo
   - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
   - add a constrained selection resizing
+- enable an effect without having to restart the program.
 
 ## Further taks:
 
