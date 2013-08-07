@@ -35,54 +35,25 @@ ScalePreferences::ScalePreferences( QWidget * parent) : QWidget(parent)
     connect (removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
     removeButton->setEnabled(false);
 
+    // make the items in the list editable and numeric (necessary for sorting)
+    // TODO: find a way to remove the spinbox and to improve the way the items are shown. (ale/20130807)
     connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(activateItem(QListWidgetItem *, QListWidgetItem *)));
-
     listWidget->setEditTriggers(QAbstractItemView::AnyKeyPressed);
-
-    /*
-    QListWidgetItem* item;
-    item = new QListWidgetItem();
-    item->setData(Qt::DisplayRole, 600);
-    listWidget->addItem(item);
-    item = new QListWidgetItem();
-    item->setData(Qt::DisplayRole, 900);
-    listWidget->addItem(item);
-    */
 }
 
-void ScalePreferences::writeSettings()
+/**
+ * @short add an item from the scale effect
+ */
+void ScalePreferences::addItem(int value)
 {
-// TODO: check, store and define in the window if it's floating: WM_WINDOW_TYPE property set to WINDOW_TYPE_NORMAL
-// https://github.com/LaurentGomila/SFML/issues/368#issuecomment-15143196
-// http://qt-project.org/doc/qt-4.8/widgets-windowflags.html or try setWindowFlags
-    QSettings settings("graphicslab.org", "photoTweaker");
-
-    settings.setValue("scale/enabled", enabledCheckBox->isChecked());
-    settings.beginWriteArray("scale/size");
-    for (int i = 0; i < listWidget->count(); i++)
-    {
-        settings.setArrayIndex(i);
-        settings.setValue("value", listWidget->item(i)->text().toInt());
-    }
-    settings.endArray();
+    QListWidgetItem* item = new QListWidgetItem();
+    item->setData(Qt::DisplayRole, value);
+    listWidget->addItem(item);
 }
 
-void ScalePreferences::readSettings()
-{
-    QSettings settings("graphicslab.org", "photoTweaker");
-    enabledCheckBox->setChecked(settings.value("scale/enabled", true).toBool());
-    QListWidgetItem* item;
-    int n = settings.beginReadArray("scale/size");
-    for (int i = 0; i < n; i++)
-    {
-        settings.setArrayIndex(i);
-        item = new QListWidgetItem();
-        item->setData(Qt::DisplayRole, settings.value("value").toInt());
-        listWidget->addItem(item);
-    }
-    settings.endArray();
-}
-
+/**
+ * @short add an empty item when reacting to a click on the add button
+ */
 void ScalePreferences::addItem()
 {
     QListWidgetItem* item = new QListWidgetItem();
@@ -92,6 +63,18 @@ void ScalePreferences::addItem()
     listWidget->item(0)->setSelected(true);
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     listWidget->editItem(item);
+}
+
+QList<int> ScalePreferences::getItemList()
+{
+    QList<int>result;
+    // foreach does not work, because there is no way to get all the QListWidgetItems in listWidget
+    const int n = listWidget->count();
+    for (int i = 0; i < n; i++)
+    {
+        result << listWidget->item(i)->text().toInt();
+    }
+    return result;
 }
 
 void ScalePreferences::removeItem()
@@ -135,7 +118,9 @@ void ScalePreferences::activateItem(QListWidgetItem * itemClicked, QListWidgetIt
             listWidget->editItem(item);
         }
     }
- 
 }
 
-
+void ScalePreferences::accept()
+{
+    emit accepted();
+}

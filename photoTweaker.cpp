@@ -126,18 +126,21 @@ void PhotoTweaker::initializeEffects()
     {
         if (effects[i].enabled)
         {
+            AbstractEffect* effect;
             if (effects[i].id == EFFECT_ROTATION)
             {
-                effects[i].effect = new EffectRotation();
+                effect = new EffectRotation();
             }
             else if (effects[i].id == EFFECT_GRAYSCALE)
             {
-                effects[i].effect = new EffectGrayscale();
+                effect = new EffectGrayscale();
             }
             else if (effects[i].id == EFFECT_SCALE)
             {
-                effects[i].effect = new EffectScale();
+                effect = new EffectScale();
             }
+            effect->readSettings();
+            effects[i].effect = effect;
         }
     }
 }
@@ -208,6 +211,7 @@ void PhotoTweaker::initializeMenu()
     menuEdit->addAction(actionEditPreferences);
     // actionPreferences->setMenuRole(QAction::PreferencesRole);
 
+    // TODO: ESC should clear the selection (ale/20130807)
     // connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
 
 }
@@ -218,10 +222,11 @@ void PhotoTweaker::initializeMenu()
  */
 void PhotoTweaker::initializeToolBar()
 {
-    // TODO: make it a setting where the toolbar is set (default left?)
+    // TODO: make it a setting where the toolbar is set (default left?) (ale/20130807)
     QToolBar* toolBar = new QToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar );
 
+    // TODO: add an option to show the label below the button? (ale/20130807)
     // toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     effectActions.fill(0, (int)EFFECT_COUNT);
@@ -394,27 +399,33 @@ void PhotoTweaker::save()
 void PhotoTweaker::preferences()
 {
         PreferencesDialog* dialog = new PreferencesDialog(this);
-        dialog->readSettings();
+        foreach(effectStruct item, effects)
+        {
+            dialog->addEffect(item.effect); // TODO: pass the full item?
+        }
         if(dialog->exec() == QDialog::Accepted){
-            for (int i = 0; i < EFFECT_COUNT; i++)
+            // TODO: write the list of enabled settings
+            // this->writeEffectSettings()
+            foreach(effectStruct item, effects)
             {
-                dialog->addEffect(effects[i].effect);
+                // item->readValuesFromWidget();
+                // item.writeSettings();
             }
-            dialog->writeSettings();
+            // TODO: for each effect write settings
         }
 }
 
- void PhotoTweaker::closeEvent(QCloseEvent *event)
- {
-     qDebug() << "closing";
-     // if (userReallyWantsToQuit()) {
-         writeSettings();
-         event->accept();
-     // } else {
-         // event->ignore();
-     // }
-     QMainWindow::closeEvent(event);
- }
+void PhotoTweaker::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "closing";
+    // if (userReallyWantsToQuit()) {
+    writeSettings();
+    event->accept();
+    // } else {
+    // event->ignore();
+    // }
+    QMainWindow::closeEvent(event);
+}
 
 void PhotoTweaker::show()
 {

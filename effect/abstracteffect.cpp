@@ -23,10 +23,11 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <QDebug>
 #include <QToolBar>
 #include "abstracteffect.h"
 #include "../undocommand.h"
-#include "effect/scalePreferences.h"
+#include "effect/effectPreferences.h"
 #include "../photo.h"
 
 AbstractEffect::AbstractEffect(QObject *parent) :
@@ -38,8 +39,17 @@ void AbstractEffect::addToToolBar(QToolBar &toolbar)
 {
 }
 
+void AbstractEffect::writeSettings()
+{
+}
+
+void AbstractEffect::readSettings()
+{
+}
+
 QWidget* AbstractEffect::getPreferencesWidget()
 {
+    qDebug() << "the enabled checkbox";
     EffectPreferences* effectPreferences = new EffectPreferences();
     effectPreferences->setMinimumSize(effectPreferences->size());
     return effectPreferences;

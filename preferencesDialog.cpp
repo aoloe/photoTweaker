@@ -11,34 +11,28 @@ PreferencesDialog::PreferencesDialog( QWidget * parent) : QDialog(parent)
     QVBoxLayout *layout = new QVBoxLayout();
 
     // TODO: get the preferences from each effects
-    foreach (AbstractEffect* item, effects)
-    {
-        QWidget* effectWidget = item->getPreferencesWidget();
-        // TODO: if null is returned, should we add a standard "[ ] enabled" widget? (ale/20130807)
-        if (effectWidget)
-        {
-            layout->addWidget(scalePreferences);
-        }
-    }
+    qDebug() << "effects.count" << effects.count();
 
     // only as sample beceause we want some items in the list dialog
+    /*
     ScalePreferences* scolePreferences = new ScalePreferences();
     scolePreferences->setMinimumSize(scalePreferences->size());
     layout->addWidget(scolePreferences);
     ScalePreferences* sculePreferences = new ScalePreferences();
     sculePreferences->setMinimumSize(scalePreferences->size());
     layout->addWidget(sculePreferences);
+    */
     scrollAreaWidgetContents->setLayout(layout);
 }
 
-void PreferencesDialog::writeSettings()
+void PreferencesDialog::addEffect(AbstractEffect *effect)
 {
-    qDebug() << "preferencesDialog writeSettings";
-    scalePreferences->writeSettings();
-}
+    effects << effect; // TODO: check if it is really needed to store the effect list (ale/20130807)
 
-void PreferencesDialog::readSettings()
-{
-    qDebug() << "preferencesDialog readSettings";
-    scalePreferences->readSettings();
+    QWidget* effectWidget = effect->getPreferencesWidget();
+    if (effectWidget)
+    {
+        scrollAreaWidgetContents->layout()->addWidget(effectWidget);
+        connect(this, SIGNAL(accepted()), effectWidget, SLOT(accept()));
+    }
 }

@@ -4,8 +4,10 @@
 #include <QSignalMapper>
 #include "abstracteffect.h"
 
-class Photo;
 class QToolBar;
+
+class Photo;
+class ScalePreferences;
 
 class EffectScale : public AbstractEffect
 {
@@ -13,16 +15,21 @@ class EffectScale : public AbstractEffect
 public:
     QSignalMapper *signalMapper;
     explicit EffectScale(QObject *parent = 0);
+    void writeSettings();
+    void readSettings();
+    void setSizeList(QList<int> list) {size = list;}
+
     void addToToolBar(QToolBar &toolBar);
-    virtual QWidget* getPreferencesWidget();
+    QWidget* getPreferencesWidget();
     void apply(Photo &photo);
 public slots:
     void doEffect(const QString &value);
+    void acceptPreferencesWidget();
 signals:
     void clicked(int value);
-
-
-
+private:
+    QList<int> size;
+    ScalePreferences* scalePreferences;
 };
 
 #endif // EFFECTSCALE_H
