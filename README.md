@@ -107,6 +107,19 @@ see `PhotoTweaker::initializeMenu().
 - attach multiple shortcuts to one item (cf. file > quit).
 - enable and disable items (cf. edit > undo).
 
+### Adding a dialog
+
+This applies for adding a dialog or a widget.
+
+- Create the basic dialog as an .ui file in Qt designer.
+- Add a .h file extending the .ui file.
+- Add a .cpp file implementing the .h file
+- Add the .ui, .h and .cpp files in the .pro file.
+- run qmake
+- use the .h
+- run make
+- call the class from your code
+
 ### Write working code
 
 When working on your project, you don't have to try to get the perfect code from the beginning. Try to get working code that somehow does what you want to achieve. Further on, like when you're adding new tiles to a jigsaw puzzle, don't be scared to move things around: refactor your code.
@@ -117,10 +130,15 @@ Don't write inline comments (add a sample with inline comments). There is a much
 
 Instead, describe at the beginning of the method (and of the class) what it is doing. This way it's much more likely that you only write relevant things, that you keep it short and it will be much easier for the reader to understand what your method is doing and how. On top of it, it will help you keeping the methods short and doing one specific thing.
 
-### Using QDebug
+### Debugging
 
+Using QDebug
 - where is the output in Qt Creator?
 - defining custom `qDebug()` methos for your specific data types (cf. `QDebug operator<< (... effectStruct)` in `PhotoTweaker`)
+
+Add "CONFIG += debug" at the beginning of the .pro file if you want to debug your project (by using gdb) without using Qt Creator. (You  when run `qmake CONFIG += debug`). You may have to `make clean` for the change to take effect.
+
+How do I set the command line parameter (argv) of a programm which runs in the debugger ? In Qt Creator the command line arguments are set under Projects, Run Settings.
 
 #Todo
 
