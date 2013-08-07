@@ -203,6 +203,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - save and load profiles for the settings
 - create a script that opens each file in a directory and let's edit a copy
 - white balance
+- allow drag and drop of images into the application to open them.
 - check the windows software from lucern and get inspiration from it.
 
 #Goal
