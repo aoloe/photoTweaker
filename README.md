@@ -143,36 +143,49 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 #Todo
 
 ## For version 1.0 we have to do:
+
 - everything implemented works correctly.
 - refactor the relationship between the effect and its preferences
-    - get the effects preferences from each effect (and not the dialog).
-- dynamically add the scale buttons from its preferences.
+  - get the effects settings from each effect (and not the dialog).
+  - save and read the settings from each effect.
 - add the toolbar buttons from each effect.
+- reload the toolbar after saving the settings.
 - rotate settings (left or right? should the button change?)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
 - add screenshots and screencasts.
+- choose a license: gpl or bsd?
+- use the github repository as the webseite (clean up the README file)
 
 ## After 1.0
+
 - provide packages for windows and os x.
 - create a website, based on github files in this repository (ideale.ch/photoTweaker)
 
 ## For version 1.1.
+
 - get it to build with jenkins
-- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress? (maybe for the future?)
-- on open without a file, show the file open dialog. quit on cancel. and remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
+- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress?
+- on open without a file, show the file open dialog. quit on cancel. maybe remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
 - create a doxygen code documentation.
+- refactor the selection / selection tool
+  - selection should be a property of photo
+  - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
+  - add a constrained selection resizing
 
 ## Further taks:
+
 - implement the effects and instruments as plugin?
 - make it testable and implement tests
 
 ## Notes
+
 - after having saved, should we show the original picture or the cropped part? at least document it well...
 - how to put dependencies in the qmake file?
   ->>> LIBS += -lpodofo
 - add the name of the current file in the title bar
 - add an asterisk in the title bar if the file has been changed (or a selection is active)
+- reload the image with a new crop after saving with a selection? should it be an option?
 - on quit, ask [ok, cancel] if image isEdited (if not in script modus)
 - implement modifying the selection with the keyboard
 - eventually, put a semi transparent mask on the part not selected
@@ -181,18 +194,14 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - in the code rename "instrument" to "tool" or "plugin"
   http://stackoverflow.com/questions/2802960/what-is-a-qt-plugin
 - ESC to stop selection changes and to release current selection (or is undo enough?)
-- refactor the selection / selection tool
-  - selection should be a property of photo
-  - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
-  - add a constrained selection resizing
 - create a user documentation
 - create a developer documentation
 - translate
 - release for windows and mac os
-- save and load profiles for the preferences
+- save and load profiles for the settings
 - create a script that opens each file in a directory and let's edit a copy
 - white balance
-- check the win software from lucern and get inspiration from it.
+- check the windows software from lucern and get inspiration from it.
 
 #Goal
 
