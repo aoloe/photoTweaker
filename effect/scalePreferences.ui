@@ -35,7 +35,7 @@
     </sizepolicy>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string>Scale</string>
    </property>
    <widget class="QCheckBox" name="enabledCheckBox">
     <property name="geometry">

@@ -26,6 +26,7 @@
 #include <QToolBar>
 #include "abstracteffect.h"
 #include "../undocommand.h"
+#include "effect/scalePreferences.h"
 #include "../photo.h"
 
 AbstractEffect::AbstractEffect(QObject *parent) :
@@ -39,7 +40,9 @@ void AbstractEffect::addToToolBar(QToolBar &toolbar)
 
 QWidget* AbstractEffect::getPreferencesWidget()
 {
-    return NULL;
+    EffectPreferences* effectPreferences = new EffectPreferences();
+    effectPreferences->setMinimumSize(effectPreferences->size());
+    return effectPreferences;
 }
 
 void AbstractEffect::apply(Photo &photo)
