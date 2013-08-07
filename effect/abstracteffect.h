@@ -46,6 +46,7 @@ public:
     virtual ~AbstractEffect(){}
 
     virtual void addToToolBar(QToolBar &toolbar);
+    virtual QWidget* getPreferencesWidget();
     virtual void apply(Photo &photo);
     
 protected:

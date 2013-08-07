@@ -11,11 +11,15 @@ PreferencesDialog::PreferencesDialog( QWidget * parent) : QDialog(parent)
     QVBoxLayout *layout = new QVBoxLayout();
 
     // TODO: get the preferences from each effects
-    scalePreferences = new ScalePreferences();
-    scalePreferences->setMinimumSize(scalePreferences->size());
-    layout->addWidget(scalePreferences);
-
-
+    foreach (AbstractEffect* item, effects)
+    {
+        QWidget* effectWidget = item->getPreferencesWidget();
+        // TODO: if null is returned, should we add a standard "[ ] enabled" widget? (ale/20130807)
+        if (effectWidget)
+        {
+            layout->addWidget(scalePreferences);
+        }
+    }
 
     // only as sample beceause we want some items in the list dialog
     ScalePreferences* scolePreferences = new ScalePreferences();

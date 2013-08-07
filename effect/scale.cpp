@@ -4,6 +4,7 @@
 #include <QToolButton>
 #include <QSignalMapper>
 #include "scale.h"
+#include "effect/scalePreferences.h"
 #include "photo.h"
 
 EffectScale::EffectScale(QObject *parent) :
@@ -28,14 +29,16 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
     connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(doEffect(const QString &)));
 }
 
+QWidget* EffectScale::getPreferencesWidget()
+{
+    ScalePreferences* scalePreferences = new ScalePreferences();
+    scalePreferences->setMinimumSize(scalePreferences->size());
+    return scalePreferences;
+}
+
 void EffectScale::doEffect(const QString &value)
 {
     qDebug() << "scale effect QString" << value;
-}
-
-void EffectScale::doEffect(bool status)
-{
-    qDebug() << "scale effect bool" << status;
 }
 
 /**

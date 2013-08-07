@@ -142,22 +142,24 @@ void PhotoTweaker::initializeEffects()
     }
 }
 
+/**
+ * @brief Create the menu bar.
+ *
+ * file   edit          select         effects
+ *  open   undo          none
+ *  --     redo          --
+ *  save   --            v move    m
+ *  --     preferences     grow    >
+ *  quit                   shrink  <
+ *                       --
+ *                       ... left  h
+ *                       ... up    j
+ *                       ... down  k
+ *                       ... right l
+ * 
+ */
 void PhotoTweaker::initializeMenu()
 {
-    /*
-     * file   edit          select         effects
-     *  open   undo          none
-     *  --     redo          --
-     *  save   --            v move    m
-     *  --     preferences     grow    >
-     *  quit                   shrink  <
-     *                       --
-     *                       ... left  h
-     *                       ... up    j
-     *                       ... down  k
-     *                       ... right l
-     * 
-     */
 
     QMenu *menuFile = menuBar()->addMenu(tr("&File"));
 
@@ -176,10 +178,10 @@ void PhotoTweaker::initializeMenu()
     menuFile->addSeparator();
 
     actionFileQuit = new QAction(tr("&Quit"), this);
+    // connection to this->close is needed to do some cleanup (like writing the preferences).
+    // this is done in closeEvent().
     connect(actionFileQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actionFileQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
-    // actionFileQuit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
     actionFileQuit->setShortcuts(
         QList<QKeySequence>()
             << Qt::CTRL + Qt::Key_Q
@@ -224,22 +226,14 @@ void PhotoTweaker::initializeToolBar()
 
     effectActions.fill(0, (int)EFFECT_COUNT);
 
+    // TODO: let the effects add themselves to the toolbar
     for (int i = 0; i < EFFECT_COUNT; i++)
     {
         if (effects[i].id == EFFECT_SCALE)
         {
             effects[i].effect->addToToolBar(*toolBar);
-        /*
-        QAction *action = new QAction(tr(effect.name), this);
-        actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
-        connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
-        toolBar->addAction(actionRotate);
-        effectActions[EFFECT_ROTATION] = actionRotate;
-        */
         }
     }
-
-    // TODO: let the effects add themselves to the toolbar
 
     QAction *actionRotate = new QAction(tr("Rotate"), this);
     actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
@@ -253,16 +247,12 @@ void PhotoTweaker::initializeToolBar()
     toolBar->addAction(actionGrayscale);
     effectActions[EFFECT_GRAYSCALE] = actionGrayscale;
 
-    // TODO: find a way to cleanly add a button with a label
-    // - the tooltip should be different than the text shown ("Scale 900" vs. "900")
-    // - it would be nice to have only one action with different parameters for each target size
     QAction *actionScale= new QAction(tr("900"), this);
     actionScale->setIcon(QIcon(":/media/icons/scale.png"));
     actionScale->setToolTip("Scale 900");
     connect(actionScale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
     effectActions[EFFECT_SCALE] = actionScale;
 
-    // QPushButton *scaleButton = new QPushButton();
     QToolButton *scaleButton = new QToolButton();
     scaleButton->setIcon(QIcon(":/media/icons/scale.png"));
     scaleButton->setText("900");

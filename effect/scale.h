@@ -14,10 +14,10 @@ public:
     QSignalMapper *signalMapper;
     explicit EffectScale(QObject *parent = 0);
     void addToToolBar(QToolBar &toolBar);
+    virtual QWidget* getPreferencesWidget();
     void apply(Photo &photo);
 public slots:
     void doEffect(const QString &value);
-    void doEffect(bool status);
 signals:
     void clicked(int value);
 

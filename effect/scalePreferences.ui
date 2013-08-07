@@ -37,7 +37,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QCheckBox" name="activeCheckBox">
+   <widget class="QCheckBox" name="enabledCheckBox">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Active</string>
+     <string>Enabled</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addButton">

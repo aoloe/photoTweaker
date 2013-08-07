@@ -57,7 +57,7 @@ void ScalePreferences::writeSettings()
 // http://qt-project.org/doc/qt-4.8/widgets-windowflags.html or try setWindowFlags
     QSettings settings("graphicslab.org", "photoTweaker");
 
-    settings.setValue("scale/active", activeCheckBox->isChecked());
+    settings.setValue("scale/enabled", enabledCheckBox->isChecked());
     settings.beginWriteArray("scale/size");
     for (int i = 0; i < listWidget->count(); i++)
     {
@@ -70,7 +70,7 @@ void ScalePreferences::writeSettings()
 void ScalePreferences::readSettings()
 {
     QSettings settings("graphicslab.org", "photoTweaker");
-    activeCheckBox->setChecked(settings.value("scale/active", true).toBool());
+    enabledCheckBox->setChecked(settings.value("scale/enabled", true).toBool());
     QListWidgetItem* item;
     int n = settings.beginReadArray("scale/size");
     for (int i = 0; i < n; i++)

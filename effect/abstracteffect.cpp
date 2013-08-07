@@ -37,6 +37,11 @@ void AbstractEffect::addToToolBar(QToolBar &toolbar)
 {
 }
 
+QWidget* AbstractEffect::getPreferencesWidget()
+{
+    return NULL;
+}
+
 void AbstractEffect::apply(Photo &photo)
 {
 }
