@@ -117,12 +117,12 @@ bool Photo::open(const QString filePath)
     this->filePath = filePath;
     emit setWindowTitle(QFileInfo(filePath).fileName());
     loaded = image.load(filePath);
-    qDebug() << "loaded:" << loaded;
+    // qDebug() << "loaded:" << loaded;
     if (loaded)
     {
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         currentInstrument = CURSOR;
-        qDebug() << "opened file" << filePath;
+        // qDebug() << "opened file" << filePath;
         emit setStatusSize(image.width(), image.height());
     }
     else
@@ -143,13 +143,13 @@ void Photo::save()
     if(!filePath.isEmpty())
     {
         SelectionInstrument *instrument = static_cast <SelectionInstrument*> (instrumentsHandlers.at(CURSOR));
-        qDebug() << "isSelection" << instrument->isSelection();
+        // qDebug() << "isSelection" << instrument->isSelection();
         if (isEdited)
         {
-            qDebug() << "filePath:" << filePath;
+            // qDebug() << "filePath:" << filePath;
             if (instrument->isSelection())
             {
-                qDebug() << "saving selection:" << instrument->getSelection();
+                // qDebug() << "saving selection:" << instrument->getSelection();
                 image.copy(instrument->getSelection()).save(filePath);
             }
             else

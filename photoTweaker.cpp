@@ -30,7 +30,7 @@ const int PhotoTweaker::EFFECT_GRAYSCALE = 1;
 const int PhotoTweaker::EFFECT_SCALE = 2;
 
 /**
- * @brief PhotoTweaker::PhotoTweaker manages the application's main window
+ * @brief PhotoTweaker::PhotoTweaker manages the application's main window and pulls all the strings together
  */
 
 PhotoTweaker::PhotoTweaker() :
@@ -116,7 +116,7 @@ void PhotoTweaker::readSettings()
         item.enabled = true;
         effects << item;
     }
-    qDebug() << "effects" << effects;
+    // qDebug() << "effects" << effects;
 }
 
 void PhotoTweaker::initializeEffects()
@@ -145,10 +145,11 @@ void PhotoTweaker::initializeEffects()
             effect = new EffectDisabled();
         }
         effect->setEffectName(effects[i].name);
-        effect->setEnabled(effect[i].enabled);
+        effect->setEnabled(effects[i].enabled);
         effect->readSettings();
         effects[i].effect = effect;
     }
+    // qDebug() << "initializeEffects effects" << effects;
 }
 
 /**
@@ -274,7 +275,7 @@ void PhotoTweaker::initializeStatusBar()
 void PhotoTweaker::run()
 {
     QMainWindow::show();
-    qDebug() << "filePath:" << filePath;
+    // qDebug() << "filePath:" << filePath;
     if (!filePath.isEmpty())
     {
         open();
@@ -313,7 +314,7 @@ void PhotoTweaker::open()
     {
         filePath = QFileDialog::getOpenFileName(this, tr("Select File"), QDir::homePath());
     }
-    qDebug() << "filePath:" << filePath;
+    // qDebug() << "filePath:" << filePath;
 
     if (filePath.isEmpty())
         return;
@@ -329,10 +330,10 @@ void PhotoTweaker::open()
 
 void PhotoTweaker::save()
 {
-    qDebug() << "trying to save";
+    // qDebug() << "saving";
     if(!filePath.isEmpty())
     {
-        qDebug() << "save " << filePath;
+        // qDebug() << "save " << filePath;
         photo->save();
     }
 }
@@ -348,13 +349,14 @@ void PhotoTweaker::preferences()
         }
         dialog->setListAlignTop();
         if(dialog->exec() == QDialog::Accepted){
-            // TODO: write the list of enabled settings
-            // this->writeEffectSettings()
-            foreach(effectStruct item, effects)
+            // TODO: check if there is a better way to do it than always call effects[i] (ale/20130808)
+            int n = effects.count();
+            for (int i = 0; i < n; i++)
             {
-                item.effect->writeSettings();
-                item.enabled = item.effect->getEnabled();
+                effects[i].effect->writeSettings();
+                effects[i].enabled = effects[i].effect->getEnabled();
             }
+            // qDebug() << "effects" << effects;
             writeSettings();
             initializeToolBar();
             // TODO: reload the toolbar
@@ -363,7 +365,7 @@ void PhotoTweaker::preferences()
 
 void PhotoTweaker::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "closing";
+    // qDebug() << "closing";
     // TODO: ask for confirmation if the document has not been saved
     // if (userReallyWantsToQuit()) {
     writeSettings();

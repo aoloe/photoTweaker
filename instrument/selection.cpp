@@ -20,11 +20,11 @@ Selection::Selection(QRect area)
 
 void Selection::setOrigin(QPoint origin)
 { 
-    qDebug() << "area" << area;
-    qDebug() << "origin" << origin;
+    // qDebug() << "area" << area;
+    // qDebug() << "origin" << origin;
     area.setX(origin.x());
     area.setY(origin.y());
-    qDebug() << "area" << area;
+    // qDebug() << "area" << area;
 }
 
 void Selection::resize(qreal ratio)

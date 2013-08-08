@@ -101,7 +101,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         {
             selection_o->calculateArea(event->pos());
             selection_o->setMousePosition(event->pos()); // necessary to calculate C movements
-            qDebug() << "getArea" << selection_o->getArea();
+            // qDebug() << "getArea" << selection_o->getArea();
             rubberBand->setGeometry(selection_o->getArea()); // TODO: or selection_o->draw()?
             rubberBand->show();
         }
@@ -153,14 +153,14 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
     /*
     if (rubberBand && isSelection())
     {
-        qDebug() << "paintEvent";
-        qDebug() << "parent" << parent();
+        // qDebug() << "paintEvent";
+        // qDebug() << "parent" << parent();
         QWidget* parentWidget = static_cast <QWidget*> (parent());
-        qDebug() << "geometry" << parentWidget->geometry();
-        qDebug() << "parent geometry" << parentWidget->geometry();
-        qDebug() << "photo geometry" << photo.geometry();
+        // qDebug() << "geometry" << parentWidget->geometry();
+        // qDebug() << "parent geometry" << parentWidget->geometry();
+        // qDebug() << "photo geometry" << photo.geometry();
         QRect surface = (static_cast <QWidget*> (parent()))->geometry();
-        qDebug() << "surface" << surface;
+        // qDebug() << "surface" << surface;
         QPainterPath path = QPainterPath();
         path.setFillRule(Qt::OddEvenFill);
         path.addRect(static_cast <QRectF>(surface));

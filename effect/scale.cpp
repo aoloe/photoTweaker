@@ -82,7 +82,7 @@ void EffectScale::acceptPreferencesWidget(bool enabled, QList<int> size)
 
 void EffectScale::apply(const QString &value)
 {
-    qDebug() << "scale effect QString" << value;
+    // qDebug() << "scale effect QString" << value;
 
     const int size = value.toInt();
 
