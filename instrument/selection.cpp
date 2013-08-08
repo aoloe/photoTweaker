@@ -6,6 +6,7 @@ Selection::Selection()
     area = QRect();
     activeHandle = NONE;
     mousePosition = QPoint(0,0);
+    creatingArea = false;
     /*
     mouseOnSelection = NONE;
     clickOnSelection = NONE;

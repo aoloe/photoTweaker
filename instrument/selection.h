@@ -28,8 +28,8 @@ public:
     bool isMouseInSelection(QPoint pos);
     Direction getActiveHandle(QPoint pos);
     void detectActiveHandle(QPoint pos);
-    void setActiveHandleCreation() {activeHandle = SE;}
-    void releaseActiveHandle() {activeHandle = NONE;}
+    void setActiveHandleCreation() {creatingArea = true; activeHandle = SE;}
+    void releaseActiveHandle() {creatingArea = false; activeHandle = NONE;}
     bool hasActiveHandle() {return (activeHandle != NONE);}
     void setImageArea(QRect area) {imageArea = area;}
     void calculateArea(QPoint position);
@@ -46,6 +46,7 @@ protected:
     QRect imageArea; // size of the whole image
     QPoint mousePosition;
     enum Direction activeHandle;
+    bool creatingArea; // set to true when creating a new area: allows negative rectangles
 private:
     Direction getCardinalDirection(QRect area, QPoint point);
 };
