@@ -148,18 +148,26 @@ This applies for adding a dialog or a widget.
 In this example we will create the fictive "improve" plugin.
 
 - create the `effect/improve.h` and `effect/improve.cpp` files defining the `EffectImprove`, extending `AbstractEffect`. It's the class where you will put effect's main code (creating the buttons for the toolbar, the `apply()` that applies the modifications on the current image).
-- in `EffectImprove` you will -- at least -- have to define the following methods:
-  - `void addToToolBar(QToolBar &toolbar)`
-  - `void apply(const QString &value)`
-  if your effect has some settings, you will also need:
-  - `void writeSettings()`
-  - void readSettings()`
-  - `QWidget* getPreferencesWidget()`
-  - `void acceptPreferencesWidget(bool enabled, QList<int> size)`
-- implement the `addToToolbar()` method that adds the effects button(s) to the toolbar. You can find a simple example in the Rotate effect, and a more complex one -- with multiple buttons created by a single effect -- in the Select effect.
-- if the effect does not have settings, `AbstractEffect::getPreferencesWidget()` will provide a default widget with a checkbox to enable/disable the effect.
-- if the effect has some settings you have to implement `EffectImprove::writeSettings()`, `EffectImprove::readSettings()`  that will use `QSettings` to store the values.
-- add all the created files in the right header, source and forms sections of the `photoTweaker.pro` file
+    - in `EffectImprove` you will -- at least -- have to define the following methods:
+      - `void addToToolBar(QToolBar &toolbar)`
+      - `void apply(const QString &value)`
+      if your effect has some settings, you will also need:
+      - `void writeSettings()`
+      - void readSettings()`
+      - `QWidget* getPreferencesWidget()`
+      - `void acceptPreferencesWidget(bool enabled, QList<int> size)`
+    - implement the `addToToolbar()` method that adds the effects button(s) to the toolbar. You can find a simple example in the Rotate effect, and a more complex one -- with multiple buttons created by a single effect -- in the Select effect.
+    - if the effect does not have settings, `AbstractEffect::getPreferencesWidget()` will provide a default widget with a checkbox to enable/disable the effect.
+    - if the effect has some settings you have to implement `EffectImprove::writeSettings()`, `EffectImprove::readSettings()`  that will use `QSettings` to store the values. You will also need the `getPreferencesWidget()` and `acceptPreferencesWidget()` to add the widget to the preferences dialog and to process the new data when the "Ok" button is pressed in the preferen in the preferences.
+    - the `apply()` method is where your real filter code resides.
+- If your effect has some settings, you will need to add the widget that will be shown in the preferences dialog:
+  - create the `improvePreferences.ui` file with Qt designer (of course you can duplicate an existing .ui file). It will need at least a group called `groupBox` and a check box called `enabledCheckBox`.
+  - create the ImprovePreferences class in the `improvePreferences.h` and `improvePreferences.cpp` files with at least the following methos:
+    - `setEnabled(bool enabled)` to let the effect set the value for the "Enabled" checkbox.
+    - `accept()` slot called by the "Preferences" dialog when the "Ok" button is pressed.
+    - `accepted(bool enabled)` signal emitted by the widget to tell to the effect that new values have to be stored.
+    and, of course, you will have to add the methods that handle the settings you need for your effect.
+- add all the created files in the right header, source and forms sections of the `photoTweaker.pro` file and the icons to the `resources.qrc` file.
 
 ### Writint working code
 
@@ -186,12 +194,8 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 ## For version 1.0 we have to do:
 
 - everything implemented works correctly.
-- refactor the relationship between the effect and its preferences
-  - get the effects settings from each effect (and not the dialog).
-  - save and read the settings from each effect.
-- add the toolbar buttons from each effect.
+- correctly handle the enabling / disabling of the effects.
 - reload the toolbar after saving the settings.
-- rotate settings (left or right? should the button change?)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
 - add screenshots and screencasts.
@@ -255,6 +259,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 - How to correctly give the effects access to the Photo?
 - When to pass a pointer, a reference to a struct or a struct?
+  - p. ex.: passing photo to the effects.
 
 #Goal
 
