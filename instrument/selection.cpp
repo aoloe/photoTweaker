@@ -206,6 +206,12 @@ void Selection::calculateArea(QPoint position)
             dy2 = 0;
         }
         area.adjust(dx1, dy1, dx2, dy2);
-        area.intersect(imageArea);
+        if (!area.isEmpty())
+        {
+            // qDebug() << "area" << area;
+            // qDebug() << "imageArea" << imageArea;
+            area = area.intersected(imageArea);
+            // qDebug() << "area intersected" << area;
+        }
     }
 }
