@@ -1,40 +1,3 @@
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
-
-- [Documentation](#documentation)
-    - [Features](#features)
-    - [License](#license)
-- [Developers documentation](#developers-documentation)
-    - [The general structure of photoTweaker](#the-general-structure-of-phototweaker)
-    - [Code conventions](#code-conventions)
-    - [photoTweaker for learning C++ and Qt](#phototweaker-for-learning-c-and-qt)
-        - [Managing the menu bar](#managing-the-menu-bar)
-        - [Adding a dialog](#adding-a-dialog)
-        - [Creating an effect](#creating-an-effect)
-        - [Writint working code](#writint-working-code)
-        - [Writing comments](#writing-comments)
-        - [Debugging](#debugging)
-- [Todo](#todo)
-    - [For version 1.0 we have to do:](#for-version-10-we-have-to-do)
-    - [After 1.0](#after-10)
-    - [For version 1.1.](#for-version-11)
-    - [Further taks:](#further-taks)
-    - [Notes](#notes)
-    - [Open "architecture" questions](#open-architecture-questions)
-- [Goal](#goal)
-    - [Possible future features](#possible-future-features)
-    - [Features that are unlikely to be](#features-that-are-unlikely-to-be)
-- [Thanks to](#thanks-to)
-- [Notes](#notes-1)
-- [The status bar](#the-status-bar)
-- [History](#history)
-    - [Creating the main .ui file](#creating-the-main-ui-file)
-    - [The main.cpp file](#the-maincpp-file)
-    - [The photoTweaker.cpp file](#the-phototweakercpp-file)
-    - [The .pro file](#the-pro-file)
-- [Random links](#random-links)
-
-# Documentation
-
 photoTweaker is a
 
 - Fast
@@ -66,7 +29,44 @@ Don't hesitate to write feature request and bug reporting in the GitHub tracker,
 - https://github.com/aoloe/photoTweaker/fork
 - http://lists.freedesktop.org/mailman/listinfo/create
 
-## Features
+# Table of Contents
+<!--
+generated with [DocToc](http://doctoc.herokuapp.com/)
+-->
+
+- [Features](#features)
+- [License](#license)
+- [Developers documentation](#developers-documentation)
+    - [The general structure of photoTweaker](#the-general-structure-of-phototweaker)
+    - [Code conventions](#code-conventions)
+    - [photoTweaker for learning C++ and Qt](#phototweaker-for-learning-c-and-qt)
+        - [Managing the menu bar](#managing-the-menu-bar)
+        - [Adding a dialog](#adding-a-dialog)
+        - [Creating an effect](#creating-an-effect)
+        - [Writint working code](#writint-working-code)
+        - [Writing comments](#writing-comments)
+        - [Debugging](#debugging)
+- [Todo](#todo)
+    - [For version 1.0 we have to do:](#for-version-10-we-have-to-do)
+    - [After 1.0](#after-10)
+    - [For version 1.1.](#for-version-11)
+    - [Further taks:](#further-taks)
+    - [Notes](#notes)
+    - [Open "architecture" questions](#open-architecture-questions)
+- [Goal](#goal)
+    - [Possible future features](#possible-future-features)
+    - [Features that are unlikely to be](#features-that-are-unlikely-to-be)
+- [Thanks to](#thanks-to)
+- [Notes](#notes-1)
+- [The status bar](#the-status-bar)
+- [History](#history)
+    - [Creating the main .ui file](#creating-the-main-ui-file)
+    - [The main.cpp file](#the-maincpp-file)
+    - [The photoTweaker.cpp file](#the-phototweakercpp-file)
+    - [The .pro file](#the-pro-file)
+- [Random links](#random-links)
+
+# Features
 
 Currently, the following features have been implemented:
 
@@ -89,7 +89,7 @@ For the near future, the following features are planned:
   - on quit the filename is returned for further processing.
   - a filename must be passed as parameter and "open" is not available.
 
-## License
+# License
 
 photoTweake is free software. It's not clear yet, if it will be GPL or MIT/BSD licensed.
 
