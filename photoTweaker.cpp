@@ -346,6 +346,7 @@ void PhotoTweaker::preferences()
             // TODO: the slot should probably not be named accepted(). (ale/20130807)
             // connect(dialog, SIGNAL(accepted()), item.effect, SLOT(accepted()));
         }
+        dialog->setListAlignTop();
         if(dialog->exec() == QDialog::Accepted){
             // TODO: write the list of enabled settings
             // this->writeEffectSettings()

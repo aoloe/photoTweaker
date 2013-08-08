@@ -21,3 +21,8 @@ void PreferencesDialog::addEffect(AbstractEffect *effect)
         connect(this, SIGNAL(accepted()), effectWidget, SLOT(accept()));
     }
 }
+
+void PreferencesDialog::setListAlignTop()
+{
+    qobject_cast<QVBoxLayout *>(scrollAreaWidgetContents->layout())->addStretch(0);
+}

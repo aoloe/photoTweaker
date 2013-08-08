@@ -31,7 +31,6 @@ FORMS += \
 SOURCES += \
     main.cpp \
     photoTweaker.cpp \
-    datasingleton.cpp \
     undocommand.cpp \
     preferencesDialog.cpp \
     instrument/abstractinstrument.cpp \
@@ -49,7 +48,6 @@ SOURCES += \
     effect/scalePreferences.cpp
 HEADERS += \
     photoTweaker.h \
-    datasingleton.h \
     undocommand.h \
     preferencesDialog.h \
     instrument/abstractinstrument.h \

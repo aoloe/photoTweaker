@@ -33,7 +33,6 @@
 
 #include "photo.h"
 #include "undocommand.h"
-#include "datasingleton.h"
 
 #include "instrument/abstractinstrument.h"
 #include "instrument/selectionInstrument.h"
@@ -70,8 +69,7 @@ Photo::Photo()
     // qDebug() << "selectionInstrument" << selectionInstrument;
     instrumentsHandlers[CURSOR] = selectionInstrument;
     // qDebug() << "instrumentsHandlers" << instrumentsHandlers;
-    DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
-
+    currentInstrument = NONE_INSTRUMENT;
 
     currentCursor = QCursor(Qt::CrossCursor);
     setCursor(currentCursor);
@@ -123,14 +121,14 @@ bool Photo::open(const QString filePath)
     if (loaded)
     {
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-        DataSingleton::Instance()->setInstrument(CURSOR);
+        currentInstrument = CURSOR;
         qDebug() << "opened file" << filePath;
         emit setStatusSize(image.width(), image.height());
     }
     else
     {
         image = QImage();
-        DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
+        currentInstrument = NONE_INSTRUMENT;
         qDebug() << "failed to open file" << filePath;
     }
     // qDebug() << "image size" << image.byteCount();
@@ -223,7 +221,7 @@ void Photo::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect();
     painter.drawImage(dirtyRect, imageView, dirtyRect);
 
-    int instrument = DataSingleton::Instance()->getInstrument();
+    int instrument = currentInstrument;
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
@@ -235,9 +233,9 @@ void Photo::resizeEvent(QResizeEvent *event)
 {
     updateImageView();
     QWidget::resizeEvent(event);
-    if (DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
+    if (currentInstrument != NONE_INSTRUMENT)
     {
-        instrumentHandler = instrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
+        instrumentHandler = instrumentsHandlers.at(currentInstrument);
         instrumentHandler->setViewScale(viewScale);
         instrumentHandler->resizeEvent(event, *this);
     }
@@ -267,7 +265,7 @@ void Photo::clearSelection()
 
 void Photo::mousePressEvent(QMouseEvent *event)
 {
-    int instrument = DataSingleton::Instance()->getInstrument();
+    int instrument = currentInstrument;
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
@@ -277,7 +275,7 @@ void Photo::mousePressEvent(QMouseEvent *event)
 
 void Photo::mouseMoveEvent(QMouseEvent *event)
 {
-    int instrument = DataSingleton::Instance()->getInstrument();
+    int instrument = currentInstrument;
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
@@ -295,7 +293,7 @@ void Photo::mouseMoveEvent(QMouseEvent *event)
 
 void Photo::mouseReleaseEvent(QMouseEvent *event)
 {
-    int instrument = DataSingleton::Instance()->getInstrument();
+    int instrument = currentInstrument;
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);

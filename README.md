@@ -229,7 +229,6 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 ## For version 1.0 we have to do:
 
 - correctly handle the enabling / disabling of the effects.
-- fix the resizing of the preferences (the list should grow and the button anchored to the bottom)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
 - add screenshots and screencasts.
@@ -257,6 +256,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - enable an effect without having to restart the program.
 - clear the selection after rotating
 - let the user define an order of the effects in the toolbar
+- let the preferences dialog grow to fit its it content / vertically fill the screen.
 
 ## Further taks:
 

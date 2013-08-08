@@ -88,6 +88,7 @@ private:
     QUndoStack *undoStack;
     QVector<AbstractInstrument*> instrumentsHandlers;
     AbstractInstrument *instrumentHandler;
+    int currentInstrument;
     QVector<AbstractEffect*> effectsHandlers;
     AbstractEffect *effectHandler;
 

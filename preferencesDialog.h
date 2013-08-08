@@ -8,6 +8,7 @@ class PreferencesDialog : public QDialog, public Ui::PreferencesDialog
 public:
     PreferencesDialog( QWidget * parent = 0);
     void addEffect(AbstractEffect *effect);
+    void setListAlignTop();
 private:
     ScalePreferences* scalePreferences;
 };
