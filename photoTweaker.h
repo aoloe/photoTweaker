@@ -23,16 +23,16 @@ public:
     void setFilePath(QString filePath) {this->filePath = filePath;}
 	void run();
 
+    Photo* getPhoto() {return this->photo;}
+
     struct effectStruct {
         int id;
         QString name;
         bool enabled;
         AbstractEffect* effect;
-        QList<QAction*> action;
     };
 
     static const int EFFECT_COUNT;
-    static const int EFFECT_NONE;
     static const int EFFECT_ROTATION;
     static const int EFFECT_GRAYSCALE;
     static const int EFFECT_SCALE;
@@ -47,7 +47,6 @@ public slots:
 	void setStatusMouse();
 	void setStatusMessage(QString message);
 	void setTitle(QString title);
-    void doEffect(bool state);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -75,7 +74,6 @@ private:
 	QString filePath;
     Photo* photo;
 
-    QVector<QAction*> effectActions;
 	// Magick++ Objects
 	QByteArray 	imgData;
 	QPixmap	pixmap;

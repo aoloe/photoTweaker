@@ -26,6 +26,7 @@ FORMS += \
     preferencesDialog.ui\
     effect/effectPreferences.ui\
     effect/disabledPreferences.ui\
+    effect/rotatePreferences.ui\
     effect/scalePreferences.ui
 SOURCES += \
     main.cpp \
@@ -40,10 +41,11 @@ SOURCES += \
     effect/abstracteffect.cpp \
     effect/disabled.cpp\
     effect/grayscale.cpp \
-    effect/rotation.cpp \
+    effect/rotate.cpp \
     effect/scale.cpp\
-    effect/disabledPreferences.cpp\
     effect/effectPreferences.cpp\
+    effect/disabledPreferences.cpp\
+    effect/rotatePreferences.cpp\
     effect/scalePreferences.cpp
 HEADERS += \
     photoTweaker.h \
@@ -57,10 +59,11 @@ HEADERS += \
     effect/abstracteffect.h \
     effect/disabled.h\
     effect/grayscale.h \
-    effect/rotation.h \
+    effect/rotate.h \
     effect/scale.h\
-    effect/disabledPreferences.h\
     effect/effectPreferences.h\
+    effect/disabledPreferences.h\
+    effect/rotatePreferences.h\
     effect/scalePreferences.h
 
 RESOURCES += \

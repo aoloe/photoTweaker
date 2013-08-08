@@ -1,7 +1,8 @@
 #ifndef ABSTRACTEFFECT_H
 #define ABSTRACTEFFECT_H
 
-#include <QtCore/QObject>
+#include <QObject>
+#include "photoTweaker.h"
 
 QT_BEGIN_NAMESPACE
 class QToolBar;
@@ -20,6 +21,7 @@ public:
     explicit AbstractEffect(QObject *parent = 0);
     virtual ~AbstractEffect(){}
 
+    void setMainApp(PhotoTweaker* app) {mainApp = app;}
     virtual void addToToolBar(QToolBar &toolbar);
     virtual void writeSettings();
     virtual void readSettings();
@@ -33,6 +35,7 @@ public:
     bool enabled; // TODO: why does it have to be public? (ale/20130807)
 protected:
     QString effectName;
+    PhotoTweaker* mainApp;
 };
 
 #endif // ABSTRACTEFFECT_H

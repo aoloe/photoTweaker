@@ -57,8 +57,7 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
         signalMapper->setMapping(button, QString::number(item));
     }
 
-    // TODO: use apply() instead of doEffect() (ale/20130807)
-    connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(doEffect(const QString &)));
+    connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(apply(const QString &)));
 }
 
 QWidget* EffectScale::getPreferencesWidget()
@@ -81,33 +80,25 @@ void EffectScale::acceptPreferencesWidget(bool enabled, QList<int> size)
     this->size = size;
 }
 
-void EffectScale::doEffect(const QString &value)
+void EffectScale::apply(const QString &value)
 {
     qDebug() << "scale effect QString" << value;
-}
 
-/**
- * @brief EffectScale::apply
- * @param photo
- * - Get the image from photo
- * - Find out if the image is wide or high
- * - If wide, scale to width 900, if high scale to height 900
- * - Store the image in photo
- */
-void EffectScale::apply(Photo &photo)
-{
-    photo.addUndoInformation();
+    const int size = value.toInt();
 
-    QImage image = photo.getImage();
+    Photo* photo = mainApp->getPhoto();
+    photo->addUndoInformation();
+
+    QImage image = photo->getImage();
     if(image.width() >= image.height())
     {
-        image = image.scaledToWidth(900);
+        image = image.scaledToWidth(size);
     }
     else
     {
-        image = image.scaledToHeight(900);
+        image = image.scaledToHeight(size);
     }
-    photo.setImage(image);
-    photo.updateImageView();
-    photo.setEdited(true);
+    photo->setImage(image);
+    photo->updateImageView();
+    photo->setEdited(true);
 }

@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QSettings>
+#include <QAction>
 #include <QToolBar>
 #include "grayscale.h"
 #include "photo.h"
@@ -8,16 +10,21 @@ AbstractEffect(parent)
 {
 }
 
-void EffectGrayscale::addToToolBar(QToolBar &toolbar)
+void EffectGrayscale::addToToolBar(QToolBar &toolBar)
 {
+    QAction *action = new QAction(tr("Grayscale"), this);
+    action->setIcon(QIcon(":/media/icons/grayscale.png"));
+    connect(action, SIGNAL(triggered(bool)), this, SLOT(apply()));
+    toolBar.addAction(action);
 }
 
-void EffectGrayscale::apply(Photo &photo)
+void EffectGrayscale::apply()
 {
-    photo.addUndoInformation();
+    Photo* photo = mainApp->getPhoto();
+    photo->addUndoInformation();
     // photo.clearSelection();
     // makeUndoCommand(imageArea);
-    QImage image = photo.getImage();
+    QImage image = photo->getImage();
     // qDebug() << "width" << image->width();
     // qDebug() << "height" << image->height();
 
@@ -31,9 +38,7 @@ void EffectGrayscale::apply(Photo &photo)
             image.setPixel(i, y, pixel);
         }
     }
-    photo.setEdited(true);
-    photo.setImage(image);
-    photo.updateImageView();
-
-
+    photo->setEdited(true);
+    photo->setImage(image);
+    photo->updateImageView();
 }

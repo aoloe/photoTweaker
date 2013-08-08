@@ -4,7 +4,7 @@
 #include "abstracteffect.h"
 
 class Photo;
-class QToolBaQToolBarr;
+class QToolBar;
 
 class EffectGrayscale : public AbstractEffect
 {
@@ -12,7 +12,8 @@ class EffectGrayscale : public AbstractEffect
 public:
     explicit EffectGrayscale(QObject *parent = 0);
     void addToToolBar(QToolBar &toolbar);
-    void apply(Photo &photo);
+public slots:
+    void apply();
 };
 
 #endif // EFFECTRAYSCALE_H

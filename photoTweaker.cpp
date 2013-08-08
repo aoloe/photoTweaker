@@ -11,13 +11,13 @@
 #include <QUndoGroup>
 #include <QLabel>
 #include <QDebug>
-#include <QAction> //insert by Katrin
+#include <QAction>
 #include <QToolButton>
 
 #include "photo.h"
 #include "effect/disabled.h"
 #include "effect/grayscale.h"
-#include "effect/rotation.h"
+#include "effect/rotate.h"
 #include "effect/scale.h"
 #include "preferencesDialog.h"
 
@@ -25,7 +25,6 @@ QDebug operator<< (QDebug d, const PhotoTweaker::effectStruct &model);
 
 
 const int PhotoTweaker::EFFECT_COUNT = 3;
-const int PhotoTweaker::EFFECT_NONE = -1; // TODO: is it needed? (ale/20130724)
 const int PhotoTweaker::EFFECT_ROTATION = 0;
 const int PhotoTweaker::EFFECT_GRAYSCALE = 1;
 const int PhotoTweaker::EFFECT_SCALE = 2;
@@ -49,8 +48,6 @@ PhotoTweaker::PhotoTweaker()
 
     photo = new Photo();
     setCentralWidget(photo);
-
-
 
     initializeMenu();
 
@@ -106,7 +103,7 @@ void PhotoTweaker::readSettings()
         effects.clear();
         effectStruct item;
         item.id = EFFECT_ROTATION;
-        item.name = "Rotation";
+        item.name = "Rotate";
         item.enabled = true;
         effects << item;
         item.id = EFFECT_GRAYSCALE;
@@ -130,7 +127,7 @@ void PhotoTweaker::initializeEffects()
         {
             if (effects[i].id == EFFECT_ROTATION)
             {
-                effect = new EffectRotation();
+                effect = new EffectRotate();
             }
             else if (effects[i].id == EFFECT_GRAYSCALE)
             {
@@ -140,6 +137,7 @@ void PhotoTweaker::initializeEffects()
             {
                 effect = new EffectScale();
             }
+            effect->setMainApp(this);
         }
         else
         {
@@ -208,7 +206,11 @@ void PhotoTweaker::initializeMenu()
 
     actionEditRedo = undoGroup->createRedoAction(this, tr("&Redo"));
     actionEditRedo->setEnabled(false);
-    actionEditRedo->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z));
+    actionEditRedo->setShortcuts(
+        QList<QKeySequence>()
+            << Qt::CTRL + Qt::Key_Z
+            << Qt::CTRL + Qt::SHIFT + Qt::Key_Z
+    );
     menuEdit->addAction(actionEditRedo);
 
     menuEdit->addSeparator();
@@ -230,48 +232,17 @@ void PhotoTweaker::initializeMenu()
 void PhotoTweaker::initializeToolBar()
 {
     // TODO: make it a setting where the toolbar is set (default left?) (ale/20130807)
+    // ... or at least store the current position in the settings.
     QToolBar* toolBar = new QToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar );
 
     // TODO: add an option to show the label below the button? (ale/20130807)
     // toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    effectActions.fill(0, (int)EFFECT_COUNT);
-
-    // TODO: let the effects add themselves to the toolbar
-    for (int i = 0; i < EFFECT_COUNT; i++)
+    foreach (effectStruct item, effects)
     {
-        if (effects[i].id == EFFECT_SCALE)
-        {
-            effects[i].effect->addToToolBar(*toolBar);
-        }
+        item.effect->addToToolBar(*toolBar);
     }
-
-    QAction *actionRotate = new QAction(tr("Rotate"), this);
-    actionRotate->setIcon(QIcon(":/media/icons/rotate.png"));
-    connect(actionRotate, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
-    toolBar->addAction(actionRotate);
-    effectActions[EFFECT_ROTATION] = actionRotate;
-
-    QAction *actionGrayscale= new QAction(tr("Gray"), this);
-    actionGrayscale->setIcon(QIcon(":/media/icons/grayscale.png"));
-    connect(actionGrayscale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
-    toolBar->addAction(actionGrayscale);
-    effectActions[EFFECT_GRAYSCALE] = actionGrayscale;
-
-    QAction *actionScale= new QAction(tr("900"), this);
-    actionScale->setIcon(QIcon(":/media/icons/scale.png"));
-    actionScale->setToolTip("Scale 900");
-    connect(actionScale, SIGNAL(triggered(bool)), this, SLOT(doEffect(bool)));
-    effectActions[EFFECT_SCALE] = actionScale;
-
-    QToolButton *scaleButton = new QToolButton();
-    scaleButton->setIcon(QIcon(":/media/icons/scale.png"));
-    scaleButton->setText("900");
-    scaleButton->setFocusPolicy(Qt::NoFocus);
-    scaleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    scaleButton->setDefaultAction(actionScale);
-    toolBar->addWidget(scaleButton);
 }
 
 void PhotoTweaker::initializeStatusBar()
@@ -300,51 +271,6 @@ void PhotoTweaker::run()
     {
         open();
     }
-}
-
-/**
- * @brief PhotoTweaker::effectsAct
- * @param bool state wether the button is down or up
- */
-void PhotoTweaker::doEffect(bool state)
-{
-     QAction *currentAction = static_cast<QAction*>(sender());
-     if (currentAction == effectActions[EFFECT_ROTATION])
-     {
-         EffectRotation* effect = new EffectRotation(this);
-         effect->apply(*photo);
-     }
-     else if (currentAction == effectActions[EFFECT_GRAYSCALE])
-     {
-         EffectGrayscale* effect = new EffectGrayscale(this);
-         effect->apply(*photo);
-     }
-     else if (currentAction == effectActions[EFFECT_SCALE])
-     {
-         EffectScale* effect = new EffectScale(this);
-         effect->apply(*photo);
-     }
-
-/*
-        TODO: is this an "abstract" way to call the effects?
-            if(currentAction == mInstrumentsActMap[COLORPICKER] && !mPrevInstrumentSetted)
-            {
-                DataSingleton::Instance()->setPreviousInstrument(DataSingleton::Instance()->getInstrument());
-                mPrevInstrumentSetted = true;
-            }
-            setAllInstrumentsUnchecked(currentAction);
-            currentAction->setChecked(true);
-            DataSingleton::Instance()->setInstrument(mInstrumentsActMap.key(currentAction));
-            emit sendInstrumentChecked(mInstrumentsActMap.key(currentAction));
-        }
-        else
-        {
-            setAllInstrumentsUnchecked(NULL);
-            DataSingleton::Instance()->setInstrument(NONE_INSTRUMENT);
-            emit sendInstrumentChecked(NONE_INSTRUMENT);
-            if(currentAction == mInstrumentsActMap[CURSOR])
-                DataSingleton::Instance()->setPreviousInstrument(mInstrumentsActMap.key(currentAction));
-*/
 }
 
 void PhotoTweaker::setStatusSize(int width, int height)
