@@ -1,12 +1,12 @@
 # Documentation
 
-photoTweake is a
+photoTweaker is a
 
 - Fast
 - Simple
 - Portable
 
-image editor.
+image editor which can be embedded in a scriptable workflow.
 
 You should use it when you don't want to spend more than a few seconds to edit a picture. For more complex work, please use a "real" image editor like Gimp.
 
@@ -17,6 +17,19 @@ Some facts:
 - Actions are performed without showing a dialog.
 - Actions can be personalized in the preferences.
 - One level undo.
+
+In the `scripts/` directory you can find two examples of bash scripts showing how to:
+- Take a screenshot, tweak it and upload it to to an image sharing service.
+- Copy the last image from your digital camera, tweak it and upload to an image sharing service.
+
+photoTweaker is first released in it's version 1.0 and not labelled as alpha or beta software, because we don't know of a better time to set it to 1.0 then time when it's publicly available to be used.
+
+But it has not been used in production yet, you have to compile it by yoursself and it's still a very young project.
+
+Don't hesitate to write feature request and bug reporting in the GitHub tracker, to fork it and make pull request, talk about it on the Create mailing list.
+- https://github.com/aoloe/photoTweaker/issues
+- https://github.com/aoloe/photoTweaker/fork
+- http://lists.freedesktop.org/mailman/listinfo/create
 
 ## Features
 
@@ -40,6 +53,16 @@ For the near future, the following features are planned:
   - "save" and "save as" also quit the program.
   - on quit the filename is returned for further processing.
   - a filename must be passed as parameter and "open" is not available.
+
+## License
+
+photoTweake is free software. It's not clear yet, if it will be GPL or MIT/BSD licensed.
+
+Lot of code is inspired by EasyPaint (https://github.com/Gr1N/EasyPaint) 
+- the undo
+- the filters
+- the selection tool
+
 
 # Developers documentation
 
@@ -120,7 +143,25 @@ This applies for adding a dialog or a widget.
 - run make
 - call the class from your code
 
-### Write working code
+### Creating an effect
+
+In this example we will create the fictive "improve" plugin.
+
+- create the `effect/improve.h` and `effect/improve.cpp` files defining the `EffectImprove`, extending `AbstractEffect`. It's the class where you will put effect's main code (creating the buttons for the toolbar, the `apply()` that applies the modifications on the current image).
+- in `EffectImprove` you will -- at least -- have to define the following methods:
+  - `void addToToolBar(QToolBar &toolbar)`
+  - `void apply(const QString &value)`
+  if your effect has some settings, you will also need:
+  - `void writeSettings()`
+  - void readSettings()`
+  - `QWidget* getPreferencesWidget()`
+  - `void acceptPreferencesWidget(bool enabled, QList<int> size)`
+- implement the `addToToolbar()` method that adds the effects button(s) to the toolbar. You can find a simple example in the Rotate effect, and a more complex one -- with multiple buttons created by a single effect -- in the Select effect.
+- if the effect does not have settings, `AbstractEffect::getPreferencesWidget()` will provide a default widget with a checkbox to enable/disable the effect.
+- if the effect has some settings you have to implement `EffectImprove::writeSettings()`, `EffectImprove::readSettings()`  that will use `QSettings` to store the values.
+- add all the created files in the right header, source and forms sections of the `photoTweaker.pro` file
+
+### Writint working code
 
 When working on your project, you don't have to try to get the perfect code from the beginning. Try to get working code that somehow does what you want to achieve. Further on, like when you're adding new tiles to a jigsaw puzzle, don't be scared to move things around: refactor your code.
 
@@ -162,6 +203,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - announce on the create mailing list.
 - provide packages for windows and os x.
 - create a website, based on github files in this repository (ideale.ch/photoTweaker)
+- create a logo / icon for the program.
 
 ## For version 1.1.
 
@@ -174,6 +216,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
   - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
   - add a constrained selection resizing
 - enable an effect without having to restart the program.
+- clear the selection after rotating
 
 ## Further taks:
 
@@ -184,7 +227,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 - after having saved, should we show the original picture or the cropped part? at least document it well...
 - how to put dependencies in the qmake file?
-  ->>> LIBS += -lpodofo
+  `->>> LIBS += -lpodofo`
 - add the name of the current file in the title bar
 - add an asterisk in the title bar if the file has been changed (or a selection is active)
 - reload the image with a new crop after saving with a selection? should it be an option?
@@ -205,6 +248,13 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - white balance
 - allow drag and drop of images into the application to open them.
 - check the windows software from lucern and get inspiration from it.
+- avoid passing PhotoTweaker to the effects to give them access to the current photo.
+- find matching icons for the toolbar, show them also in the preferences
+
+## Open "architecture" questions
+
+- How to correctly give the effects access to the Photo?
+- When to pass a pointer, a reference to a struct or a struct?
 
 #Goal
 
@@ -237,21 +287,6 @@ ntome, cbreak and the other friendly guys on #qt
 
 
 #Notes
-
-- EasyPaint implements crop by resizing the image "window"
-
-
-Lot of code comes from EasyPaint (https://github.com/Gr1N/EasyPaint) 
-- the undo
-- the filters
-- the selection tool
-
-... it's still in the starting blocks and i'm not the best at c++ / qt... but i try to improve
-but i'm open to comments and hints!
-
-The goal is to create an application that allows me to crop and scale one image in a very fast way....
-
-Tt should work on linux, without KDE or Gnome and i should be able to call it from a script. If possible, it should be multiplatform.
 
 I've been looking for alternatives but didn't find any matching my needs:
 - while Gimp does does crop and scale in a more then satisfactory way, it takes me between one and two minutes to achieve my result...  I've been using for years for this task. And the Gimp (GUI) guys have been very clear that they're not interested in supporting this type of tasks. They're targetting professional graphic designers spending hours on a single image.
