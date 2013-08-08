@@ -24,7 +24,7 @@ photoTweaker is first released in it's version 1.0 and not labelled as alpha or 
 
 But it has not been used in production yet, you have to compile it by yoursself and it's still a very young project.
 
-Don't hesitate to write feature request and bug reporting in the GitHub tracker, to fork it and make pull request, talk about it on the Create mailing list.
+Don't hesitate to write feature requests and bug reportings in the GitHub tracker, to fork this and make pull requests, or talk about your ideas on the Create mailing list (We will create an own forum/list if the dicussion starts being too noisy for the list).
 - https://github.com/aoloe/photoTweaker/issues
 - https://github.com/aoloe/photoTweaker/fork
 - http://lists.freedesktop.org/mailman/listinfo/create
@@ -228,14 +228,14 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
-- everything implemented works correctly.
 - correctly handle the enabling / disabling of the effects.
-- reload the toolbar after saving the settings.
+- fix the resizing of the preferences (the list should grow and the button anchored to the bottom)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
 - add screenshots and screencasts.
 - choose a license: gpl or bsd?
 - use the github repository as the webseite (clean up the README file)
+
 
 ## After 1.0
 
@@ -256,6 +256,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
   - add a constrained selection resizing
 - enable an effect without having to restart the program.
 - clear the selection after rotating
+- let the user define an order of the effects in the toolbar
 
 ## Further taks:
 

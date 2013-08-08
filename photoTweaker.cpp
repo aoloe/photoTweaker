@@ -33,7 +33,8 @@ const int PhotoTweaker::EFFECT_SCALE = 2;
  * @brief PhotoTweaker::PhotoTweaker manages the application's main window
  */
 
-PhotoTweaker::PhotoTweaker()
+PhotoTweaker::PhotoTweaker() :
+    toolBar(0)
 {
     setupUi(this);
 
@@ -102,16 +103,16 @@ void PhotoTweaker::readSettings()
         // until we have real plugins: initialise the list of effects
         effects.clear();
         effectStruct item;
+        item.id = EFFECT_SCALE;
+        item.name = "Scale";
+        item.enabled = true;
+        effects << item;
         item.id = EFFECT_ROTATION;
         item.name = "Rotate";
         item.enabled = true;
         effects << item;
         item.id = EFFECT_GRAYSCALE;
         item.name = "Grayscale";
-        item.enabled = true;
-        effects << item;
-        item.id = EFFECT_SCALE;
-        item.name = "Scale";
         item.enabled = true;
         effects << item;
     }
@@ -233,8 +234,15 @@ void PhotoTweaker::initializeToolBar()
 {
     // TODO: make it a setting where the toolbar is set (default left?) (ale/20130807)
     // ... or at least store the current position in the settings.
-    QToolBar* toolBar = new QToolBar();
-    addToolBar(Qt::TopToolBarArea, toolBar );
+    if (toolBar == NULL)
+    {
+        toolBar = new QToolBar();
+        addToolBar(Qt::TopToolBarArea, toolBar );
+    }
+    else
+    {
+        toolBar->clear();
+    }
 
     // TODO: add an option to show the label below the button? (ale/20130807)
     // toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -347,12 +355,15 @@ void PhotoTweaker::preferences()
                 item.enabled = item.effect->getEnabled();
             }
             writeSettings();
+            initializeToolBar();
+            // TODO: reload the toolbar
         }
 }
 
 void PhotoTweaker::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closing";
+    // TODO: ask for confirmation if the document has not been saved
     // if (userReallyWantsToQuit()) {
     writeSettings();
     event->accept();

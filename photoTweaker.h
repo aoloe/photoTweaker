@@ -64,6 +64,7 @@ private:
     void writeSettings();
     void readSettings();
     void initializeToolBar();
+    QToolBar* toolBar;
     void initializeMenu();
 
     QAction *actionFileOpen, *actionFileSave, *actionFileQuit, 
