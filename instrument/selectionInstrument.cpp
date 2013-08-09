@@ -42,23 +42,22 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
     AbstractInstrument(parent)
 {
     rubberBand = 0;
-    selection_o = 0;
+    selection = 0;
 }
 
 // --> entity-control-boundary pattern
 
 void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
 {
-    // TODO: rename selection_o to selection
-    if (!selection_o)
+    if (!selection)
     {
-        selection_o = new Selection();
-        selection_o->setImageArea(photo.getImageView().rect());
+        selection = new Selection();
+        selection->setImageArea(photo.getImageView().rect());
     }
-    selection_o->setMousePosition(origin); // necessary to calculate C movements
-    selection_o->setOrigin(origin);
-    selection_o->setSize();
-    selection_o->setActiveHandleCreation();
+    selection->setMousePosition(origin); // necessary to calculate C movements
+    selection->setOrigin(origin);
+    selection->setSize();
+    selection->setActiveHandleCreation();
     if (!rubberBand)
     {
         rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
@@ -71,9 +70,9 @@ void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
 
 void SelectionInstrument::destructSelection()
 {
-    if (selection_o != NULL)
+    if (selection != NULL)
     {
-        selection_o = NULL; // TODO: check if we should free the object's memory (ale/20130726)
+        selection = NULL; // TODO: check if we should free the object's memory (ale/20130726)
         rubberBand->hide(); // TODO: check if necessary
         rubberBand = NULL;
     }
@@ -82,23 +81,23 @@ void SelectionInstrument::destructSelection()
 
 void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 {
-    if (selection_o == NULL)
+    if (selection == NULL)
     {
         createSelection(event->pos(), photo);
     }
     else
     {
-        selection_o->setMousePosition(event->pos()); // necessary to calculate C movements
-        if (selection_o->isMouseInSelection(event->pos()))
+        selection->setMousePosition(event->pos()); // necessary to calculate C movements
+        if (selection->isMouseInSelection(event->pos()))
         {
-            selection_o->detectActiveHandle(event->pos());
+            selection->detectActiveHandle(event->pos());
         } 
         else
         {
             createSelection(event->pos(), photo);
-            // selection_o->setOrigin(event->pos());
-            // selection_o->setSize();
-            // selection_o->setActiveHandleCreation();
+            // selection->setOrigin(event->pos());
+            // selection->setSize();
+            // selection->setActiveHandleCreation();
             // rubberBand->setGeometry(QRect());
         }
     }
@@ -107,14 +106,14 @@ void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
 void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 {
 
-    if (selection_o != NULL)
+    if (selection != NULL)
     {
-        if (selection_o->hasActiveHandle())
+        if (selection->hasActiveHandle())
         {
-            selection_o->calculateArea(event->pos());
-            selection_o->setMousePosition(event->pos()); // necessary to calculate C movements
-            // qDebug() << "getArea" << selection_o->getArea();
-            rubberBand->setGeometry(selection_o->getArea()); // TODO: or selection_o->draw()?
+            selection->calculateArea(event->pos());
+            selection->setMousePosition(event->pos()); // necessary to calculate C movements
+            // qDebug() << "getArea" << selection->getArea();
+            rubberBand->setGeometry(selection->getArea()); // TODO: or selection->draw()?
             rubberBand->show();
         }
         updateCursor(event, photo);
@@ -125,13 +124,13 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 {
     // this->selection = QRect(selection.topLeft() / viewScale, selection.size() / viewScale);
 
-    if (selection_o->isEmpty())
+    if (selection->isEmpty())
     {
         destructSelection();
     }
     else
     {
-        selection_o->releaseActiveHandle();
+        selection->releaseActiveHandle();
     }
     updateCursor(event, photo);
     photo.setEdited(true);
@@ -139,11 +138,11 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
 
 void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 {
-    if (selection_o != NULL)
+    if (selection != NULL)
     {
-        selection_o->setImageArea(photo.getImageView().rect());
-        selection_o->resize(viewScale);
-        rubberBand->setGeometry(selection_o->getArea()); // TODO: or selection_o->draw()?
+        selection->setImageArea(photo.getImageView().rect());
+        selection->resize(viewScale);
+        rubberBand->setGeometry(selection->getArea()); // TODO: or selection->draw()?
     }
 }
 
@@ -192,11 +191,11 @@ void SelectionInstrument::paintEvent(QPaintEvent* event, Photo &photo)
 void SelectionInstrument::updateCursor(QMouseEvent *event, Photo &photo)
 {
     Selection::Direction handle = Selection::NONE;
-    if (selection_o != NULL)
+    if (selection != NULL)
     {
-        if (selection_o->isMouseInSelection(event->pos()))
+        if (selection->isMouseInSelection(event->pos()))
         {
-            handle = selection_o->getActiveHandle(event->pos());
+            handle = selection->getActiveHandle(event->pos());
         }
     }
     switch (handle) {

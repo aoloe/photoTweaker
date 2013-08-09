@@ -20,15 +20,14 @@ public:
     void createSelection(QPoint origin, Photo &photo);
     void destructSelection();
     void clearSelection();
-    QRect getSelection() {return selection_o->getArea();} // return the selection in image coordinates
-    bool isSelection() {return (selection_o != NULL) && (!selection_o->isEmpty());}
+    QRect getSelection() {return selection->getArea();} // return the selection in image coordinates
+    bool isSelection() {return (selection != NULL) && (!selection->isEmpty());}
 
 protected:
     void paint(Photo &photo, bool = false, bool = false);
     QPoint origin;
     QRubberBand* rubberBand;
-    QRect selection; // selection in image coordinates
-    Selection* selection_o; // the selection entity
+    Selection* selection; // the selection entity
     bool selectionCreating;
     /*
     // TODO: find how avoid the static cast when doing the | in getCardinalDirection()
@@ -57,7 +56,6 @@ private:
     void mouseReleaseEvent(QMouseEvent *event, Photo &photo);
     void resizeEvent(QResizeEvent *event, Photo &photo);
     void paintEvent(QPaintEvent *event, Photo &photo);
-    Direction abcd(QRect selection, QPoint pos);
     Direction getCardinalDirection(QPoint point, QRect area);
     void updateCursor(QMouseEvent *event, Photo &photo);
 
