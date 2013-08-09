@@ -228,8 +228,8 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
-- allow (again) selecting from the lower right corner.
-- when resizing the window the resizing of the selection is wrong (shrinks way too fast)
+- when resizing the window (zooming) the selection should also be resized.
+- rename `selection_o` to `selection` in `SelectionInstrument`
 - choose the right "company" (currently graphicslab.org, should it be ideale.ch?)
 - save on quit option (script mode; remove the file > save entry)
 - help / about menu entry

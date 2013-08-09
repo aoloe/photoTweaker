@@ -52,12 +52,14 @@ void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
     if (!selection)
     {
         selection = new Selection();
-        selection->setImageArea(photo.getImageView().rect());
+        selection->setImageArea(photo.getImage().rect());
+        selection->setImageAreaView(photo.getImageView().rect());
+        selection->setViewScale(viewScale);
     }
     selection->setMousePosition(origin); // necessary to calculate C movements
     selection->setOrigin(origin);
     selection->setSize();
-    selection->setActiveHandleCreation();
+    selection->start();
     if (!rubberBand)
     {
         rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
@@ -108,12 +110,12 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
 
     if (selection != NULL)
     {
-        if (selection->hasActiveHandle())
+        if (selection->isSelecting())
         {
-            selection->calculateArea(event->pos());
+            selection->calculateAreaView(event->pos());
             selection->setMousePosition(event->pos()); // necessary to calculate C movements
-            // qDebug() << "getArea" << selection->getArea();
-            rubberBand->setGeometry(selection->getArea()); // TODO: or selection->draw()?
+            qDebug() << "getArea" << selection->getArea();
+            rubberBand->setGeometry(selection->getAreaView()); // TODO: or selection->draw()?
             rubberBand->show();
         }
         updateCursor(event, photo);
@@ -130,7 +132,7 @@ void SelectionInstrument::mouseReleaseEvent(QMouseEvent *event, Photo &photo)
     }
     else
     {
-        selection->releaseActiveHandle();
+        selection->stop();
     }
     updateCursor(event, photo);
     photo.setEdited(true);
@@ -140,9 +142,10 @@ void SelectionInstrument::resizeEvent(QResizeEvent *event, Photo &photo)
 {
     if (selection != NULL)
     {
-        selection->setImageArea(photo.getImageView().rect());
+        selection->setImageAreaView(photo.getImageView().rect());
+        selection->setImageArea(photo.getImage().rect());
         selection->resize(viewScale);
-        rubberBand->setGeometry(selection->getArea()); // TODO: or selection->draw()?
+        rubberBand->setGeometry(selection->getAreaView()); // TODO: or selection->draw()?
     }
 }
 

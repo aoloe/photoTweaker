@@ -4,6 +4,7 @@
 Selection::Selection()
 {
     area = QRect();
+    areaView = QRect();
     activeHandle = NONE;
     mousePosition = QPoint(0,0);
     /*
@@ -12,46 +13,75 @@ Selection::Selection()
     */
 }
 
+/**
+ * TODO: is it used? (ale/20130809)
+ */
 Selection::Selection(QRect area)
 {
     Selection();
     this->area = area;
 }
 
-void Selection::setOrigin(QPoint origin)
-{ 
-    // qDebug() << "area" << area;
-    // qDebug() << "origin" << origin;
-    area.setX(origin.x());
-    area.setY(origin.y());
-    // qDebug() << "area" << area;
-}
-
-void Selection::resize(qreal ratio)
-{
-    area.setX((int) area.x() * ratio);
-    area.setY((int) area.y() * ratio);
-    area.setWidth((int) area.width() * ratio);
-    area.setHeight((int) area.height() * ratio);
-}
-
 bool Selection::isMouseInSelection(QPoint pos)
 {
     bool result = false;
-    if (!area.isEmpty())
+    if (!areaView.isEmpty())
     {
-        QRect selectionOuter = area.adjusted(-6, -6, 6, 6);
+        QRect selectionOuter = areaView.adjusted(-6, -6, 6, 6);
         result = selectionOuter.contains(pos);
     }
     return result;
 }
 
+void Selection::start()
+{
+    creatingArea = true;
+    activeHandle = NONE;
+}
+void Selection::stop()
+{
+    creatingArea = false;
+    activeHandle = NONE;
+    resizeArea();
+}
+
+bool Selection::isSelecting() {
+    return (activeHandle != NONE || creatingArea);
+}
+
+void Selection::setOrigin(QPoint origin)
+{ 
+    // qDebug() << "areaView" << areaView;
+    // qDebug() << "origin" << origin;
+    areaView.setX(origin.x());
+    areaView.setY(origin.y());
+    // qDebug() << "areaView" << areaView;
+}
+
+void Selection::resize(qreal ratio)
+{
+    viewScale = ratio;
+    areaView.setX((int) area.x() * ratio);
+    areaView.setY((int) area.y() * ratio);
+    areaView.setWidth((int) area.width() * ratio);
+    areaView.setHeight((int) area.height() * ratio);
+}
+
+void Selection::resizeArea()
+{
+    area.setX((int) areaView.x() / viewScale);
+    area.setY((int) areaView.y() / viewScale);
+    area.setWidth((int) areaView.width() / viewScale);
+    area.setHeight((int) areaView.height() / viewScale);
+}
+
+
 Selection::Direction Selection::getActiveHandle(QPoint pos)
 {
     Direction result = NONE;
-    if (!area.isEmpty())
+    if (!areaView.isEmpty())
     {
-        QRect selectionInner = area.adjusted(3, 3, -3, -3);
+        QRect selectionInner = areaView.adjusted(3, 3, -3, -3);
         result = getCardinalDirection(selectionInner, pos);
     }
     return result;
@@ -66,30 +96,30 @@ void Selection::detectActiveHandle(QPoint pos)
  * retuns the relative position of qpoint towards the area as a cardinal point
  * (N, S, W, E, NE, SE, NW, SW)
  */
-Selection::Direction Selection::getCardinalDirection(QRect area, QPoint point)
+Selection::Direction Selection::getCardinalDirection(QRect rect, QPoint point)
 {
     enum Direction result = NONE;
 
-    if (area.contains(point))
+    if (rect.contains(point))
     {
         result = INNER;
     }
     else
     {
-        if (point.y() < area.top())
+        if (point.y() < rect.top())
         {
             result = static_cast<Direction>(result | N);
         }
-        else if (point.y() > area.bottom())
+        else if (point.y() > rect.bottom())
         {
             result = static_cast<Direction>(result | S);
         }
 
-        if (point.x() < area.left())
+        if (point.x() < rect.left())
         {
             result = static_cast<Direction>(result | W);
         }
-        else if (point.x() > area.right())
+        else if (point.x() > rect.right())
         {
             result = static_cast<Direction>(result | E);
         }
@@ -98,7 +128,7 @@ Selection::Direction Selection::getCardinalDirection(QRect area, QPoint point)
     return result;
 }
 
-void Selection::calculateArea(QPoint position)
+void Selection::calculateAreaView(QPoint position)
 {
     int dx1 = 0;
     int dx2 = 0;
@@ -113,25 +143,25 @@ void Selection::calculateArea(QPoint position)
             // ... that the selection does not move out of the image area...
             int dx = position.x() - mousePosition.x();
             int dy = position.y() - mousePosition.y();
-            if (area.left() + dx < 0)
+            if (areaView.left() + dx < 0)
             {
-                dx1 = -area.left();
+                dx1 = -areaView.left();
             }
-            else if (area.right() + dx > imageArea.width() - 1)
+            else if (areaView.right() + dx > imageAreaView.width() - 1)
             {
-                dx1 = imageArea.width() - area.right();
+                dx1 = imageAreaView.width() - areaView.right();
             }
             else
             {
                 dx1 = dx;
             }
-            if (area.top() + dy < 0)
+            if (areaView.top() + dy < 0)
             {
-                dy1 = -area.top();
+                dy1 = -areaView.top();
             }
-            else if (area.bottom() + dy > imageArea.height() - 1)
+            else if (areaView.bottom() + dy > imageAreaView.height() - 1)
             {
-                dy1 = imageArea.height() - area.bottom();
+                dy1 = imageAreaView.height() - areaView.bottom();
             }
             else
             {
@@ -141,32 +171,32 @@ void Selection::calculateArea(QPoint position)
         else
         {
             // ... and touches the border when the mouse goes out of the image area.
-            Direction direction = getCardinalDirection(imageArea, position);
-            if ((direction & N) &&  (area.top() > imageArea.top()))
+            Direction direction = getCardinalDirection(imageAreaView, position);
+            if ((direction & N) &&  (areaView.top() > imageAreaView.top()))
             {
-                dy1 = imageArea.top() - area.top(); 
+                dy1 = imageAreaView.top() - areaView.top(); 
             }
-            else if ((direction & S) && (area.bottom() < imageArea.bottom()))
+            else if ((direction & S) && (areaView.bottom() < imageAreaView.bottom()))
             {
-                dy1 = imageArea.bottom() - area.bottom(); 
+                dy1 = imageAreaView.bottom() - areaView.bottom(); 
             }
-            if ((direction & E) && (area.right() < imageArea.right()))
+            if ((direction & E) && (areaView.right() < imageAreaView.right()))
             {
-                dx1 = imageArea.right() - area.right(); 
+                dx1 = imageAreaView.right() - areaView.right(); 
             }
-            else if ((direction & W) && (area.left() > imageArea.left()))
+            else if ((direction & W) && (areaView.left() > imageAreaView.left()))
             {
-                dx1 =  imageArea.left() - area.left(); 
+                dx1 =  imageAreaView.left() - areaView.left(); 
             }
         }
         dx2 = dx1;
         dy2 = dy1;
-        area.adjust(dx1, dy1, dx2, dy2);
+        areaView.adjust(dx1, dy1, dx2, dy2);
     }
     else if (creatingArea)
     {
-        int dx = position.x() - area.x();
-        int dy = position.y() - area.y();
+        int dx = position.x() - areaView.x();
+        int dy = position.y() - areaView.y();
         if ((dx != 0) && (dy != 0))
         {
             activeHandle = W;
@@ -183,8 +213,8 @@ void Selection::calculateArea(QPoint position)
                 activeHandle = static_cast<Direction>(activeHandle | N);
             }
             // qDebug() << "activeHandle" << activeHandle;
-            area.setWidth(qAbs(dx));
-            area.setHeight(qAbs(dy));
+            areaView.setWidth(qAbs(dx));
+            areaView.setHeight(qAbs(dy));
             creatingArea = false;
         }
     }
@@ -193,44 +223,44 @@ void Selection::calculateArea(QPoint position)
         // resize the selection (up to the image area)
         switch (activeHandle) {
             case N:
-                dy1 = position.y() - area.top();
+                dy1 = position.y() - areaView.top();
             break;
             case S:
-                dy2 =  position.y() - area.bottom();
+                dy2 =  position.y() - areaView.bottom();
             break;
             case W:
-                dx1 =  position.x() - area.left();
+                dx1 =  position.x() - areaView.left();
             break;
             case E:
-                dx2 =  position.x() - area.right();
+                dx2 =  position.x() - areaView.right();
             break;
             case SE:
-                dx2 = position.x() - area.bottomRight().x();
-                dy2 = position.y() - area.bottomRight().y();
+                dx2 = position.x() - areaView.bottomRight().x();
+                dy2 = position.y() - areaView.bottomRight().y();
             break;
             case NW:
-                dx1 =  position.x() - area.topLeft().x();
-                dy1 =  position.y() - area.topLeft().y();
+                dx1 =  position.x() - areaView.topLeft().x();
+                dy1 =  position.y() - areaView.topLeft().y();
             break;
             case SW:
-                dx1 = position.x() - area.bottomLeft().x();
-                dy2 = position.y() - area.bottomLeft().y();
+                dx1 = position.x() - areaView.bottomLeft().x();
+                dy2 = position.y() - areaView.bottomLeft().y();
             break;
             case NE:
-                dx2 =  position.x() - area.topRight().x();
-                dy1 =  position.y() - area.topRight().y();
+                dx2 =  position.x() - areaView.topRight().x();
+                dy1 =  position.y() - areaView.topRight().y();
             break;
         }
         // ensure that the area is at least 1x1 and don't allow negative areas
-        if (position.x() <= area.left())
+        if (position.x() <= areaView.left())
         {
             dx2 = 0;
         }
-        if (position.y() <= area.top())
+        if (position.y() <= areaView.top())
         {
             dy2 = 0;
         }
-        area.adjust(dx1, dy1, dx2, dy2);
-        area.intersect(imageArea);
+        areaView.adjust(dx1, dy1, dx2, dy2);
+        areaView = areaView.intersected(imageAreaView);
     }
 }
