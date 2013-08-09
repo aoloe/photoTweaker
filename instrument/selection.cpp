@@ -6,7 +6,6 @@ Selection::Selection()
     area = QRect();
     activeHandle = NONE;
     mousePosition = QPoint(0,0);
-    creatingArea = false;
     /*
     mouseOnSelection = NONE;
     clickOnSelection = NONE;
@@ -164,6 +163,31 @@ void Selection::calculateArea(QPoint position)
         dy2 = dy1;
         area.adjust(dx1, dy1, dx2, dy2);
     }
+    else if (creatingArea)
+    {
+        int dx = position.x() - area.x();
+        int dy = position.y() - area.y();
+        if ((dx != 0) && (dy != 0))
+        {
+            activeHandle = W;
+            if (dx > 0)
+            {
+                activeHandle = E;
+            }
+            if (dy > 0)
+            {
+                activeHandle = static_cast<Direction>(activeHandle | S);
+            }
+            else
+            {
+                activeHandle = static_cast<Direction>(activeHandle | N);
+            }
+            // qDebug() << "activeHandle" << activeHandle;
+            area.setWidth(qAbs(dx));
+            area.setHeight(qAbs(dy));
+            creatingArea = false;
+        }
+    }
     else
     {
         // resize the selection (up to the image area)
@@ -207,12 +231,6 @@ void Selection::calculateArea(QPoint position)
             dy2 = 0;
         }
         area.adjust(dx1, dy1, dx2, dy2);
-        if (!area.isEmpty())
-        {
-            // qDebug() << "area" << area;
-            // qDebug() << "imageArea" << imageArea;
-            area = area.intersected(imageArea);
-            // qDebug() << "area intersected" << area;
-        }
+        area.intersect(imageArea);
     }
 }

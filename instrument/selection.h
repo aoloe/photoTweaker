@@ -28,15 +28,15 @@ public:
     bool isMouseInSelection(QPoint pos);
     Direction getActiveHandle(QPoint pos);
     void detectActiveHandle(QPoint pos);
-    void setActiveHandleCreation() {creatingArea = true; activeHandle = SE;}
+    void setActiveHandleCreation() {creatingArea = true; activeHandle = NONE;}
     void releaseActiveHandle() {creatingArea = false; activeHandle = NONE;}
-    bool hasActiveHandle() {return (activeHandle != NONE);}
+    bool hasActiveHandle() {return (activeHandle != NONE || creatingArea);}
     void setImageArea(QRect area) {imageArea = area;}
     void calculateArea(QPoint position);
     QRect getArea() {return area;}
     void setOrigin(QPoint origin);
     void setSize(QSize size) {area.setSize(size);}
-    void setSize() {setSize(QSize());}
+    void setSize() {setSize(QSize(0, 0));}
     void resize(qreal ratio);
     bool isEmpty() {return area.isEmpty();}
     void setMousePosition(QPoint position) {mousePosition = position;}

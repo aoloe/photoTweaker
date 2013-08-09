@@ -50,12 +50,23 @@ SelectionInstrument::SelectionInstrument(QObject *parent) :
 void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
 {
     // TODO: rename selection_o to selection
-    selection_o = new Selection();
-    selection_o->setImageArea(photo.getImageView().rect());
+    if (!selection_o)
+    {
+        selection_o = new Selection();
+        selection_o->setImageArea(photo.getImageView().rect());
+    }
     selection_o->setMousePosition(origin); // necessary to calculate C movements
     selection_o->setOrigin(origin);
+    selection_o->setSize();
     selection_o->setActiveHandleCreation();
-    rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
+    if (!rubberBand)
+    {
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
+    }
+    else
+    {
+        rubberBand->setGeometry(QRect(0, 0, 0, 0));
+    }
 }
 
 void SelectionInstrument::destructSelection()
@@ -84,10 +95,11 @@ void SelectionInstrument::mousePressEvent(QMouseEvent *event, Photo &photo)
         } 
         else
         {
-            selection_o->setOrigin(event->pos());
-            selection_o->setSize();
-            selection_o->setActiveHandleCreation();
-            rubberBand->setGeometry(QRect());
+            createSelection(event->pos(), photo);
+            // selection_o->setOrigin(event->pos());
+            // selection_o->setSize();
+            // selection_o->setActiveHandleCreation();
+            // rubberBand->setGeometry(QRect());
         }
     }
 }
