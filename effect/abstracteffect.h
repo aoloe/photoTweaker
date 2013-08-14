@@ -33,6 +33,8 @@ public:
     
 public:
     bool enabled; // TODO: why does it have to be public? (ale/20130807)
+public slots:
+    void onSave(QImage& image);
 protected:
     QString effectName;
     PhotoTweaker* mainApp;

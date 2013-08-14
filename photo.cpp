@@ -150,7 +150,9 @@ void Photo::save()
             if (instrument->isSelection())
             {
                 // qDebug() << "saving selection:" << instrument->getSelection();
-                image.copy(instrument->getSelection()).save(filePath);
+                QImage image = this->image.copy(instrument->getSelection());
+                emit onSave(image);
+                image.save(filePath);
             }
             else
             {

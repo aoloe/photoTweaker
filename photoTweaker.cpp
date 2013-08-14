@@ -323,6 +323,10 @@ void PhotoTweaker::open()
     {
         // TODO: disable the menus that need an image to be open (save)
     }
+    foreach (effectStruct item, effects)
+    {
+        Q_ASSERT(connect(photo, SIGNAL(onSave(QImage&)), item.effect, SLOT(onSave(QImage&))));
+    }
     photo->update();
     undoGroup->addStack(photo->getUndoStack());
     undoGroup->setActiveStack(photo->getUndoStack());

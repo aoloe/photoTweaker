@@ -59,3 +59,7 @@ QWidget* AbstractEffect::getPreferencesWidget()
 void AbstractEffect::apply(Photo &photo)
 {
 }
+
+void AbstractEffect::onSave(QImage& image)
+{
+}

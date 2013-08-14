@@ -228,10 +228,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
-- when resizing the window (zooming) the selection should also be resized.
-- rename `selection_o` to `selection` in `SelectionInstrument`
 - choose the right "company" (currently graphicslab.org, should it be ideale.ch?)
-- save on quit option (script mode; remove the file > save entry)
 - help / about menu entry
 - add screenshots and screencasts.
 - choose a license: gpl or bsd?
@@ -247,7 +244,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 ## For version 1.1.
 
 - get it to build with jenkins
-- scale should not be immediately be applied, but scheduled for the next save (and the defined scale should apply to the current selection). should it be shown as a pressed button, which you can unpress?
+- save on quit option (script mode; remove the file > save entry)
 - on open without a file, show the file open dialog. quit on cancel. maybe remove file > open. (except in file preferences definition mode? then no open dialog nor file > open)
 - create a doxygen code documentation.
 - refactor the selection / selection tool
@@ -255,11 +252,15 @@ How do I set the command line parameter (argv) of a programm which runs in the d
   - add a selection effect creating a (as big as possible) selection constrained to predefined ratios
   - add a constrained selection resizing
 - enable an effect without having to restart the program.
-- clear the selection after rotating
+- clear/rotate the selection after rotating
 - let the user define an order of the effects in the toolbar
 - let the preferences dialog grow to fit its it content / vertically fill the screen.
-- get the effects to write an "done" message into the status bar.
+- get the effects to write a "done" message into the status bar.
 - in the statusbar show the real mouse coordinates, not the view ones.
+- move the instrument handlers to photoTweaker? but the selection has a state which depends on the current document.
+- more options for scale:
+  - in the settings define for for each button if the scale applies to the wide / high / the longer side.
+  - in the settings add an option to only scale down
 
 ## Further taks:
 

@@ -89,8 +89,8 @@ private:
     QVector<AbstractInstrument*> instrumentsHandlers;
     AbstractInstrument *instrumentHandler;
     int currentInstrument;
-    QVector<AbstractEffect*> effectsHandlers;
-    AbstractEffect *effectHandler;
+    // QVector<AbstractEffect*> effectsHandlers;
+    // AbstractEffect *effectHandler;
 
     inline void emitShow() { emit show(); }
 
@@ -103,6 +103,7 @@ signals:
     void setStatusMouse();
     void setStatusMessage(QString message);
     void setWindowTitle(QString message);
+    void onSave(QImage &image); // TODO: rename this to a verb (ale/20130814)
 
 protected:
     void mousePressEvent(QMouseEvent *event);

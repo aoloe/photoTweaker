@@ -114,7 +114,7 @@ void SelectionInstrument::mouseMoveEvent(QMouseEvent *event, Photo &photo)
         {
             selection->calculateAreaView(event->pos());
             selection->setMousePosition(event->pos()); // necessary to calculate C movements
-            qDebug() << "getArea" << selection->getArea();
+            // qDebug() << "getArea" << selection->getArea();
             rubberBand->setGeometry(selection->getAreaView()); // TODO: or selection->draw()?
             rubberBand->show();
         }
