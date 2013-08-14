@@ -238,6 +238,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 - announce on the create mailing list.
 - provide packages for windows and os x.
+  - cross compiling for windows: http://stackoverflow.com/questions/10934683/how-do-i-configure-qt-for-cross-compilation-from-linux-to-windows-target
 - create a website, based on github files in this repository (ideale.ch/photoTweaker)
 - create a logo / icon for the program.
 
