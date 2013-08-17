@@ -24,9 +24,9 @@
  */
 
 #include <QDebug>
-#include <QtGui/QApplication>
-#include <QtGui/QPaintEvent>
-#include <QtGui/QPainter>
+#include <QApplication>
+#include <QPaintEvent>
+#include <QPainter>
 #include <QFileInfo>
 
 #include <QUndoStack>

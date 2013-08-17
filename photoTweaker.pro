@@ -5,20 +5,22 @@
 CONFIG += debug ; if you want the debug symbols for gdb
 
 TEMPLATE = app
-TARGET = 
+#TARGET =
 
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
 
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DEPENDPATH += .
-;INCLUDEPATH += . /usr/include/ImageMagick
-;INCLUDEPATH += .
+#INCLUDEPATH += . /usr/include/ImageMagick
+#INCLUDEPATH += .
 
 # Magick++
-;LIBS += -lMagick++
+#LIBS += -lMagick++
 
 # Input
 FORMS += \

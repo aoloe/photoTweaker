@@ -31,12 +31,12 @@
 #include "math.h"
 
 #include <QDebug>
-#include <QtGui/QPainter>
-#include <QtGui/QApplication>
-#include <QtGui/QRubberBand>
-#include <QtGui/QWidget> // for painting the semi-transparent background
-#include <QtGui/QPainterPath> // for painting the semi-transparent background
-// #include <QtGui/QBrush> // for painting the semi-transparent background
+#include <QPainter>
+#include <QApplication>
+#include <QRubberBand>
+#include <QWidget> // for painting the semi-transparent background
+#include <QPainterPath> // for painting the semi-transparent background
+// #include <QBrush> // for painting the semi-transparent background
 
 SelectionInstrument::SelectionInstrument(QObject *parent) :
     AbstractInstrument(parent)

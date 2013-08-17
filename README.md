@@ -101,6 +101,15 @@ Lot of code is inspired by EasyPaint (https://github.com/Gr1N/EasyPaint)
 
 # Developers documentation
 
+## Compiling photoTweaker
+
+### Windows
+
+- Download and install git from the git project
+- Download and install Qt5 with mingw
+- Start Qt Creator and create a new project by importing it from the GitHub repository
+- Press on the "Run" button
+
 ## The general structure of photoTweaker
 
 - The entry point is main.cpp which builds the PhotoTweaker Qt application in `photoTweaker.cpp`, forwards the command line options and runs it
@@ -228,6 +237,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
+- add a default size in the auto generated settings.
 - choose the right "company" (currently graphicslab.org, should it be ideale.ch?)
 - help / about menu entry
 - add screenshots and screencasts.

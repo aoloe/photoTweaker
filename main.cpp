@@ -1,5 +1,3 @@
-// --- MAIN ---
-
 #include <QApplication>
 #include <QDebug>
 #include "photoTweaker.h"
@@ -18,6 +16,6 @@ int main(int argc, char **argv)
     }
 	photoTweaker.run();
 
-	return app.exec();
+    return app.exec();
 }
 
