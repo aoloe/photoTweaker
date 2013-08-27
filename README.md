@@ -255,6 +255,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
+- fix the wrong display of selections on mac
 - add a default size in the auto generated settings.
 - choose the right "company" (currently graphicslab.org, should it be ideale.ch?)
 - help / about menu entry
