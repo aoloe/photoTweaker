@@ -291,6 +291,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 - more options for scale:
   - in the settings define for for each button if the scale applies to the wide / high / the longer side.
   - in the settings add an option to only scale down
+- check [maptoglobal](http://stackoverflow.com/questions/11881989/using-qrubberband-to-crop-image-in-qt) for connecting the view and image coordinates
 
 ## Further taks:
 
