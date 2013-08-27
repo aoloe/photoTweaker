@@ -33,7 +33,11 @@
 #include <QDebug>
 #include <QPainter>
 #include <QApplication>
+
 #include <QRubberBand>
+#include <QPalette>
+#include <QColor>
+
 #include <QWidget> // for painting the semi-transparent background
 #include <QPainterPath> // for painting the semi-transparent background
 // #include <QBrush> // for painting the semi-transparent background
@@ -63,6 +67,20 @@ void SelectionInstrument::createSelection(QPoint origin, Photo &photo)
     if (!rubberBand)
     {
         rubberBand = new QRubberBand(QRubberBand::Rectangle, &photo);
+
+        // XXX: on mac os x, the default just style just shows a solid gray rectangle
+        // maybe i should draw my own rubberband class: http://www.qtcentre.org/threads/21324-How-to-draw-QRubberBand-with-red-color
+        QPalette palette;
+
+        // QColor color(Qt::blue);
+        // color.setAlpha(80);
+        // palette.setBrush(QPalette::Highlight, QBrush(color));
+
+        palette.setBrush(QPalette::Base, QBrush(Qt::green));
+        palette.setBrush(QPalette::Foreground, QBrush( Qt::red ) );
+
+        rubberBand->setPalette(palette);
+
     }
     else
     {
