@@ -227,6 +227,7 @@ void Photo::paintEvent(QPaintEvent *event)
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
+        instrumentHandler->setViewScale(viewScale);
         instrumentHandler->paintEvent(event, *this);
     }
 }
