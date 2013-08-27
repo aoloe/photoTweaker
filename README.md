@@ -146,7 +146,7 @@ Note: http://doc.qt.nokia.com/4.7/mac-differences.html#bundle-based-libraries
 - If you leave something unfinished, adda  `TODO:` comment with the details on what there is todo, your name and the date (`TODO: add the other effects (ale/2013087)`)
 - Use `foreach (const ItemType item, list)` instead of `foreach (i = 0; i < list.count; i++)` wherever it's possible. It's not faster but it's more readable.
 
-## photoTweaker for learning C++ and Qt
+## photoTweaker as a learning tool for programmers
 
 This project aims at teaching some best practices when programming with C++ and Qt.
 
@@ -255,6 +255,7 @@ How do I set the command line parameter (argv) of a programm which runs in the d
 
 ## For version 1.0 we have to do:
 
+- fix the wrong display of selections on mac
 - add a default size in the auto generated settings.
 - choose the right "company" (currently graphicslab.org, should it be ideale.ch?)
 - help / about menu entry
