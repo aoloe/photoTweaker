@@ -110,6 +110,24 @@ Lot of code is inspired by EasyPaint (https://github.com/Gr1N/EasyPaint)
 - Start Qt Creator and create a new project by importing it from the GitHub repository
 - Press on the "Run" button
 
+### Mac OS X
+
+- download and install Qt from [](http://qt-project.org/downloads)
+- download and install git
+  - through mac-brew
+  - from [](http://git-scm.com/downloads)
+
+From [](http://wiki.oz9aec.net/index.php/Packaging_Qt_apps_for_Mac_OS_X)
+
+- Build your application in release mode
+- Execute "macdeployqt myprog.app"
+  - see -h for options
+  - good to use -verbose=2 
+
+This will bundle all the Qt libraries into the myprog.app - this will be approximately 40 MB. I guess one could still do the manual process for small applications that do not need all the Qt libraries. Or maybe the unnecessary libraries can be removed again manually?
+
+Note: http://doc.qt.nokia.com/4.7/mac-differences.html#bundle-based-libraries 
+
 ## The general structure of photoTweaker
 
 - The entry point is main.cpp which builds the PhotoTweaker Qt application in `photoTweaker.cpp`, forwards the command line options and runs it
