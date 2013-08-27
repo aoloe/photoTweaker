@@ -122,6 +122,7 @@ bool Photo::open(const QString filePath)
     {
         image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         currentInstrument = CURSOR;
+
         // qDebug() << "opened file" << filePath;
         emit setStatusSize(image.width(), image.height());
     }
@@ -134,6 +135,13 @@ bool Photo::open(const QString filePath)
     // qDebug() << "image size" << image.byteCount();
     clearSelection();
     updateImageView();
+
+    if (currentInstrument != NONE_INSTRUMENT)
+    {
+        instrumentHandler = instrumentsHandlers.at(currentInstrument);
+        instrumentHandler->setViewScale(viewScale);
+    }
+
     isEdited = false;
     return loaded;
 }
@@ -227,7 +235,6 @@ void Photo::paintEvent(QPaintEvent *event)
     if (instrument >= 0)
     {
         instrumentHandler = instrumentsHandlers.at(instrument);
-        instrumentHandler->setViewScale(viewScale);
         instrumentHandler->paintEvent(event, *this);
     }
 }
