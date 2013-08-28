@@ -251,6 +251,39 @@ Add "CONFIG += debug" at the beginning of the .pro file if you want to debug you
 
 How do I set the command line parameter (argv) of a programm which runs in the debugger ? In Qt Creator the command line arguments are set under Projects, Run Settings.
 
+## Packaging PhotoTweaker
+
+### Packaging for Windows
+
+Goal: get the Qt 5.1 dlls without debugging information.
+
+- Install Qt 5.1 with Mingw.
+- Let Qt 5.1 install itself in the place suggested by the installer (in my case C:\Qt and Qt creator is at C:\Qt\Qt5.1.0\Tools\QtCreator\bin\qtcreator.exe)
+
+The Qt libraries you have downloaded have been compiled with the debug symbols. If you want  to prepare a package for distribution, you will have to get and compile the Qt sources
+
+- Download the Qt 5.1 sources as .zip file the Qt project download page (http://download.qt-project.org; in my case http://download.qt-project.org/official_releases/qt/5.1/5.1.0/single/qt-everywhere-opensource-src-5.1.0.zip)
+- Unzip the content of the sources file (I have unzipped in ~/src/qt-5.1.0; Hint: don't use the unzipper delivered with Windows, 7zip, as an example, is 10 time faster!).
+- Add the mingw tools to the path.
+- `C:\Users\ale\src\qt-5.1.0\qtbase>configure -release -opengl desktop`
+
+Adding a directory to the path:
+
+- From the Desktop, right-click My Computer and click Properties.
+- Click Advanced System Settings link in the left column.
+- In the System Properties window click the Environment Variables button.
+
+... or for a temporary path:
+
+    $ path = %PATH%;C:\Qt\Qt5.1.0\Tools\mingw48_32\bin
+
+
+    $ configure -release -opengl desktop
+    $ mingw32-make
+
+icu is needed for internationalization... and is not included in the mingw distribution
+(http://qt-project.org/wiki/Compiling-ICU-with-MinGW)
+
 #Todo
 
 ## For version 1.0 we have to do:
