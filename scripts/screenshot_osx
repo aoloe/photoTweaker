@@ -1,0 +1,37 @@
+one try:
+
+    set screenshotfile to "Screen Shot.png"
+    do shell script "screencapture ~/Desktop/" & quoted form of screenshotfile
+    tell application "Finder"
+        activate
+        open application file "photoTweaker.app" of folder "bin" of folder "build-photoTweaker-Desktop_Qt_5_1_0_clang_64bit-Debug" of folder "src" of folder "ale" of folder "Users" of startup disk
+    end tell
+
+    set screenshotpath to "Screen Shot " & (current date) & ".png"
+
+    tell application "photoTweaker"
+        open file ((path to desktop folder) & screenshotfile)
+        activate
+    end tell
+
+
+
+another try:
+
+
+    set screenshotfile to "Screen Shot.png"
+    do shell script "screencapture ~/Desktop/" & quoted form of screenshotfile
+
+    tell application "Finder"
+        open file ((path to desktop folder as text) & screenshotfile) using application file "photoTweaker.app" of folder "bin" of folder "build-photoTweaker-Desktop_Qt_5_1_0_clang_64bit-Debug" of folder "src" of folder "ale" of folder "Users" of startup disk
+    end tell
+
+
+a third try:
+
+    do shell script "screencapture -tjpg "
+    tell application "Finder"
+        activate
+        open application file "photoTweaker.app" of folder "bin" of folder "build-photoTweaker-Desktop_Qt_5_1_0_clang_64bit-Debug" of folder "src" of folder "ale" of folder "Users" of startup disk
+    end tell
+
