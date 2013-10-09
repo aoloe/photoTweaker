@@ -106,7 +106,6 @@ void EffectScale::apply(QImage& image, int size)
 
 void EffectScale::onSave(QImage& image)
 {
-    qDebug() << "applying scale on save";
     // qDebug() << "checkedId" << buttonGroup->checkedId();
     int id = buttonGroup->checkedId();
     if (id > -1)
