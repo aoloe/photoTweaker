@@ -4,5 +4,6 @@
         <file>media/icons/rotate_clockwise.png</file>
         <file>media/icons/rotate_anticlockwise.png</file>
         <file>media/icons/scale.png</file>
+        <file>media/text/help.html</file>
     </qresource>
 </RCC>

@@ -20,6 +20,7 @@
 #include "effect/rotate.h"
 #include "effect/scale.h"
 #include "preferencesDialog.h"
+#include "helpDialog.h"
 
 QDebug operator<< (QDebug d, const PhotoTweaker::effectStruct &model);
 
@@ -225,6 +226,17 @@ void PhotoTweaker::initializeMenu()
     // TODO: ESC should clear the selection (ale/20130807)
     // connect(actionNothing, SIGNAL(triggered()), photo, SLOT(clearSelection()));
 
+    QMenu *menuHelp = menuBar()->addMenu(tr("&Help"));
+
+    actionHelpAbout = new QAction(tr("&About"), this);
+    connect(actionHelpAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    menuHelp->addAction(actionHelpAbout);
+
+    actionHelp = new QAction(tr("&Help"), this);
+    connect(actionHelp, SIGNAL(triggered()), this, SLOT(help()));
+    actionHelp->setShortcut(QKeySequence(Qt::Key_F1));
+    menuHelp->addAction(actionHelp);
+
 }
 
 /**
@@ -364,6 +376,24 @@ void PhotoTweaker::preferences()
             writeSettings();
             initializeToolBar();
             // TODO: reload the toolbar
+        }
+}
+
+void PhotoTweaker::helpAbout()
+{
+    // QMessageBox::about(this, "photoTweaker", "photoTweaker\n\n(c) GPL 2013 Ale Rimoldi\n\nhttp://graphicslab.org/projects\nhttps://github.com/aoloe/photoTweaker");
+    QMessageBox msgBox;
+    msgBox.setTextFormat(Qt::RichText);   //this is what makes the links clickable
+    msgBox.setText("<a href='http://google.com/'>Google</a>");
+    msgBox.setText("<p>photoTweaker</p><p>(c) GPL 2013 Ale Rimoldi</p><p><a href='http://graphicslab.org/projects'>http://graphicslab.org/projects</a><br><a href='https://github.com/aoloe/photoTweaker'>https://github.com/aoloe/photoTweaker</a></p>");
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.exec();
+}
+
+void PhotoTweaker::help()
+{
+        HelpDialog* dialog = new HelpDialog(this);
+        if(dialog->exec() == QDialog::Accepted){
         }
 }
 

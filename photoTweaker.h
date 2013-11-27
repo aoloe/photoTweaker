@@ -41,7 +41,9 @@ public slots:
 	void open();
 	void save();
 	void preferences();
-	void show();
+    void helpAbout();
+    void help();
+    void show();
 	void setStatusSize(int width, int height);
 	void setStatusMouse(int x, int y);
 	void setStatusMouse();
@@ -68,7 +70,8 @@ private:
     void initializeMenu();
 
     QAction *actionFileOpen, *actionFileSave, *actionFileQuit, 
-    *actionEditUndo, *actionEditRedo, *actionEditPreferences;
+    *actionEditUndo, *actionEditRedo, *actionEditPreferences,
+    *actionHelp, *actionHelpAbout;
 
     QUndoGroup *undoGroup;
 

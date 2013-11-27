@@ -8,10 +8,10 @@ mount /mnt/nikon 2> /dev/null
 
 q=$(ls -tr1 /mnt/nikon/dcim 2> /dev/null | tail -n 1)
 
-if [ $q != '' ]; then
+if [ "$q" != "" ]; then
     r=$(ls -tr1 /mnt/nikon/dcim/$q 2> /dev/null | tail -n 1)
     #echo $r
-    if [ $q != '' ]; then
+    if [ "$q" != "" ]; then
         # copy or move each token to /tmp
         for item in $r; do
             echo $item

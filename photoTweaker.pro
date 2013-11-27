@@ -29,7 +29,8 @@ FORMS += \
     effect/effectPreferences.ui\
     effect/disabledPreferences.ui\
     effect/rotatePreferences.ui\
-    effect/scalePreferences.ui
+    effect/scalePreferences.ui \
+    helpDialog.ui
 SOURCES += \
     main.cpp \
     photoTweaker.cpp \
@@ -47,7 +48,8 @@ SOURCES += \
     effect/effectPreferences.cpp\
     effect/disabledPreferences.cpp\
     effect/rotatePreferences.cpp\
-    effect/scalePreferences.cpp
+    effect/scalePreferences.cpp \
+    helpDialog.cpp
 HEADERS += \
     photoTweaker.h \
     undocommand.h \
@@ -64,7 +66,10 @@ HEADERS += \
     effect/effectPreferences.h\
     effect/disabledPreferences.h\
     effect/rotatePreferences.h\
-    effect/scalePreferences.h
+    effect/scalePreferences.h \
+    helpDialog.h
 
 RESOURCES += \
     resources.qrc
+
+RCC_DIR = resources_bin # forces the reload of the resources on build

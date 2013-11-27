@@ -1,0 +1,72 @@
+<h1>photoTweaker</h1>
+
+<p>PhotoTweaker is a small photo editor that can be integrated in a simple photo and picture management workflow.</p>
+
+<p>It's aim is to facilitate a fast, simple and ergonomic manipulation of invividual pictures.</p>
+
+<h2>Basic concepts</h2>
+
+<ul>
+<li>As few click as possible.</li>
+<li>No dialogs shown while you're working on the image.</li>
+<li>If a tool needs the user to define a set of values, those will be defined in <i>Edit &gt; Prefernces</i> and multiple buttons will be shown, each with a specific value.</li>
+<li>Only the features that are strictly necessary get implemented.</li>
+<li>Effects are implemented as plugins and you're welcome to propose and add new ones!</li>
+</ul>
+
+<h2>Opening an image</h2>
+
+<p>photoTweaker can open PNG and JPG images. The normal way to open an image is to set the image as a parameter when launching photoTweaker.</p>
+
+<p>Currently, you can also use <i>File &gt; Open</i>, but it's likey that the menu entry will be removed in future version and replaced by the <i>File &gt; Revert</i> command.</p>
+
+<p>You can only open one image at a time.</p>
+
+<h2>Saving the image</h2>
+
+<p><i>File &gt; Save</i> lets you overwrite the image and save the changes you've done</p>
+
+<blockquote>If you want to save the image under a new name, you have duplicate the image before opening it with photoTweaker</blockquote>
+
+<h2>Zooming</h2>
+
+<p>photoTweaker does not really have a zoom. The image gets automatically shrinked to fit the window size: you can resize the window to see a bigger or smaller view of your image.</p>
+
+<p>photoTweaker won't zoom further in than a 1:1 ratio.</p>
+
+<h2>Cropping</h2>
+
+<p>Cropping is as simple as selecting a region: on save only the selected area will be kept.</p>
+
+<p>If nothing is selected, the full image will be saved.</p>
+
+<h2>Scaling</h2>
+
+<p>If you click on one of the <i>Scaling</i> buttons, on save the image will be shrinked to the given measurement.</p>
+
+<p>You can add new measurements in <i>Edit &gt; Preferences</i></p>
+
+<blocquote>Currently, the size always refers to the "biggest" measurment: the width for horizontal images and the height for vertial ones. In the future finer settings will be possible (always horizontal...)</blocquote>
+
+
+<h2>Rotating</h2>
+
+<p>The rotating tool, rotates the image by steps of 90°</p>
+
+<p>In <i>Edit &gt; Preferences</i> you can define if the rotation will be applied clockwise or anti-clockwise</p>
+
+<h2>Grayscale</h2>
+
+<p>Converts the image to grayscale.</p>
+
+<h2>Undo</h2>
+
+<p>You can always undo / redo the last step.</p>
+
+<h2>Scripts</h2>
+
+<p>You can use photoTweaker inside of scripts. In the <kbd>scripts/</kbd> directory you can find some examples.</p>
+
+<h2>Contributing</h2>
+
+<p>Every contribution is welcome: <a href="https://github.com/aoloe/photoTweaker">https://github.com/aoloe/photoTweaker</a>.</p>
