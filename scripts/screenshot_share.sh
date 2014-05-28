@@ -25,6 +25,7 @@ function upload_to_imgur() {
     # snippet adapted from
     # https://github.com/jomo/imgur-screenshot/blob/master/imgur-screenshot.sh
     # (MIT license by jomo)
+    # an alternative: https://github.com/Ceryn/img/blob/master/img.sh
     filename=$1
     imgur_anon_key="486690f872c678126a2c09a9e196ce1b"
 
