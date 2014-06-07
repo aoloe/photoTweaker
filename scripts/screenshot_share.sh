@@ -15,10 +15,6 @@ function upload_to_imagebin() {
       --form "disclaimer_agree=Y" --form "mode=add" --form "Submit=Submit"\
       http://imagebin.org/index.php -w '%{redirect_url}')
     echo $url
-
-
-
-
 }
 
 function upload_to_imgur() {
