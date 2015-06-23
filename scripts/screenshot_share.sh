@@ -29,7 +29,8 @@ function upload_to_imgur() {
     upload_timeout="120"
     upload_retries="1"
 
-    response="$(curl --connect-timeout "$upload_connect_timeout" -m "$upload_timeout" --retry "$upload_retries" -s -F "image=@$filename" -F "key=$imgur_anon_key" https://imgur.com/api/upload.xml)"
+    response="$(curl --connect-timeout "$upload_connect_timeout" -m "$upload_timeout" --retry "$upload_retries" -s -F "image=@$filename" -F "key=$imgur_anon_key" http://imgur.com/api/upload.xml)"
+    # echo $response
 
     # imgur response contains stat="ok" when successful
     if [[ "$response" == *"stat=\"ok\""*  ]]; then
