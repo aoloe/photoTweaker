@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# make sure that the camera/card is mount with lowercase file names
+# UUID=6664-3139 /mnt/camera    vfat    defaults,user,rw,noauto,shortname=lower  0       0
+
 filename=$(tempfile --suffix ".jpg");
 echo "filename: " $filename
 
