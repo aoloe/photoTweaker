@@ -30,11 +30,11 @@ void EffectRotate::addToToolBar(QToolBar &toolBar)
     QAction *action = new QAction(tr("Rotate"), this);
     if (clockwise)
     {
-        action->setIcon(QIcon(":/media/icons/rotate_clockwise.png"));
+        action->setIcon(QIcon(":/icons/rotate_clockwise.png"));
     }
     else
     {
-        action->setIcon(QIcon(":/media/icons/rotate_anticlockwise.png"));
+        action->setIcon(QIcon(":/icons/rotate_anticlockwise.png"));
     }
     connect(action, SIGNAL(triggered(bool)), this, SLOT(apply()));
     toolBar.addAction(action);

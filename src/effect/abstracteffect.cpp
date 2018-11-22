@@ -25,7 +25,7 @@
 
 #include <QDebug>
 #include <QToolBar>
-#include "abstracteffect.h"
+#include "./abstracteffect.h"
 #include "../undocommand.h"
 #include "effect/effectPreferences.h"
 #include "../photo.h"

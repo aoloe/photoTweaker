@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/grayscale.png</file>
+        <file>icons/rotate_clockwise.png</file>
+        <file>icons/rotate_anticlockwise.png</file>
+        <file>icons/scale.png</file>
+        <file>text/help.html</file>
+    </qresource>
+</RCC>

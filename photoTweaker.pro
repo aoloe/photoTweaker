@@ -18,58 +18,59 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 DEPENDPATH += .
 #INCLUDEPATH += . /usr/include/ImageMagick
 #INCLUDEPATH += .
+INCLUDEPATH += src/
 
 # Magick++
 #LIBS += -lMagick++
 
 # Input
 FORMS += \
-    photoTweaker.ui \
-    preferencesDialog.ui\
-    effect/effectPreferences.ui\
-    effect/disabledPreferences.ui\
-    effect/rotatePreferences.ui\
-    effect/scalePreferences.ui \
-    helpDialog.ui
+    ui/photoTweaker.ui \
+    ui/preferencesDialog.ui\
+    ui/effect/effectPreferences.ui\
+    ui/effect/disabledPreferences.ui\
+    ui/effect/rotatePreferences.ui\
+    ui/effect/scalePreferences.ui \
+    ui/helpDialog.ui
 SOURCES += \
-    main.cpp \
-    photoTweaker.cpp \
-    undocommand.cpp \
-    preferencesDialog.cpp \
-    instrument/abstractinstrument.cpp \
-    instrument/selectionInstrument.cpp \
-    instrument/selection.cpp \
-    photo.cpp \
-    effect/abstracteffect.cpp \
-    effect/disabled.cpp\
-    effect/grayscale.cpp \
-    effect/rotate.cpp \
-    effect/scale.cpp\
-    effect/effectPreferences.cpp\
-    effect/disabledPreferences.cpp\
-    effect/rotatePreferences.cpp\
-    effect/scalePreferences.cpp \
-    helpDialog.cpp
+    src/main.cpp \
+    src/photoTweaker.cpp \
+    src/undocommand.cpp \
+    src/preferencesDialog.cpp \
+    src/instrument/abstractinstrument.cpp \
+    src/instrument/selectionInstrument.cpp \
+    src/instrument/selection.cpp \
+    src/photo.cpp \
+    src/effect/abstracteffect.cpp \
+    src/effect/disabled.cpp\
+    src/effect/grayscale.cpp \
+    src/effect/rotate.cpp \
+    src/effect/scale.cpp\
+    src/effect/effectPreferences.cpp\
+    src/effect/disabledPreferences.cpp\
+    src/effect/rotatePreferences.cpp\
+    src/effect/scalePreferences.cpp \
+    src/helpDialog.cpp
 HEADERS += \
-    photoTweaker.h \
-    undocommand.h \
-    preferencesDialog.h \
-    instrument/abstractinstrument.h \
-    instrument/selectionInstrument.h \
-    instrument/selection.h \
-    photo.h \
-    effect/abstracteffect.h \
-    effect/disabled.h\
-    effect/grayscale.h \
-    effect/rotate.h \
-    effect/scale.h\
-    effect/effectPreferences.h\
-    effect/disabledPreferences.h\
-    effect/rotatePreferences.h\
-    effect/scalePreferences.h \
-    helpDialog.h
+    src/photoTweaker.h \
+    src/undocommand.h \
+    src/preferencesDialog.h \
+    src/instrument/abstractinstrument.h \
+    src/instrument/selectionInstrument.h \
+    src/instrument/selection.h \
+    src/photo.h \
+    src/effect/abstracteffect.h \
+    src/effect/disabled.h\
+    src/effect/grayscale.h \
+    src/effect/rotate.h \
+    src/effect/scale.h\
+    src/effect/effectPreferences.h\
+    src/effect/disabledPreferences.h\
+    src/effect/rotatePreferences.h\
+    src/effect/scalePreferences.h \
+    src/helpDialog.h
 
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc
 
 RCC_DIR = resources_bin # forces the reload of the resources on build

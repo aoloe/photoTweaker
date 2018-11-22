@@ -49,7 +49,7 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
     foreach (int item, size)
     {
         button = new QToolButton();
-        button->setIcon(QIcon(":/media/icons/scale.png"));
+        button->setIcon(QIcon(":/icons/scale.png"));
         button->setText(QString::number(item));
         button->setToolTip(tr("Scale")+ " " + QString::number(item));
         button->setFocusPolicy(Qt::NoFocus);
@@ -126,7 +126,7 @@ void EffectScale::addToToolBar(QToolBar &toolBar)
     foreach (int item, size)
     {
         button = new QToolButton();
-        button->setIcon(QIcon(":/media/icons/scale.png"));
+        button->setIcon(QIcon(":/icons/scale.png"));
         button->setText(QString::number(item));
         button->setToolTip(tr("Scale")+ " " + QString::number(item));
         button->setFocusPolicy(Qt::NoFocus);

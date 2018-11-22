@@ -13,7 +13,7 @@ AbstractEffect(parent)
 void EffectGrayscale::addToToolBar(QToolBar &toolBar)
 {
     QAction *action = new QAction(tr("Grayscale"), this);
-    action->setIcon(QIcon(":/media/icons/grayscale.png"));
+    action->setIcon(QIcon(":/icons/grayscale.png"));
     connect(action, SIGNAL(triggered(bool)), this, SLOT(apply()));
     toolBar.addAction(action);
 }
