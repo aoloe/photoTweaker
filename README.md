@@ -415,6 +415,8 @@ The toolbar will onyl have scale buttons... and one button for each available fi
 The image is automatically cropped to the current selection when saving:  since you can only apply filters to the whole image, the only goal for selecting will be to crop.
 And if you start the application in "scripter mode" it will automatically save on quit, without asking anything.
 
+have a look at zenity for GUI automation
+
 # The status bar
 
 

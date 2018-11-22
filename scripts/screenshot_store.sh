@@ -6,6 +6,7 @@ echo "filename: " $filename
 import -window root $filename
 
 target_filename=`zenity --file-selection --save --confirm-overwrite`
+# target_filename=`zenity --file-selection --save --confirm-overwrite --directory --filename=/tmp/` <-- this creates a directory with the png name <-- this creates a directory with the png name
 
 case $? in
          0)
