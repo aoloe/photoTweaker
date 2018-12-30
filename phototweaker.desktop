@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=photoTweaker
+Name=photoTweaker
+Comment=Photo "tweaker" allowing fast cropping and resizing of an image at a time
+Icon=phototweaker
+Categories=Graphics;
